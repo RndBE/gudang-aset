@@ -2,42 +2,41 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Model;
 
-class SaldoStok extends BaseModel
+class SaldoStok extends Model
 {
     protected $table = 'saldo_stok';
 
-    protected $fillable = [
-        'instansi_id',
-        'gudang_id',
-        'lokasi_id',
-        'barang_id',
-        'no_lot',
-        'tanggal_kedaluwarsa',
-        'qty_tersedia',
-        'qty_dipesan',
-        'qty_bisa_dipakai',
-        'pergerakan_terakhir_pada'
-    ];
+    const CREATED_AT = 'dibuat_pada';
+    const UPDATED_AT = 'diubah_pada';
+
+    protected $guarded = [];
 
     protected $casts = [
         'tanggal_kedaluwarsa' => 'date',
+        'pergerakan_terakhir_pada' => 'datetime',
         'qty_tersedia' => 'decimal:4',
         'qty_dipesan' => 'decimal:4',
         'qty_bisa_dipakai' => 'decimal:4',
-        'pergerakan_terakhir_pada' => 'datetime',
     ];
 
-    public function gudang(): BelongsTo
+    public function instansi()
+    {
+        return $this->belongsTo(Instansi::class, 'instansi_id');
+    }
+
+    public function gudang()
     {
         return $this->belongsTo(Gudang::class, 'gudang_id');
     }
-    public function lokasi(): BelongsTo
+
+    public function lokasi()
     {
         return $this->belongsTo(LokasiGudang::class, 'lokasi_id');
     }
-    public function barang(): BelongsTo
+
+    public function barang()
     {
         return $this->belongsTo(Barang::class, 'barang_id');
     }

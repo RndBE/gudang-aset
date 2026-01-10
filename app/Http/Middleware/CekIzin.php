@@ -9,6 +9,7 @@ class CekIzin
 {
     public function handle($request, \Closure $next, $kode = null)
     {
+
         $user = auth()->user();
         if (!$user) abort(401);
 

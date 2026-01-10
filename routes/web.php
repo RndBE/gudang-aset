@@ -16,6 +16,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PenggunaController;
 use App\Http\Controllers\AsetController;
 
+use App\Http\Controllers\PesananPembelianController;
+use App\Http\Controllers\PenerimaanController;
+use App\Http\Controllers\InspeksiQcController;
 
 Route::get('/login', [AuthController::class, 'formLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.post');
@@ -144,4 +147,49 @@ Route::middleware('auth')->group(function () {
     Route::post('aset/{aset}/penghapusan', [AsetController::class, 'penghapusanStore'])
         ->name('aset.penghapusan.store')
         ->middleware('izin:penghapusan_aset.kelola');
+    Route::resource('pesanan-pembelian', PesananPembelianController::class)
+        ->only(['index'])
+        ->middleware('izin:pesanan_pembelian.lihat');
+
+    Route::resource('pesanan-pembelian', PesananPembelianController::class)
+        ->only(['create', 'store', 'edit', 'update'])
+        ->middleware('izin:pesanan_pembelian.kelola');
+
+    Route::post('pesanan-pembelian/{pesanan_pembelian}/ajukan', [PesananPembelianController::class, 'ajukan'])
+        ->name('pesanan-pembelian.ajukan')
+        ->middleware('izin:pesanan_pembelian.kelola');
+
+    Route::post('pesanan-pembelian/{pesanan_pembelian}/setujui', [PesananPembelianController::class, 'setujui'])
+        ->name('pesanan-pembelian.setujui')
+        ->middleware('izin:pesanan_pembelian.kelola');
+
+    Route::post('pesanan-pembelian/{pesanan_pembelian}/batalkan', [PesananPembelianController::class, 'batalkan'])
+        ->name('pesanan-pembelian.batalkan')
+        ->middleware('izin:pesanan_pembelian.kelola');
+
+
+    Route::resource('penerimaan', PenerimaanController::class)
+        ->only(['index'])
+        ->middleware('izin:penerimaan.lihat');
+
+    Route::resource('penerimaan', PenerimaanController::class)
+        ->only(['create', 'store', 'edit', 'update'])
+        ->middleware('izin:penerimaan.kelola');
+
+    Route::post('penerimaan/{penerimaan}/qc-mulai', [PenerimaanController::class, 'qcMulai'])
+        ->name('penerimaan.qcMulai')
+        ->middleware('izin:penerimaan.kelola');
+
+    Route::post('penerimaan/{penerimaan}/posting-stok-masuk', [PenerimaanController::class, 'postingStokMasuk'])
+        ->name('penerimaan.postingStokMasuk')
+        ->middleware('izin:stok.posting');
+
+
+    Route::resource('inspeksi-qc', InspeksiQcController::class)
+        ->only(['index'])
+        ->middleware('izin:qc.lihat');
+
+    Route::resource('inspeksi-qc', InspeksiQcController::class)
+        ->only(['create', 'store', 'edit', 'update'])
+        ->middleware('izin:qc.kelola');
 });

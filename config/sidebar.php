@@ -54,47 +54,47 @@ return [
         ],
     ],
 
-    // [
-    //     'label' => 'Transaksi',
-    //     'izin'  => [],
-    //     'children' => [
-    //         [
-    //             'label' => 'Pesanan Pembelian',
-    //             'route' => 'pesanan-pembelian.index',
-    //             'izin'  => ['po.lihat', 'po.kelola'],
-    //         ],
-    //         [
-    //             'label' => 'Penerimaan',
-    //             'route' => 'penerimaan.index',
-    //             'izin'  => ['penerimaan.lihat', 'penerimaan.kelola'],
-    //         ],
-    //         [
-    //             'label' => 'QC',
-    //             'route' => 'inspeksi-qc.index',
-    //             'izin'  => ['qc.lihat', 'qc.kelola'],
-    //         ],
-    //         [
-    //             'label' => 'Permintaan',
-    //             'route' => 'permintaan.index',
-    //             'izin'  => ['permintaan.lihat', 'permintaan.kelola'],
-    //         ],
-    //         [
-    //             'label' => 'Pengeluaran',
-    //             'route' => 'pengeluaran.index',
-    //             'izin'  => ['pengeluaran.lihat', 'pengeluaran.kelola'],
-    //         ],
-    //         [
-    //             'label' => 'Transfer',
-    //             'route' => 'transfer.index',
-    //             'izin'  => ['transfer.lihat', 'transfer.kelola'],
-    //         ],
-    //         [
-    //             'label' => 'Stok Opname',
-    //             'route' => 'stok-opname.index',
-    //             'izin'  => ['opname.lihat', 'opname.kelola'],
-    //         ],
-    //     ],
-    // ],
+    [
+        'label' => 'Transaksi',
+        'izin'  => [],
+        'children' => [
+            [
+                'label' => 'Pesanan Pembelian',
+                'route' => 'pesanan-pembelian.index',
+                'izin'  => ['pesanan_pembelian.lihat', 'pesanan_pembelian.kelola'],
+            ],
+            [
+                'label' => 'Penerimaan',
+                'route' => 'penerimaan.index',
+                'izin'  => ['penerimaan.lihat', 'penerimaan.kelola'],
+            ],
+            [
+                'label' => 'QC',
+                'route' => 'inspeksi-qc.index',
+                'izin'  => ['qc.lihat', 'qc.kelola'],
+            ],
+            // [
+            //     'label' => 'Permintaan',
+            //     'route' => 'permintaan.index',
+            //     'izin'  => ['permintaan.lihat', 'permintaan.kelola'],
+            // ],
+            // [
+            //     'label' => 'Pengeluaran',
+            //     'route' => 'pengeluaran.index',
+            //     'izin'  => ['pengeluaran.lihat', 'pengeluaran.kelola'],
+            // ],
+            // [
+            //     'label' => 'Transfer',
+            //     'route' => 'transfer.index',
+            //     'izin'  => ['transfer.lihat', 'transfer.kelola'],
+            // ],
+            // [
+            //     'label' => 'Stok Opname',
+            //     'route' => 'stok-opname.index',
+            //     'izin'  => ['opname.lihat', 'opname.kelola'],
+            // ],
+        ],
+    ],
 
     [
         'label' => 'Aset',
