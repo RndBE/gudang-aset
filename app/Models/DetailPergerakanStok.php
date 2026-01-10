@@ -18,7 +18,7 @@ class DetailPergerakanStok extends BaseModel
         'no_lot',
         'tanggal_kedaluwarsa',
         'qty',
-        'biaya_satuan'
+        'biaya_satuan',
     ];
 
     protected $casts = [
@@ -27,12 +27,33 @@ class DetailPergerakanStok extends BaseModel
         'biaya_satuan' => 'decimal:4',
     ];
 
-    public function pergerakan(): BelongsTo
+    public function pergerakanStok(): BelongsTo
     {
         return $this->belongsTo(PergerakanStok::class, 'pergerakan_stok_id');
     }
+
     public function barang(): BelongsTo
     {
         return $this->belongsTo(Barang::class, 'barang_id');
+    }
+
+    public function dariGudang(): BelongsTo
+    {
+        return $this->belongsTo(Gudang::class, 'dari_gudang_id');
+    }
+
+    public function dariLokasi(): BelongsTo
+    {
+        return $this->belongsTo(LokasiGudang::class, 'dari_lokasi_id');
+    }
+
+    public function keGudang(): BelongsTo
+    {
+        return $this->belongsTo(Gudang::class, 'ke_gudang_id');
+    }
+
+    public function keLokasi(): BelongsTo
+    {
+        return $this->belongsTo(LokasiGudang::class, 'ke_lokasi_id');
     }
 }

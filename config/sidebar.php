@@ -132,6 +132,22 @@ return [
             // ],
         ],
     ],
+    [
+        'label' => 'Stok',
+        'izin'  => [],
+        'children' => [
+            [
+                'label' => 'Saldo Stok',
+                'route' => 'saldo-stok.index',
+                'izin'  => ['saldo_stok.lihat'],
+            ],
+            [
+                'label' => 'Pergerakan Stok',
+                'route' => 'pergerakan-stok.index',
+                'izin'  => ['pergerakan_stok.lihat'],
+            ],
+        ],
+    ],
 
     // [
     //     'label' => 'Persetujuan',

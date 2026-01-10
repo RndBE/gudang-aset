@@ -31,10 +31,12 @@ class PergerakanStok extends BaseModel
     {
         return $this->belongsTo(Gudang::class, 'gudang_id');
     }
+
     public function dipostingOleh(): BelongsTo
     {
         return $this->belongsTo(Pengguna::class, 'diposting_oleh');
     }
+
     public function dibuatOleh(): BelongsTo
     {
         return $this->belongsTo(Pengguna::class, 'dibuat_oleh');

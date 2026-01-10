@@ -124,6 +124,9 @@ class GudangAsetSeeder extends Seeder
                 ['kode' => 'pengeluaran.lihat', 'nama' => 'Lihat pengeluaran'],
                 ['kode' => 'pengeluaran.kelola', 'nama' => 'Kelola pengeluaran'],
 
+                ['kode' => 'pergerakan_stok.lihat', 'nama' => 'Melihat Pergerakan Stok'],
+                ['kode' => 'saldo_stok.kelola', 'nama' => 'Izin Melihat Stok'],
+
                 ['kode' => 'transfer.lihat', 'nama' => 'Lihat transfer'],
                 ['kode' => 'transfer.kelola', 'nama' => 'Kelola transfer'],
 

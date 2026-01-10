@@ -20,6 +20,9 @@ use App\Http\Controllers\PesananPembelianController;
 use App\Http\Controllers\PenerimaanController;
 use App\Http\Controllers\InspeksiQcController;
 
+use App\Http\Controllers\SaldoStokController;
+use App\Http\Controllers\PergerakanStokController;
+
 Route::get('/login', [AuthController::class, 'formLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.post');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
@@ -192,4 +195,24 @@ Route::middleware('auth')->group(function () {
     Route::resource('inspeksi-qc', InspeksiQcController::class)
         ->only(['create', 'store', 'edit', 'update'])
         ->middleware('izin:qc.kelola');
+
+    Route::get('saldo-stok', [SaldoStokController::class, 'index'])
+        ->name('saldo-stok.index')
+        ->middleware('izin:saldo_stok.lihat');
+
+    Route::get('pergerakan-stok', [PergerakanStokController::class, 'index'])
+        ->name('pergerakan-stok.index')
+        ->middleware('izin:pergerakan_stok.lihat');
+
+    Route::get('pergerakan-stok/{pergerakan_stok}', [PergerakanStokController::class, 'show'])
+        ->name('pergerakan-stok.show')
+        ->middleware('izin:pergerakan_stok.lihat');
+
+    Route::get('penerimaan/{penerimaan}/posting', [PergerakanStokController::class, 'postingDariPenerimaan'])
+        ->name('penerimaan.posting')
+        ->middleware('izin:pergerakan_stok.kelola');
+
+    Route::post('penerimaan/{penerimaan}/posting', [PergerakanStokController::class, 'simpanPostingDariPenerimaan'])
+        ->name('penerimaan.posting.store')
+        ->middleware('izin:pergerakan_stok.kelola');
 });
