@@ -14,6 +14,7 @@ use App\Http\Controllers\BarangController;
 use App\Http\Controllers\PemasokController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PenggunaController;
+use App\Http\Controllers\AsetController;
 
 
 Route::get('/login', [AuthController::class, 'formLogin'])->name('login');
@@ -131,4 +132,16 @@ Route::middleware('auth')->group(function () {
     Route::post('/rbac/pengguna/{pengguna}/peran', [RbacController::class, 'simpanPeranPengguna'])
         ->name('rbac.pengguna.peran')
         ->middleware('izin:rbac.kelola');
+
+    Route::resource('aset', AsetController::class)
+        ->only(['index', 'create', 'store', 'show', 'edit', 'update', 'destroy'])
+        ->middleware('izin:aset.lihat|aset.kelola');
+
+    Route::get('aset/{aset}/penghapusan', [AsetController::class, 'penghapusanForm'])
+        ->name('aset.penghapusan.form')
+        ->middleware('izin:penghapusan_aset.lihat|penghapusan_aset.kelola');
+
+    Route::post('aset/{aset}/penghapusan', [AsetController::class, 'penghapusanStore'])
+        ->name('aset.penghapusan.store')
+        ->middleware('izin:penghapusan_aset.kelola');
 });

@@ -464,7 +464,7 @@ return new class extends Migration {
             $table->foreignId('lokasi_saat_ini_id')->nullable()->constrained('lokasi_gudang')->nullOnDelete();
             $table->foreignId('pemegang_pengguna_id')->nullable()->constrained('pengguna')->nullOnDelete();
             $table->enum('status_kondisi', ['baik','rusak_ringan','rusak_berat','hilang','dalam_perbaikan','dihapus'])->default('baik');
-            $table->enum('status_siklus', ['aktif','dipinjam','ditugaskan','disimpan','nonaktif','dihapus'])->default('aktif');
+            $table->enum('status_siklus', ['tersedia','dipinjam','ditugaskan','disimpan','nonaktif','dihapus'])->default('aktif');
             $table->decimal('biaya_perolehan', 18, 2)->default(0);
             $table->string('mata_uang', 10)->default('IDR');
             $table->json('extra')->nullable();

@@ -29,4 +29,9 @@ class Gudang extends Model
     {
         return $this->belongsTo(UnitOrganisasi::class, 'unit_organisasi_id');
     }
+
+    public function gudang()
+    {
+        return $this->hasMany(Aset::class, 'gudang_saat_ini_id');
+    }
 }

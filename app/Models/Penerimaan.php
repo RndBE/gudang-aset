@@ -60,4 +60,9 @@ class Penerimaan extends BaseModel
     {
         return $this->hasOne(InspeksiQc::class, 'penerimaan_id');
     }
+
+    public function aset(): HasMany
+    {
+        return $this->hasMany(Aset::class, 'penerimaan_id');
+    }
 }

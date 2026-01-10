@@ -96,42 +96,42 @@ return [
     //     ],
     // ],
 
-    // [
-    //     'label' => 'Aset',
-    //     'izin'  => [],
-    //     'children' => [
-    //         [
-    //             'label' => 'Daftar Aset',
-    //             'route' => 'aset.index',
-    //             'izin'  => ['aset.lihat', 'aset.kelola'],
-    //         ],
-    //         [
-    //             'label' => 'Penugasan Aset',
-    //             'route' => 'penugasan-aset.index',
-    //             'izin'  => ['penugasan_aset.lihat', 'penugasan_aset.kelola'],
-    //         ],
-    //         [
-    //             'label' => 'Peminjaman Aset',
-    //             'route' => 'peminjaman-aset.index',
-    //             'izin'  => ['peminjaman_aset.lihat', 'peminjaman_aset.kelola'],
-    //         ],
-    //         [
-    //             'label' => 'Penghapusan Aset',
-    //             'route' => 'penghapusan-aset.index',
-    //             'izin'  => ['penghapusan_aset.lihat', 'penghapusan_aset.kelola'],
-    //         ],
-    //         [
-    //             'label' => 'Perawatan',
-    //             'route' => 'rencana-perawatan.index',
-    //             'izin'  => ['perawatan.lihat', 'perawatan.kelola'],
-    //         ],
-    //         [
-    //             'label' => 'Perintah Kerja',
-    //             'route' => 'perintah-kerja.index',
-    //             'izin'  => ['pk.lihat', 'pk.kelola'],
-    //         ],
-    //     ],
-    // ],
+    [
+        'label' => 'Aset',
+        'izin'  => [],
+        'children' => [
+            [
+                'label' => 'Daftar Aset',
+                'route' => 'aset.index',
+                'izin'  => ['aset.lihat', 'aset.kelola'],
+            ],
+            [
+                'label' => 'Penugasan Aset',
+                'route' => 'penugasan-aset.index',
+                'izin'  => ['penugasan_aset.lihat', 'penugasan_aset.kelola'],
+            ],
+            [
+                'label' => 'Peminjaman Aset',
+                'route' => 'peminjaman-aset.index',
+                'izin'  => ['peminjaman_aset.lihat', 'peminjaman_aset.kelola'],
+            ],
+            [
+                'label' => 'Penghapusan Aset',
+                'route' => 'penghapusan-aset.index',
+                'izin'  => ['penghapusan_aset.lihat', 'penghapusan_aset.kelola'],
+            ],
+            // [
+            //     'label' => 'Perawatan',
+            //     'route' => 'rencana-perawatan.index',
+            //     'izin'  => ['perawatan.lihat', 'perawatan.kelola'],
+            // ],
+            // [
+            //     'label' => 'Perintah Kerja',
+            //     'route' => 'perintah-kerja.index',
+            //     'izin'  => ['pk.lihat', 'pk.kelola'],
+            // ],
+        ],
+    ],
 
     // [
     //     'label' => 'Persetujuan',
