@@ -99,23 +99,23 @@ class AsetController extends Controller
     public function update(Request $request, Aset $aset)
     {
         $validated = $request->validate([
-            'barang_id' => ['required','integer'],
-            'tag_aset' => ['required','string','max:120'],
-            'no_serial' => ['nullable','string','max:120'],
-            'imei' => ['nullable','string','max:120'],
-            'no_mesin' => ['nullable','string','max:120'],
-            'no_rangka' => ['nullable','string','max:120'],
-            'no_polisi' => ['nullable','string','max:120'],
-            'tanggal_beli' => ['nullable','date'],
-            'penerimaan_id' => ['nullable','integer'],
-            'unit_organisasi_saat_ini_id' => ['nullable','integer'],
-            'gudang_saat_ini_id' => ['nullable','integer'],
-            'lokasi_saat_ini_id' => ['nullable','integer'],
-            'pemegang_pengguna_id' => ['nullable','integer'],
-            'status_kondisi' => ['required','in:baik,rusak_ringan,rusak_berat'],
-            'status_siklus' => ['required','in:tersedia,dipinjam,ditugaskan,disimpan,perawatan,dihapus'],
-            'biaya_perolehan' => ['nullable','numeric','min:0'],
-            'mata_uang' => ['required','string','max:10'],
+            'barang_id' => ['required', 'integer'],
+            'tag_aset' => ['required', 'string', 'max:120'],
+            'no_serial' => ['nullable', 'string', 'max:120'],
+            'imei' => ['nullable', 'string', 'max:120'],
+            'no_mesin' => ['nullable', 'string', 'max:120'],
+            'no_rangka' => ['nullable', 'string', 'max:120'],
+            'no_polisi' => ['nullable', 'string', 'max:120'],
+            'tanggal_beli' => ['nullable', 'date'],
+            'penerimaan_id' => ['nullable', 'integer'],
+            'unit_organisasi_saat_ini_id' => ['nullable', 'integer'],
+            'gudang_saat_ini_id' => ['nullable', 'integer'],
+            'lokasi_saat_ini_id' => ['nullable', 'integer'],
+            'pemegang_pengguna_id' => ['nullable', 'integer'],
+            'status_kondisi' => ['required', 'in:baik,rusak_ringan,rusak_berat'],
+            'status_siklus' => ['required', 'in:tersedia,dipinjam,ditugaskan,disimpan,perawatan,dihapus'],
+            'biaya_perolehan' => ['nullable', 'numeric', 'min:0'],
+            'mata_uang' => ['required', 'string', 'max:10'],
         ]);
 
         $aset->update($validated);
@@ -130,5 +130,39 @@ class AsetController extends Controller
     {
         $aset->delete();
         return redirect()->route('aset.index')->with('success', 'Aset berhasil dihapus.');
+    }
+
+    public function penghapusanForm(Aset $aset)
+    {
+        return view('aset.penghapusan', compact('aset'));
+    }
+
+    public function penghapusanStore(Request $request, Aset $aset)
+    {
+        $validated = $request->validate([
+            'tanggal' => ['required', 'date'],
+            'metode' => ['required', 'in:hibah,lelang,rusak,hilang,lainnya'],
+            'alasan' => ['required', 'string', 'max:500'],
+            'keterangan' => ['nullable', 'string'],
+        ]);
+
+        $extra = $aset->extra ?? [];
+        $extra['penghapusan'] = [
+            'tanggal' => $validated['tanggal'],
+            'metode' => $validated['metode'],
+            'alasan' => $validated['alasan'],
+            'keterangan' => $validated['keterangan'] ?? null,
+            'oleh' => auth()->user()->id,
+            'waktu' => now()->toDateTimeString(),
+        ];
+
+        $aset->update([
+            'status_siklus' => 'dihapus',
+            'extra' => $extra,
+        ]);
+
+        return redirect()
+            ->route('aset.show', $aset->id)
+            ->with('success', 'Aset berhasil dihapuskan.');
     }
 }

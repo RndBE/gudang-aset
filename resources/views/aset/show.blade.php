@@ -56,7 +56,14 @@
             </div>
             <div>
                 <div class="text-xs text-gray-500">Biaya</div>
-                <div class="font-medium"> Rp {{ number_format($aset->biaya_perolehan, 0, ',', '.') }}</div>
+                <div class="font-medium">
+                    @if ($aset->biaya_perolehan)
+                        {{ $aset->mata_uang === 'USD' ? '$' : 'Rp' }}
+                        {{ number_format($aset->biaya_perolehan, 0, ',', '.') }}
+                    @else
+                        -
+                    @endif
+                </div>
             </div>
         </div>
 

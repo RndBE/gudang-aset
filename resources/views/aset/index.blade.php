@@ -37,6 +37,7 @@
             <thead class="bg-gray-50">
                 <tr>
                     <th class="text-left p-3">Nama Barang</th>
+                    <th class="text-left p-3">Tanggal Beli</th>
                     <th class="text-left p-3">Tag</th>
                     <th class="text-left p-3">Serial</th>
                     <th class="text-left p-3">IMEI</th>
@@ -49,6 +50,7 @@
                 @forelse($data as $row)
                     <tr class="border-t">
                         <td class="p-3 font-medium">{{ $row->barang?->nama ?? '-' }}</td>
+                        <td class="p-3 font-medium">{{ optional($row->tanggal_beli)->locale('id')->translatedFormat('j F Y') }}</td>
                         <td class="p-3 font-medium">{{ $row->tag_aset }}</td>
                         <td class="p-3">{{ $row->no_serial ?? '-' }}</td>
                         <td class="p-3">{{ $row->imei ?? '-' }}</td>
@@ -78,7 +80,7 @@
                                 href="{{ route('aset.edit', $row->id) }}">Edit</a>
 
                             <a class="px-3 py-1 rounded border text-sm text-red-600 hover:bg-red-50"
-                                href="{{ route('aset.penghapusan.form', $row->id) }}">Hapus</a>
+                                href="*">Hapus</a>
                         </td>
                     </tr>
                 @empty

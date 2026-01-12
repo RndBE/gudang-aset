@@ -45,6 +45,10 @@
                     @endforeach
                 </select>
             </div>
+            <div>
+                <label class="text-sm font-medium">Nomor Polisi</label>
+                <input name="no_polisi" value="{{ old('no_polisi') }}" class="mt-1 w-full border rounded px-3 py-2">
+            </div>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -57,11 +61,16 @@
                 <label class="text-sm font-medium">IMEI</label>
                 <input name="imei" value="{{ old('imei') }}" class="mt-1 w-full border rounded px-3 py-2">
             </div>
-        </div>
-
-        <div>
-            <label class="text-sm font-medium">Nomor Polisi</label>
-            <input name="no_polisi" value="{{ old('no_polisi') }}" class="mt-1 w-full border rounded px-3 py-2">
+            <div>
+                <label class="text-sm font-medium">Biaya Perolehan</label>
+                <input type="number" name="biaya_perolehan" value="{{ old('biaya_perolehan') }}"
+                    class="mt-1 w-full border rounded px-3 py-2" placeholder="Contoh: 15000000" min="0"
+                    step="1" required>
+            </div>
+            <div>
+                <label class="text-sm font-medium">Mata Uang</label>
+                <input name="mata_uang" value="{{ old('mata_uang') }}" class="mt-1 w-full border rounded px-3 py-2" placeholder="IDR/USD">
+            </div>
         </div>
 
         <div>
@@ -75,19 +84,6 @@
                     </option>
                 @endforeach
             </select>
-        </div>
-        <div>
-            <label class="text-sm font-medium">Biaya Perolehan (Rp)</label>
-    <input
-        type="number"
-        name="mata_uang"
-        value="{{ old('mata_uang') }}"
-        class="mt-1 w-full border rounded px-3 py-2"
-        placeholder="Contoh: 15000000"
-        min="0"
-        step="1"
-        required
-    >
         </div>
 
         <div class="flex gap-2">

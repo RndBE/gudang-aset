@@ -14,7 +14,13 @@ use App\Http\Controllers\BarangController;
 use App\Http\Controllers\PemasokController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PenggunaController;
+
 use App\Http\Controllers\AsetController;
+use App\Http\Controllers\PenghapusanAsetController;
+use App\Http\Controllers\PeminjamanAsetController;
+use App\http\Controllers\PenugasanAsetController;
+use App\Http\Controllers\RencanaPerawatanController;
+use App\Http\Controllers\PerintahKerjaController;
 
 use App\Http\Controllers\PesananPembelianController;
 use App\Http\Controllers\PenerimaanController;
@@ -143,13 +149,34 @@ Route::middleware('auth')->group(function () {
         ->only(['index', 'create', 'store', 'show', 'edit', 'update', 'destroy'])
         ->middleware('izin:aset.lihat|aset.kelola');
 
-    Route::get('aset/{aset}/penghapusan', [AsetController::class, 'penghapusanForm'])
-        ->name('aset.penghapusan.form')
+    Route::resource('penugasan-aset', PenugasanAsetController::class)
+        ->only(['index', 'create', 'store', 'show', 'edit', 'update', 'destroy'])
+        ->middleware('izin:penugasan_aset.lihat|penugasan_aset.kelola');
+
+    Route::resource('peminjaman-aset', PeminjamanAsetController::class)
+        ->only(['index', 'create', 'store', 'show', 'edit', 'update', 'destroy'])
+        ->middleware('izin:peminjaman_aset.lihat|peminjaman_aset.kelola');
+
+    Route::resource('penghapusan-aset', PenghapusanAsetController::class)
+        ->only(['index', 'create', 'store', 'show', 'edit', 'update', 'destroy'])
         ->middleware('izin:penghapusan_aset.lihat|penghapusan_aset.kelola');
 
-    Route::post('aset/{aset}/penghapusan', [AsetController::class, 'penghapusanStore'])
-        ->name('aset.penghapusan.store')
-        ->middleware('izin:penghapusan_aset.kelola');
+    Route::resource('rencana-perawatan', RencanaPerawatanController::class)
+        ->only(['index', 'create', 'store', 'show', 'edit', 'update', 'destroy'])
+        ->middleware('izin:perawatan.lihat|perawatan.kelola');
+
+    Route::resource('perintah-kerja', PerintahKerjaController::class)
+        ->only(['index', 'create', 'store', 'show', 'edit', 'update', 'destroy'])
+        ->middleware('izin:pk.lihat|pk.kelola');
+
+    // Route::get('aset/{aset}/penghapusan', [AsetController::class, 'penghapusanForm'])
+    //     ->name('aset.penghapusan.form')
+    //     ->middleware('izin:penghapusan_aset.lihat|penghapusan_aset.kelola');
+
+    // Route::post('aset/{aset}/penghapusan', [AsetController::class, 'penghapusanStore'])
+    //     ->name('aset.penghapusan.store')
+    //     ->middleware('izin:penghapusan_aset.kelola');
+
     Route::resource('pesanan-pembelian', PesananPembelianController::class)
         ->only(['index'])
         ->middleware('izin:pesanan_pembelian.lihat');
