@@ -29,6 +29,9 @@ use App\Http\Controllers\InspeksiQcController;
 use App\Http\Controllers\SaldoStokController;
 use App\Http\Controllers\PergerakanStokController;
 
+use App\Http\Controllers\AlurPersetujuanController;
+use App\Http\Controllers\PermintaanPersetujuanController;
+
 Route::get('/login', [AuthController::class, 'formLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.post');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
@@ -242,4 +245,20 @@ Route::middleware('auth')->group(function () {
     Route::post('penerimaan/{penerimaan}/posting', [PergerakanStokController::class, 'simpanPostingDariPenerimaan'])
         ->name('penerimaan.posting.store')
         ->middleware('izin:pergerakan_stok.kelola');
+
+    Route::resource('alur-persetujuan', AlurPersetujuanController::class)
+        ->only(['index', 'create', 'store', 'show', 'edit', 'update', 'destroy'])
+        ->middleware('izin:alur_persetujuan.lihat|alur_persetujuan.kelola');
+
+    Route::resource('permintaan-persetujuan', PermintaanPersetujuanController::class)
+        ->only(['index', 'show'])
+        ->middleware('izin:permintaan_persetujuan.lihat|permintaan_persetujuan.kelola');
+
+    Route::post('permintaan-persetujuan/{permintaan_persetujuan}/setujui', [PermintaanPersetujuanController::class, 'setujui'])
+        ->name('permintaan-persetujuan.setujui')
+        ->middleware('izin:permintaan_persetujuan.kelola');
+
+    Route::post('permintaan-persetujuan/{permintaan_persetujuan}/tolak', [PermintaanPersetujuanController::class, 'tolak'])
+        ->name('permintaan-persetujuan.tolak')
+        ->middleware('izin:permintaan_persetujuan.kelola');
 });

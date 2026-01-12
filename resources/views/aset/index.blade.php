@@ -41,7 +41,7 @@
                     <th class="text-left p-3">Tag</th>
                     <th class="text-left p-3">Serial</th>
                     <th class="text-left p-3">IMEI</th>
-                    <th class="text-left p-3">No Polisi</th>
+                    {{-- <th class="text-left p-3">No Polisi</th> --}}
                     <th class="text-left p-3">Status</th>
                     <th class="text-right p-3">Aksi</th>
                 </tr>
@@ -54,7 +54,7 @@
                         <td class="p-3 font-medium">{{ $row->tag_aset }}</td>
                         <td class="p-3">{{ $row->no_serial ?? '-' }}</td>
                         <td class="p-3">{{ $row->imei ?? '-' }}</td>
-                        <td class="p-3">{{ $row->no_polisi ?? '-' }}</td>
+                        {{-- <td class="p-3">{{ $row->no_polisi ?? '-' }}</td> --}}
                         <td class="p-3">
                             @php
                                 $warna = match ($row->status_siklus) {

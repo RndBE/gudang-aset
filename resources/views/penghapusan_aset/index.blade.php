@@ -40,7 +40,7 @@
                         <th class="p-3 border-b">Serial</th>
                         <th class="p-3 border-b">Metode</th>
                         <th class="p-3 border-b">Status</th>
-                        <th class="p-3 border-b w-[220px]">Aksi</th>
+                        <th class="p-3 border-b .w-[220px]">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>

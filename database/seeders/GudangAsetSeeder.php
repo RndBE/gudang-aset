@@ -118,6 +118,13 @@ class GudangAsetSeeder extends Seeder
                 ['kode' => 'qc.lihat', 'nama' => 'Lihat inspeksi QC'],
                 ['kode' => 'qc.kelola', 'nama' => 'Kelola inspeksi QC'],
 
+                ['kode' => 'penugasan_aset.lihat', 'nama' => 'Lihat aset penugasan'],
+                ['kode' => 'penugasan_aset.kelola', 'nama' => 'Kelola aset penugasan'],
+                ['kode' => 'peminjaman_aset.lihat', 'nama' => 'Lihat aset peminjaman '],
+                ['kode' => 'peminjaman_aset.kelola', 'nama'=> 'Kelola aset peminjaman'],
+                ['kode' => 'penghapusan_aset.lihat', 'nama' => 'Lihat aset penghapusan '],
+                ['kode' => 'penghapusan_aset.kelola', 'nama'=> 'Kelola aset penghapusan'],
+
                 ['kode' => 'permintaan.lihat', 'nama' => 'Lihat permintaan'],
                 ['kode' => 'permintaan.kelola', 'nama' => 'Kelola permintaan'],
 

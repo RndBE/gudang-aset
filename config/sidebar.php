@@ -149,22 +149,22 @@ return [
         ],
     ],
 
-    // [
-    //     'label' => 'Persetujuan',
-    //     'izin'  => [],
-    //     'children' => [
-    //         [
-    //             'label' => 'Alur Persetujuan',
-    //             'route' => 'alur-persetujuan.index',
-    //             'izin'  => ['alur_persetujuan.lihat', 'alur_persetujuan.kelola'],
-    //         ],
-    //         [
-    //             'label' => 'Permintaan Persetujuan',
-    //             'route' => 'permintaan-persetujuan.index',
-    //             'izin'  => ['permintaan_persetujuan.lihat', 'permintaan_persetujuan.kelola'],
-    //         ],
-    //     ],
-    // ],
+    [
+        'label' => 'Persetujuan',
+        'izin'  => [],
+        'children' => [
+            [
+                'label' => 'Alur Persetujuan',
+                'route' => 'alur-persetujuan.index',
+                'izin'  => ['alur_persetujuan.lihat', 'alur_persetujuan.kelola'],
+            ],
+            [
+                'label' => 'Permintaan Persetujuan',
+                'route' => 'permintaan-persetujuan.index',
+                'izin'  => ['permintaan_persetujuan.lihat', 'permintaan_persetujuan.kelola'],
+            ],
+        ],
+    ],
 
     [
         'label' => 'Admin',
