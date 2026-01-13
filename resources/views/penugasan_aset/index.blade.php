@@ -28,13 +28,13 @@
         <!-- Table -->
         <div class="bg-white border rounded overflow-hidden">
             <table class="w-full text-sm">
-                <thead class="bg-gray-50 text-left">
+                <thead class="bg-gray-50 border-b">
                     <tr>
-                        <th class="p-3 border-b">Tanggal</th>
-                        <th class="p-3 border-b">Tag Aset</th>
-                        <th class="p-3 border-b">No Dokumen</th>
-                        <th class="p-3 border-b">Status</th>
-                        <th class="p-3 border-b text-center whitespace-nowrap .w-[220px]">Aksi</th>
+                        <th class="p-3 text-left">Tanggal</th>
+                        <th class="p-3 text-left">Tag Aset</th>
+                        <th class="p-3 text-left">No Dokumen</th>
+                        <th class="p-3 text-left">Status</th>
+                        <th class="text-right p-3">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -76,26 +76,28 @@
                             </td>
 
                             <td class="p-3 border-b">
-                                <div class="flex items-center justify-center gap-2 whitespace-nowrap">
+                                <div class="flex items-center justify-end gap-2 whitespace-nowrap">
 
                                     <a href="{{ route('penugasan-aset.show', $row->id) }}"
                                         class="px-3 py-1 border rounded text-xs hover:bg-gray-100">
                                         Detail
                                     </a>
+                                    {{-- @if ($row->status === 'aktif' || $row->status === 'terlambat') --}}
+                                    @if ($row->status === 'aktif')
+                                        <a href="{{ route('penugasan-aset.edit', $row->id) }}"
+                                            class="px-3 py-1 border rounded text-xs text-blue-700 hover:bg-blue-50">
+                                            Edit
+                                        </a>
 
-                                    <a href="{{ route('penugasan-aset.edit', $row->id) }}"
-                                        class="px-3 py-1 border rounded text-xs text-blue-700 hover:bg-blue-50">
-                                        Edit
-                                    </a>
-
-                                    <form method="POST" action="{{ route('penugasan-aset.destroy', $row->id) }}">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" onclick="return confirm('Hapus data penugasan ini?')"
-                                            class="px-3 py-1 border rounded text-xs text-red-700 hover:bg-red-50">
-                                            Hapus
-                                        </button>
-                                    </form>
+                                        <form method="POST" action="{{ route('penugasan-aset.destroy', $row->id) }}">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" onclick="return confirm('Hapus data penugasan ini?')"
+                                                class="px-3 py-1 border rounded text-xs text-red-700 hover:bg-red-50">
+                                                Hapus
+                                            </button>
+                                        </form>
+                                    @endif
 
                                 </div>
                             </td>

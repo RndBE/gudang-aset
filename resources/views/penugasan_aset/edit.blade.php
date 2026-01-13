@@ -75,7 +75,7 @@
                     <div>
                         <div class="text-gray-500">Tanggal Kembali</div>
                         <div class="font-medium">
-                            {{ $data->tanggal_kembali?->translatedFormat('d F Y, H:i') ?? '-'  }}
+                            {{ $data->tanggal_kembali?->translatedFormat('d F Y, H:i') ?? '-' }}
                         </div>
                     </div>
 
@@ -89,6 +89,31 @@
                         <div class="font-medium" style="white-space: pre-line;">
                             {{ $data->catatan ?? '-' }}
                         </div>
+                    </div>
+                    <div class="pt-2 border-t flex gap-2">
+                        @if ($data->status === 'aktif')
+                            <form method="POST" action="{{ route('penugasan-aset.kembalikan', $data->id) }}">
+
+                                @csrf
+                                <button class="px-3 py-2 rounded bg-green-600 text-white text-sm hover:bg-green-700"
+                                    onclick="return confirm('Kembalikan aset ini?')">
+                                    Kembalikan
+                                </button>
+                            </form>
+
+                            <form method="POST" action="{{ route('penugasan-aset.batalkan', $data->id) }}">
+
+                                @csrf
+                                <button class="px-3 py-2 rounded bg-yellow-500 text-white text-sm hover:bg-yellow-600"
+                                    onclick="return confirm('Batalkan penugasan ini?')">
+                                    Batalkan
+                                </button>
+                            </form>
+                        @else
+                            <span class="px-3 py-2 rounded bg-gray-100 text-gray-500 text-sm">
+                                Aksi tidak tersedia
+                            </span>
+                        @endif
                     </div>
 
                 </div>
