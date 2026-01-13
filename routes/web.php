@@ -158,9 +158,25 @@ Route::middleware('auth')->group(function () {
         ->only(['index', 'create', 'store', 'show', 'edit', 'update', 'destroy'])
         ->middleware('izin:penugasan_aset.lihat|penugasan_aset.kelola');
 
+    Route::post('penugasan-aset/{penugasan_aset}/kembalikan', [PenugasanAsetController::class, 'kembalikan'])
+        ->name('penugasan-aset.kembalikan')
+        ->middleware('izin:penugasan_aset.kelola');
+
+    Route::post('penugasan-aset/{penugasan_aset}/batalkan', [PenugasanAsetController::class, 'batalkan'])
+        ->name('penugasan-aset.batalkan')
+        ->middleware('izin:penugasan_aset.kelola');
+
     Route::resource('peminjaman-aset', PeminjamanAsetController::class)
         ->only(['index', 'create', 'store', 'show', 'edit', 'update', 'destroy'])
         ->middleware('izin:peminjaman_aset.lihat|peminjaman_aset.kelola');
+
+    Route::post('peminjaman-aset/{peminjaman_aset}/kembalikan', [PeminjamanAsetController::class, 'kembalikan'])
+        ->name('peminjaman-aset.kembalikan')
+        ->middleware('izin:peminjaman_aset.kelola');
+
+    Route::post('peminjaman-aset/{peminjaman_aset}/batalkan', [PeminjamanAsetController::class, 'batalkan'])
+        ->name('peminjaman-aset.batalkan')
+        ->middleware('izin:peminjaman_aset.kelola');
 
     Route::resource('penghapusan-aset', PenghapusanAsetController::class)
         ->only(['index', 'create', 'store', 'show', 'edit', 'update', 'destroy'])
