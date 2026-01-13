@@ -143,6 +143,8 @@ class GudangAsetSeeder extends Seeder
                 ['kode' => 'alur_persetujuan.kelola', 'nama' => 'Kelola alur persetujuan'],
                 ['kode' => 'permintaan_persetujuan.lihat', 'nama' => 'Lihat permintaan persetujuan'],
                 ['kode' => 'permintaan_persetujuan.kelola', 'nama' => 'Kelola permintaan persetujuan'],
+
+                ['kode' => 'audit.lihat', 'nama' => 'Lihat audit'],
             ];
 
             $izinMap = [];
