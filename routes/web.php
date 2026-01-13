@@ -32,6 +32,8 @@ use App\Http\Controllers\PergerakanStokController;
 use App\Http\Controllers\AlurPersetujuanController;
 use App\Http\Controllers\PermintaanPersetujuanController;
 
+use App\Http\Controllers\LogAuditController;
+
 Route::get('/login', [AuthController::class, 'formLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.post');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
@@ -261,4 +263,9 @@ Route::middleware('auth')->group(function () {
     Route::post('permintaan-persetujuan/{permintaan_persetujuan}/tolak', [PermintaanPersetujuanController::class, 'tolak'])
         ->name('permintaan-persetujuan.tolak')
         ->middleware('izin:permintaan_persetujuan.kelola');
+
+    Route::resource('log-audit', LogAuditController::class)
+        ->only(['index', 'show'])
+        // ->middleware('izin:log_audit.lihat|log_audit.kelola');
+        ->middleware('izin:audit.lihat');
 });

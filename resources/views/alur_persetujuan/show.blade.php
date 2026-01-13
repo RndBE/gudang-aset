@@ -107,7 +107,7 @@
                         <tbody>
                             @forelse($data->langkah as $l)
                                 <tr class="border-t">
-                                    <td class="px-4 py-2 font-medium">{{ $l->urutan }}</td>
+                                    <td class="px-4 py-2 font-medium">{{ $l->no_langkah }}</td>
                                     <td class="px-4 py-2">
                                         <div class="font-medium">{{ $l->nama_langkah }}</div>
                                         <div class="text-xs text-gray-500">
@@ -115,17 +115,13 @@
                                             {{ $l->batas_waktu_hari !== null ? $l->batas_waktu_hari . ' hari' : '-' }}
                                         </div>
                                     </td>
-                                    <td class="px-4 py-2">{{ $l->no_langkah ?? '-' }}</td>
+                                    <td class="px-4 py-2">{{ $l->peran->nama ?? '-' }}</td>
                                     <td class="px-4 py-2">{{ $l->izin_khusus ?? '-' }}</td>
                                     <td class="px-4 py-2">
-                                        @if ($l->wajib_catatan)
-                                            <span class="px-2 py-1 text-xs rounded bg-yellow-100 text-yellow-700">
-                                                Wajib Catatan
-                                            </span>
+                                        @if ($l->harus_semua)
+                                            <span class="badge bg-warning text-dark">Harus Semua</span>
                                         @else
-                                            <span class="px-2 py-1 text-xs rounded bg-gray-200 text-gray-600">
-                                                Opsional
-                                            </span>
+                                            <span class="badge bg-secondary">Salah Satu Cukup</span>
                                         @endif
                                     </td>
                                 </tr>

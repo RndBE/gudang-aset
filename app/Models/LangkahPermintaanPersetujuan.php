@@ -12,14 +12,15 @@ class LangkahPermintaanPersetujuan extends Model
     const UPDATED_AT = 'diubah_pada';
 
     protected $fillable = [
-        'permintaan_id',
+        'permintaan_persetujuan_id',
         'langkah_alur_id',
-        'urutan',
+        'no_langkah',
         'nama_langkah',
         'status',
-        'disetujui_oleh',
-        'disetujui_pada',
-        'catatan',
+        'diputuskan_oleh',
+        'diputuskan_pada',
+        'catatan_keputusan',
+        'snapshot',
     ];
 
     protected $casts = [
@@ -34,5 +35,10 @@ class LangkahPermintaanPersetujuan extends Model
     public function langkahAlur()
     {
         return $this->belongsTo(LangkahAlurPersetujuan::class, 'langkah_alur_id');
+    }
+
+    public function diputuskan()
+    {
+        return $this->belongsTo(Pengguna::class, 'diputuskan_oleh');
     }
 }

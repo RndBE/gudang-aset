@@ -29,11 +29,16 @@ class LangkahAlurPersetujuan extends Model
     ];
 
     protected $casts = [
-        'wajib_catatan' => 'boolean'
+        'harus_semua' => 'boolean'
     ];
 
     public function alur()
     {
         return $this->belongsTo(AlurPersetujuan::class, 'alur_persetujuan_id');
+    }
+
+    public function peran()
+    {
+        return $this->belongsTo(Peran::class, 'peran_id');
     }
 }
