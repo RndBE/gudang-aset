@@ -53,12 +53,12 @@
             <table class="w-full text-sm">
                 <thead class="bg-gray-50 border-b">
                     <tr>
-                        <th class="p-3 text-left">Tanggal</th>
+                        <th class="p-3 text-left">Tanggal Peminjaman</th>
                         <th class="p-3 text-left">Aset</th>
                         <th class="p-3 text-left">Jatuh Tempo</th>
                         <th class="p-3 text-left">Status</th>
                         <th class="p-3 text-left">Dokumen</th>
-                        <th class="p-3 text-left">Aksi</th>
+                        <th class="text-right p-3">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y">
@@ -102,6 +102,31 @@
                             </td>
 
                             <td class="p-3">
+                                {{-- @php
+                                    $statusTampil = $row->status;
+
+                                    if ($row->status === 'aktif' && $row->jatuh_tempo && now()->gt($row->jatuh_tempo)) {
+                                        $statusTampil = 'terlambat';
+                                    }
+
+                                    $color = 'bg-gray-100 text-gray-700';
+                                    if ($statusTampil === 'aktif') {
+                                        $color = 'bg-blue-100 text-blue-700';
+                                    }
+                                    if ($statusTampil === 'terlambat') {
+                                        $color = 'bg-red-100 text-red-700';
+                                    }
+                                    if ($statusTampil === 'dikembalikan') {
+                                        $color = 'bg-green-100 text-green-700';
+                                    }
+                                    if ($statusTampil === 'dibatalkan') {
+                                        $color = 'bg-gray-200 text-gray-600';
+                                    }
+                                @endphp
+
+                                <span class="px-2 py-1 text-xs rounded {{ $color }}">
+                                    {{ ucfirst($statusTampil) }}
+                                </span> --}}
                                 @php
                                     $color = 'bg-gray-100 text-gray-700';
                                     if ($row->status == 'aktif') {
@@ -126,7 +151,7 @@
                                 {{ $row->nomor_dok_serah_terima ?? '-' }}
                             </td>
 
-                            <td class="p-3 space-x-1">
+                            <td class="p-3 text-right space-x-1">
                                 <a href="{{ route('peminjaman-aset.show', $row->id) }}"
                                     class="px-2 py-1 border rounded text-xs hover:bg-gray-50">
                                     Detail

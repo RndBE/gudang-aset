@@ -40,7 +40,7 @@
             <div class="bg-white border rounded p-4 space-y-3">
                 <h2 class="font-semibold text-sm">Informasi Peminjaman</h2>
 
-                <div>
+                {{-- <div>
                     <div class="text-xs text-gray-500">Status</div>
                     @php
                         $badge = 'bg-gray-100 text-gray-700';
@@ -66,11 +66,43 @@
                             Terlambat
                         </span>
                     @endif
+                </div> --}}
+                <div>
+                    <div class="text-xs text-gray-500">Status</div>
+
+                    @php
+                        $statusTampil = $data->status;
+
+                        if ($data->status === 'aktif' && $data->jatuh_tempo && now()->gt($data->jatuh_tempo)) {
+                            $statusTampil = 'terlambat';
+                        }
+
+                        $badge = 'bg-gray-100 text-gray-700';
+                        if ($statusTampil === 'aktif') {
+                            $badge = 'bg-blue-100 text-blue-700';
+                        }
+                        if ($statusTampil === 'terlambat') {
+                            $badge = 'bg-red-100 text-red-700';
+                        }
+                        if ($statusTampil === 'dikembalikan') {
+                            $badge = 'bg-green-100 text-green-700';
+                        }
+                        if ($statusTampil === 'dibatalkan') {
+                            $badge = 'bg-gray-200 text-gray-700';
+                        }
+                    @endphp
+
+                    <span class="px-2 py-1 rounded text-xs {{ $badge }}">
+                        {{ ucfirst($statusTampil) }}
+                    </span>
                 </div>
+
 
                 <div>
                     <div class="text-xs text-gray-500">Tanggal Mulai</div>
-                    <div>{{ optional($data->tanggal_mulai)->locale('id')->translatedFormat('j F Y, H:i') ?? '-' }}</div>
+                    <div>
+                        {{ $data->tanggal_mulai ? $data->tanggal_mulai->locale('id')->translatedFormat('j F Y, H:i') : '-' }}
+                    </div>
                 </div>
 
                 <div>
@@ -80,7 +112,9 @@
 
                 <div>
                     <div class="text-xs text-gray-500">Tanggal Kembali</div>
-                    <div>{{ optional($data->tanggal_kembali)->locale('id')->translatedFormat('j F Y, H:i') ?? '-' }}</div>
+                    <div>
+                        {{ $data->tanggal_kembali ? $data->tanggal_kembali->locale('id')->translatedFormat('j F Y, H:i') : '-' }}
+                    </div>
                 </div>
 
                 <div>
@@ -119,9 +153,9 @@
                     <div class="whitespace-pre-line">{{ $data->catatan ?? '-' }}</div>
                 </div>
 
-                @if ($data->status === 'aktif' || $data->status === 'terlambat')
+                {{-- @if ($data->status === 'aktif' || $data->status === 'terlambat')
                     <div class="pt-4 border-t flex gap-2">
-                        <a href="#pengembalian" class="px-3 py-2 border rounded text-sm text-green-600 hover:bg-green-50">
+                        <a href="{{ route('peminjaman-aset.kembalikan', $data->id) }}" class="px-3 py-2 border rounded text-sm text-green-600 hover:bg-green-50">
                             Pengembalian
                         </a>
 
@@ -133,7 +167,7 @@
                             </button>
                         </form>
                     </div>
-                @endif
+                @endif --}}
 
             </div>
 

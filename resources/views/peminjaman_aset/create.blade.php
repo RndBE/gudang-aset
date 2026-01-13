@@ -63,15 +63,40 @@
             <!-- Peminjam -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                    <label class="block text-sm font-medium mb-1">Peminjam Pengguna (ID)</label>
-                    <input name="peminjam_pengguna_id" value="{{ old('peminjam_pengguna_id') }}" placeholder="misal: 12"
-                        class="w-full border rounded px-3 py-2 text-sm">
+                    <label class="block text-sm font-medium mb-1">Peminjam Pengguna</label>
+                    {{-- <input name="peminjam_pengguna_id" value="{{ old('peminjam_pengguna_id') }}" placeholder="misal: 12"
+                        class="w-full border rounded px-3 py-2 text-sm"> --}}
+                    <select name="peminjam_pengguna_id"
+                        class="w-full border rounded px-3 py-2 text-sm mt-1 @error('peminjam_pengguna_id') border-red-400 @enderror">
+                        <option value="">-- pilih pengguna --</option>
+                        @foreach ($pengguna as $p)
+                            <option value="{{ $p->id }}" {{ old('peminjam_pengguna_id') == $p->id ? 'selected' : '' }}>
+                                {{ $p->nama_lengkap }}
+                                {{-- {{ $p->username }} (ID: {{ $p->id }}) --}}
+                            </option>
+                        @endforeach
+                    </select>
+                    @error('peminjam_pengguna_id')
+                        <div class="text-xs text-red-600 mt-1">{{ $message }}</div>
+                    @enderror
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium mb-1">Peminjam Unit (ID)</label>
-                    <input name="peminjam_unit_id" value="{{ old('peminjam_unit_id') }}" placeholder="misal: 4"
-                        class="w-full border rounded px-3 py-2 text-sm">
+                    <label class="block text-sm font-medium mb-1">Peminjam Unit</label>
+                    {{-- <input name="peminjam_unit_id" value="{{ old('peminjam_unit_id') }}" placeholder="misal: 4"
+                        class="w-full border rounded px-3 py-2 text-sm"> --}}
+                    <select name="peminjam_unit_id"
+                        class="w-full border rounded px-3 py-2 text-sm mt-1 @error('peminjam_unit_id') border-red-400 @enderror">
+                        <option value="">-- pilih unit --</option>
+                        @foreach ($unit as $u)
+                            <option value="{{ $u->id }}" {{ old('peminjam_unit_id') == $u->id ? 'selected' : '' }}>
+                                {{ $u->nama_unit ?? ($u->nama ?? 'Unit ' . $u->id) }}
+                            </option>
+                        @endforeach
+                    </select>
+                    @error('peminjam_unit_id')
+                        <div class="text-xs text-red-600 mt-1">{{ $message }}</div>
+                    @enderror
                 </div>
             </div>
 
