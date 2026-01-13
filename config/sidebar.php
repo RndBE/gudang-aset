@@ -185,11 +185,11 @@ return [
                 'route' => 'izin.index',
                 'izin'  => ['izin.lihat', 'izin.kelola'],
             ],
-            // [
-            //     'label' => 'Log Audit',
-            //     'route' => 'log-audit.index',
-            //     'izin'  => ['audit.lihat'],
-            // ],
+            [
+                'label' => 'Log Audit',
+                'route' => 'log-audit.index',
+                'izin'  => ['audit.lihat'],
+            ],
         ],
     ],
 ];
