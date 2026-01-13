@@ -61,9 +61,10 @@
                     <div class="text-sm whitespace-pre-line">{{ $data->catatan ?? '-' }}</div>
                 </div>
 
-                {{-- <div class="pt-2 border-t flex gap-2">
+                <div class="pt-2 border-t flex gap-2">
                     @if ($data->status === 'aktif')
-                        <form method="POST" action="{{ route('penugasan-aset.kembalikan', $data->id) }}">
+                        {{-- <form method="POST" action="{{ route('penugasan-aset.kembalikan', $data->id) }}"> --}}
+                            <form method="POST" action="*">
                             @csrf
                             <button class="px-3 py-2 rounded bg-green-600 text-white text-sm hover:bg-green-700"
                                 onclick="return confirm('Kembalikan aset ini?')">
@@ -71,7 +72,8 @@
                             </button>
                         </form>
 
-                        <form method="POST" action="{{ route('penugasan-aset.batalkan', $data->id) }}">
+                        {{-- <form method="POST" action="{{ route('penugasan-aset.batalkan', $data->id) }}"> --}}
+                            <form method="POST" action="*">
                             @csrf
                             <button class="px-3 py-2 rounded bg-yellow-500 text-white text-sm hover:bg-yellow-600"
                                 onclick="return confirm('Batalkan penugasan ini?')">
@@ -83,7 +85,7 @@
                             Aksi tidak tersedia
                         </span>
                     @endif
-                </div> --}}
+                </div>
 
             </div>
 

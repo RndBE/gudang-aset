@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Aset;
 use App\Models\PenugasanAset;
+use App\Models\Pengguna;
+use App\Models\UnitOrganisasi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -99,24 +101,111 @@ class PenugasanAsetController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(PenugasanAset $penugasan_aset)
     {
-        //
+        if ($penugasan_aset->status !== 'aktif') {
+            return redirect()->route('penugasan-aset.index')
+                ->with('error', 'Data tidak bisa diedit karena tidak aktif.');
+        }
+
+        $aset = Aset::query()
+            ->where('instansi_id', auth()->user()->instansi_id)
+            ->whereNotIn('status_siklus', ['dihapus'])
+            ->orderBy('tag_aset')
+            ->get();
+
+        $pengguna = Pengguna::query()
+            ->where('instansi_id', auth()->user()->instansi_id)
+            ->orderBy('username')
+            ->get();
+
+        $unit = UnitOrganisasi::query()
+            ->where('instansi_id', auth()->user()->instansi_id)
+            ->orderBy('nama')
+            ->get();
+
+        return view('penugasan_aset.edit', [
+            'data' => $penugasan_aset,
+            'aset' => $aset,
+            'pengguna' => $pengguna,
+            'unit' => $unit,
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, PenugasanAset $penugasan_aset)
     {
-        //
+        if ($penugasan_aset->status !== 'aktif') {
+            return redirect()->route('penugasan-aset.index')->with('error', 'Data tidak dapat diubah.');
+        }
+
+        $validated = $request->validate([
+            'aset_id' => ['required', 'integer'],
+            'ditugaskan_ke_pengguna_id' => ['nullable', 'integer'],
+            'ditugaskan_ke_unit_id' => ['nullable', 'integer'],
+            'tanggal_tugas' => ['required', 'date'],
+            'nomor_dok_serah_terima' => ['required', 'string', 'max:120'],
+            'catatan' => ['nullable', 'string'],
+        ]);
+
+        $penugasan_aset->update($validated);
+
+        Aset::where('id', $penugasan_aset->aset_id)->update([
+            'status_siklus' => 'ditugaskan',
+            'pemegang_pengguna_id' => $penugasan_aset->ditugaskan_ke_pengguna_id,
+            'unit_organisasi_saat_ini_id' => $penugasan_aset->ditugaskan_ke_unit_id,
+        ]);
+
+        return redirect()->route('penugasan-aset.index')->with('success', 'Penugasan aset diperbarui.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function destroy(PenugasanAset $penugasan_aset)
     {
-        //
+        if ($penugasan_aset->status === 'aktif') {
+            return back()->with('error', 'Penugasan aktif tidak dapat dihapus. Silakan kembalikan/batalkan.');
+        }
+
+        $penugasan_aset->delete();
+
+        return redirect()->route('penugasan-aset.index')->with('success', 'Data penugasan dihapus.');
+    }
+
+    public function kembalikan(PenugasanAset $penugasan_aset)
+    {
+        if ($penugasan_aset->status !== 'aktif') {
+            return back()->with('error', 'Tidak dapat diproses.');
+        }
+
+        $penugasan_aset->update([
+            'status' => 'dikembalikan',
+            'tanggal_kembali' => now(),
+        ]);
+
+        Aset::where('id', $penugasan_aset->aset_id)->update([
+            'status_siklus' => 'tersedia',
+            'pemegang_pengguna_id' => null,
+        ]);
+
+        return back()->with('success', 'Aset berhasil dikembalikan.');
+    }
+
+    public function batalkan(PenugasanAset $penugasan_aset)
+    {
+        if ($penugasan_aset->status !== 'aktif') {
+            return back()->with('error', 'Tidak dapat dibatalkan.');
+        }
+
+        $penugasan_aset->update([
+            'status' => 'dibatalkan',
+        ]);
+
+        Aset::where('id', $penugasan_aset->aset_id)->update([
+            'status_siklus' => 'tersedia',
+            'pemegang_pengguna_id' => null,
+        ]);
+
+        return back()->with('success', 'Penugasan berhasil dibatalkan.');
     }
 }
