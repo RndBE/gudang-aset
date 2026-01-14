@@ -73,11 +73,11 @@ return [
                 'route' => 'inspeksi-qc.index',
                 'izin'  => ['qc.lihat', 'qc.kelola'],
             ],
-            // [
-            //     'label' => 'Permintaan',
-            //     'route' => 'permintaan.index',
-            //     'izin'  => ['permintaan.lihat', 'permintaan.kelola'],
-            // ],
+            [
+                'label' => 'Permintaan',
+                'route' => 'permintaan.index',
+                'izin'  => ['permintaan.lihat', 'permintaan.kelola'],
+            ],
             // [
             //     'label' => 'Pengeluaran',
             //     'route' => 'pengeluaran.index',

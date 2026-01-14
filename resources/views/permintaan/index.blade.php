@@ -1,0 +1,90 @@
+@extends('layouts.app')
+
+@section('content')
+    <div class="flex items-center justify-between">
+        <div>
+            <div class="text-xl font-semibold">Permintaan</div>
+            <div class="text-sm text-gray-500">Permintaan</div>
+        </div>
+
+        @if (auth()->user() && auth()->user()->punyaIzin('permintaan.kelola'))
+            <a href="{{ route('permintaan.create') }}" class="px-3 py-2 rounded bg-gray-900 text-white hover:bg-black">Buat
+                Permintaan</a>
+        @endif
+    </div>
+
+    @if (session('ok'))
+        <div class="p-3 rounded bg-green-50 text-green-800 border border-green-200">{{ session('ok') }}</div>
+    @endif
+
+    <div class="bg-white border rounded p-4 my-3">
+        <form class="grid grid-cols-1 md:grid-cols-4 gap-3">
+            <div>
+                <label class="text-sm text-gray-600">Status</label>
+                <select name="status" class="w-full border rounded px-3 py-2">
+                    <option value="">Semua</option>
+                    @foreach ($statusList as $k => $v)
+                        <option value="{{ $k }}" @selected(request('status') === $k)>{{ $v }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="md:col-span-2">
+                <label class="text-sm text-gray-600">Cari</label>
+                <input name="keyword" value="{{ request('keyword') }}" class="w-full border rounded px-3 py-2"
+                    placeholder="Nomor / tujuan">
+            </div>
+            <div class="flex items-end gap-2">
+                <button class="px-3 py-2 rounded border hover:bg-gray-50">Filter</button>
+                <a href="{{ route('permintaan.index') }}" class="px-3 py-2 rounded border hover:bg-gray-50">Reset</a>
+            </div>
+        </form>
+    </div>
+
+    <div class="bg-white border rounded overflow-x-auto">
+        <table class="w-full text-sm">
+            <thead class="bg-gray-50 text-left">
+                <tr>
+                    <th class="px-4 py-3">Nomor</th>
+                    <th class="px-4 py-3">Tanggal</th>
+                    <th class="px-4 py-3">Pemohon</th>
+                    <th class="px-4 py-3">Unit</th>
+                    <th class="px-4 py-3">Tipe</th>
+                    <th class="px-4 py-3">Prioritas</th>
+                    <th class="px-4 py-3">Status</th>
+                    <th class="px-4 py-3 text-right">Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse($items as $it)
+                    <tr class="border-t">
+                        <td class="px-4 py-3 font-medium">{{ $it->nomor_permintaan }}</td>
+                        <td class="px-4 py-3">{{ optional($it->tanggal_permintaan)->format('Y-m-d H:i') }}</td>
+                        <td class="px-4 py-3">{{ $it->pemohon?->nama_lengkap }}</td>
+                        <td class="px-4 py-3">{{ $it->unitOrganisasi?->nama }}</td>
+                        <td class="px-4 py-3">{{ $it->tipe_permintaan }}</td>
+                        <td class="px-4 py-3">{{ $it->prioritas }}</td>
+                        <td class="px-4 py-3">
+                            <span class="px-2 py-1 rounded border">{{ $statusList[$it->status] ?? $it->status }}</span>
+                        </td>
+                        <td class="px-4 py-3 text-right">
+                            @if (auth()->user() && auth()->user()->punyaIzin('permintaan.kelola'))
+                                <a class="px-3 py-2 rounded border hover:bg-gray-50"
+                                    href="{{ route('permintaan.edit', $it->id) }}">Edit</a>
+                            @else
+                                <span class="text-gray-400">-</span>
+                            @endif
+                        </td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td class="px-4 py-6 text-center text-gray-500" colspan="8">Belum ada data.</td>
+                    </tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
+
+    <div>
+        {{ $items->links() }}
+    </div>
+@endsection

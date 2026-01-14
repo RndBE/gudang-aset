@@ -14,7 +14,7 @@ return new class extends Migration {
             $table->text('alamat')->nullable();
             $table->string('telepon', 50)->nullable();
             $table->string('email', 255)->nullable();
-            $table->enum('status', ['aktif','nonaktif'])->default('aktif');
+            $table->enum('status', ['aktif', 'nonaktif'])->default('aktif');
             $table->timestamp('dibuat_pada')->useCurrent();
             $table->timestamp('diubah_pada')->useCurrent()->useCurrentOnUpdate();
         });
@@ -23,16 +23,16 @@ return new class extends Migration {
             $table->id();
             $table->foreignId('instansi_id')->constrained('instansi');
             $table->foreignId('induk_id')->nullable()->constrained('unit_organisasi')->nullOnDelete();
-            $table->enum('tipe_unit', ['mabes','polda','polres','polsek','satker','unit','unit_gudang','lainnya'])->default('satker');
+            $table->enum('tipe_unit', ['mabes', 'polda', 'polres', 'polsek', 'satker', 'unit', 'unit_gudang', 'lainnya'])->default('satker');
             $table->string('kode', 80);
             $table->string('nama', 255);
             $table->text('alamat')->nullable();
             $table->string('telepon', 50)->nullable();
             $table->string('email', 255)->nullable();
-            $table->enum('status', ['aktif','nonaktif'])->default('aktif');
+            $table->enum('status', ['aktif', 'nonaktif'])->default('aktif');
             $table->timestamp('dibuat_pada')->useCurrent();
             $table->timestamp('diubah_pada')->useCurrent()->useCurrentOnUpdate();
-            $table->unique(['instansi_id','kode'], 'uq_unit_org_inst_kode');
+            $table->unique(['instansi_id', 'kode'], 'uq_unit_org_inst_kode');
         });
 
         Schema::create('pengguna', function (Blueprint $table) {
@@ -47,12 +47,12 @@ return new class extends Migration {
             $table->string('nip_nrk', 120)->nullable();
             $table->string('pangkat', 120)->nullable();
             $table->string('jabatan', 160)->nullable();
-            $table->enum('status', ['aktif','nonaktif','terkunci'])->default('aktif');
+            $table->enum('status', ['aktif', 'nonaktif', 'terkunci'])->default('aktif');
             $table->timestamp('login_terakhir_pada')->nullable();
             $table->timestamp('dibuat_pada')->useCurrent();
             $table->timestamp('diubah_pada')->useCurrent()->useCurrentOnUpdate();
-            $table->unique(['instansi_id','username'], 'uq_pengguna_inst_username');
-            $table->unique(['instansi_id','email'], 'uq_pengguna_inst_email');
+            $table->unique(['instansi_id', 'username'], 'uq_pengguna_inst_username');
+            $table->unique(['instansi_id', 'email'], 'uq_pengguna_inst_email');
         });
 
         Schema::create('peran', function (Blueprint $table) {
@@ -63,7 +63,7 @@ return new class extends Migration {
             $table->text('deskripsi')->nullable();
             $table->timestamp('dibuat_pada')->useCurrent();
             $table->timestamp('diubah_pada')->useCurrent()->useCurrentOnUpdate();
-            $table->unique(['instansi_id','kode'], 'uq_peran_inst_kode');
+            $table->unique(['instansi_id', 'kode'], 'uq_peran_inst_kode');
         });
 
         Schema::create('izin', function (Blueprint $table) {
@@ -79,14 +79,14 @@ return new class extends Migration {
             $table->foreignId('pengguna_id')->constrained('pengguna')->cascadeOnDelete();
             $table->foreignId('peran_id')->constrained('peran')->cascadeOnDelete();
             $table->timestamp('dibuat_pada')->useCurrent();
-            $table->primary(['pengguna_id','peran_id']);
+            $table->primary(['pengguna_id', 'peran_id']);
         });
 
         Schema::create('peran_izin', function (Blueprint $table) {
             $table->foreignId('peran_id')->constrained('peran')->cascadeOnDelete();
             $table->foreignId('izin_id')->constrained('izin')->cascadeOnDelete();
             $table->timestamp('dibuat_pada')->useCurrent();
-            $table->primary(['peran_id','izin_id']);
+            $table->primary(['peran_id', 'izin_id']);
         });
 
         Schema::create('urutan_nomor_dokumen', function (Blueprint $table) {
@@ -100,7 +100,7 @@ return new class extends Migration {
             $table->string('akhiran', 120)->nullable();
             $table->timestamp('dibuat_pada')->useCurrent();
             $table->timestamp('diubah_pada')->useCurrent()->useCurrentOnUpdate();
-            $table->unique(['instansi_id','unit_organisasi_id','tipe_dokumen','tahun'], 'uq_urutan_doc_scope');
+            $table->unique(['instansi_id', 'unit_organisasi_id', 'tipe_dokumen', 'tahun'], 'uq_urutan_doc_scope');
         });
 
         Schema::create('gudang', function (Blueprint $table) {
@@ -110,25 +110,25 @@ return new class extends Migration {
             $table->string('kode', 80);
             $table->string('nama', 200);
             $table->text('alamat')->nullable();
-            $table->enum('status', ['aktif','nonaktif'])->default('aktif');
+            $table->enum('status', ['aktif', 'nonaktif'])->default('aktif');
             $table->timestamp('dibuat_pada')->useCurrent();
             $table->timestamp('diubah_pada')->useCurrent()->useCurrentOnUpdate();
-            $table->unique(['instansi_id','kode'], 'uq_gudang_inst_kode');
+            $table->unique(['instansi_id', 'kode'], 'uq_gudang_inst_kode');
         });
 
         Schema::create('lokasi_gudang', function (Blueprint $table) {
             $table->id();
             $table->foreignId('gudang_id')->constrained('gudang')->cascadeOnDelete();
             $table->foreignId('induk_id')->nullable()->constrained('lokasi_gudang')->nullOnDelete();
-            $table->enum('tipe_lokasi', ['zona','lorong','rak','ambalan','bin','ruang','halaman','lainnya'])->default('bin');
+            $table->enum('tipe_lokasi', ['zona', 'lorong', 'rak', 'ambalan', 'bin', 'ruang', 'halaman', 'lainnya'])->default('bin');
             $table->string('kode', 120);
             $table->string('nama', 200)->nullable();
             $table->string('jalur', 600)->nullable();
             $table->boolean('bisa_picking')->default(true);
-            $table->enum('status', ['aktif','nonaktif'])->default('aktif');
+            $table->enum('status', ['aktif', 'nonaktif'])->default('aktif');
             $table->timestamp('dibuat_pada')->useCurrent();
             $table->timestamp('diubah_pada')->useCurrent()->useCurrentOnUpdate();
-            $table->unique(['gudang_id','kode'], 'uq_lokasi_gudang_kode');
+            $table->unique(['gudang_id', 'kode'], 'uq_lokasi_gudang_kode');
         });
 
         Schema::create('satuan_barang', function (Blueprint $table) {
@@ -148,7 +148,7 @@ return new class extends Migration {
             $table->boolean('default_aset')->default(false);
             $table->timestamp('dibuat_pada')->useCurrent();
             $table->timestamp('diubah_pada')->useCurrent()->useCurrentOnUpdate();
-            $table->unique(['instansi_id','kode'], 'uq_kategori_inst_kode');
+            $table->unique(['instansi_id', 'kode'], 'uq_kategori_inst_kode');
         });
 
         Schema::create('pemasok', function (Blueprint $table) {
@@ -161,10 +161,10 @@ return new class extends Migration {
             $table->string('nama_kontak', 160)->nullable();
             $table->string('telepon', 50)->nullable();
             $table->string('email', 255)->nullable();
-            $table->enum('status', ['aktif','nonaktif'])->default('aktif');
+            $table->enum('status', ['aktif', 'nonaktif'])->default('aktif');
             $table->timestamp('dibuat_pada')->useCurrent();
             $table->timestamp('diubah_pada')->useCurrent()->useCurrentOnUpdate();
-            $table->unique(['instansi_id','kode'], 'uq_pemasok_inst_kode');
+            $table->unique(['instansi_id', 'kode'], 'uq_pemasok_inst_kode');
         });
 
         Schema::create('barang', function (Blueprint $table) {
@@ -177,14 +177,14 @@ return new class extends Migration {
             $table->string('merek', 160)->nullable();
             $table->string('model', 160)->nullable();
             $table->json('spesifikasi')->nullable();
-            $table->enum('tipe_barang', ['habis_pakai','aset','keduanya'])->default('habis_pakai');
-            $table->enum('metode_pelacakan', ['tanpa','lot','kedaluwarsa','serial'])->default('tanpa');
+            $table->enum('tipe_barang', ['habis_pakai', 'aset', 'keduanya'])->default('habis_pakai');
+            $table->enum('metode_pelacakan', ['tanpa', 'lot', 'kedaluwarsa', 'serial'])->default('tanpa');
             $table->decimal('stok_minimum', 18, 4)->default(0);
             $table->decimal('titik_pesan_ulang', 18, 4)->default(0);
-            $table->enum('status', ['aktif','nonaktif'])->default('aktif');
+            $table->enum('status', ['aktif', 'nonaktif'])->default('aktif');
             $table->timestamp('dibuat_pada')->useCurrent();
             $table->timestamp('diubah_pada')->useCurrent()->useCurrentOnUpdate();
-            $table->unique(['instansi_id','sku'], 'uq_barang_inst_sku');
+            $table->unique(['instansi_id', 'sku'], 'uq_barang_inst_sku');
             $table->index(['nama'], 'idx_barang_nama');
         });
 
@@ -199,12 +199,12 @@ return new class extends Migration {
             $table->date('selesai_tanggal')->nullable();
             $table->decimal('nilai_total', 18, 2)->default(0);
             $table->string('mata_uang', 10)->default('IDR');
-            $table->enum('status', ['draft','aktif','selesai','dibatalkan'])->default('draft');
+            $table->enum('status', ['draft', 'aktif', 'selesai', 'dibatalkan'])->default('draft');
             $table->text('catatan')->nullable();
             $table->foreignId('dibuat_oleh')->nullable()->constrained('pengguna')->nullOnDelete();
             $table->timestamp('dibuat_pada')->useCurrent();
             $table->timestamp('diubah_pada')->useCurrent()->useCurrentOnUpdate();
-            $table->unique(['instansi_id','nomor_kontrak'], 'uq_kontrak_no');
+            $table->unique(['instansi_id', 'nomor_kontrak'], 'uq_kontrak_no');
         });
 
         Schema::create('pesanan_pembelian', function (Blueprint $table) {
@@ -220,12 +220,12 @@ return new class extends Migration {
             $table->decimal('subtotal', 18, 2)->default(0);
             $table->decimal('pajak', 18, 2)->default(0);
             $table->decimal('total', 18, 2)->default(0);
-            $table->enum('status', ['draft','diajukan','disetujui','diterima_sebagian','diterima','dibatalkan'])->default('draft');
+            $table->enum('status', ['draft', 'diajukan', 'disetujui', 'diterima_sebagian', 'diterima', 'dibatalkan'])->default('draft');
             $table->text('catatan')->nullable();
             $table->foreignId('dibuat_oleh')->nullable()->constrained('pengguna')->nullOnDelete();
             $table->timestamp('dibuat_pada')->useCurrent();
             $table->timestamp('diubah_pada')->useCurrent()->useCurrentOnUpdate();
-            $table->unique(['instansi_id','nomor_po'], 'uq_po_no');
+            $table->unique(['instansi_id', 'nomor_po'], 'uq_po_no');
         });
 
         Schema::create('pesanan_pembelian_detail', function (Blueprint $table) {
@@ -240,7 +240,7 @@ return new class extends Migration {
             $table->decimal('total_baris', 18, 4)->default(0);
             $table->timestamp('dibuat_pada')->useCurrent();
             $table->timestamp('diubah_pada')->useCurrent()->useCurrentOnUpdate();
-            $table->unique(['pesanan_pembelian_id','barang_id'], 'uq_po_detail');
+            $table->unique(['pesanan_pembelian_id', 'barang_id'], 'uq_po_detail');
         });
 
         Schema::create('penerimaan', function (Blueprint $table) {
@@ -252,12 +252,12 @@ return new class extends Migration {
             $table->string('nomor_penerimaan', 120);
             $table->date('tanggal_penerimaan');
             $table->foreignId('diterima_oleh')->nullable()->constrained('pengguna')->nullOnDelete();
-            $table->enum('status', ['draft','diterima','qc_menunggu','qc_selesai','diposting','dibatalkan'])->default('draft');
+            $table->enum('status', ['draft', 'diterima', 'qc_menunggu', 'qc_selesai', 'diposting', 'dibatalkan'])->default('draft');
             $table->text('catatan')->nullable();
             $table->foreignId('dibuat_oleh')->nullable()->constrained('pengguna')->nullOnDelete();
             $table->timestamp('dibuat_pada')->useCurrent();
             $table->timestamp('diubah_pada')->useCurrent()->useCurrentOnUpdate();
-            $table->unique(['instansi_id','nomor_penerimaan'], 'uq_penerimaan_no');
+            $table->unique(['instansi_id', 'nomor_penerimaan'], 'uq_penerimaan_no');
         });
 
         Schema::create('penerimaan_detail', function (Blueprint $table) {
@@ -281,7 +281,7 @@ return new class extends Migration {
             $table->string('nomor_qc', 120)->unique();
             $table->date('tanggal_qc');
             $table->foreignId('pemeriksa_id')->nullable()->constrained('pengguna')->nullOnDelete();
-            $table->enum('status', ['menunggu','lulus','gagal','sebagian'])->default('menunggu');
+            $table->enum('status', ['menunggu', 'lulus', 'gagal', 'sebagian'])->default('menunggu');
             $table->text('ringkasan')->nullable();
             $table->timestamp('dibuat_pada')->useCurrent();
             $table->timestamp('diubah_pada')->useCurrent()->useCurrentOnUpdate();
@@ -292,13 +292,13 @@ return new class extends Migration {
             $table->id();
             $table->foreignId('inspeksi_qc_id')->constrained('inspeksi_qc')->cascadeOnDelete();
             $table->foreignId('penerimaan_detail_id')->constrained('penerimaan_detail')->cascadeOnDelete();
-            $table->enum('hasil', ['menunggu','lulus','gagal'])->default('menunggu');
+            $table->enum('hasil', ['menunggu', 'lulus', 'gagal'])->default('menunggu');
             $table->text('catatan_cacat')->nullable();
             $table->decimal('qty_diterima', 18, 4)->default(0);
             $table->decimal('qty_ditolak', 18, 4)->default(0);
             $table->timestamp('dibuat_pada')->useCurrent();
             $table->timestamp('diubah_pada')->useCurrent()->useCurrentOnUpdate();
-            $table->unique(['inspeksi_qc_id','penerimaan_detail_id'], 'uq_qc_detail');
+            $table->unique(['inspeksi_qc_id', 'penerimaan_detail_id'], 'uq_qc_detail');
         });
 
         Schema::create('saldo_stok', function (Blueprint $table) {
@@ -315,26 +315,26 @@ return new class extends Migration {
             $table->timestamp('pergerakan_terakhir_pada')->nullable();
             $table->timestamp('dibuat_pada')->useCurrent();
             $table->timestamp('diubah_pada')->useCurrent()->useCurrentOnUpdate();
-            $table->unique(['gudang_id','lokasi_id','barang_id','no_lot','tanggal_kedaluwarsa'], 'uq_saldo_kunci');
+            $table->unique(['gudang_id', 'lokasi_id', 'barang_id', 'no_lot', 'tanggal_kedaluwarsa'], 'uq_saldo_kunci');
         });
 
         Schema::create('pergerakan_stok', function (Blueprint $table) {
             $table->id();
             $table->foreignId('instansi_id')->constrained('instansi');
             $table->string('nomor_pergerakan', 120);
-            $table->enum('jenis_pergerakan', ['penerimaan','pengeluaran','transfer','penyesuaian','reservasi','batal_reservasi','penyesuaian_opname']);
+            $table->enum('jenis_pergerakan', ['penerimaan', 'pengeluaran', 'transfer', 'penyesuaian', 'reservasi', 'batal_reservasi', 'penyesuaian_opname']);
             $table->string('tipe_referensi', 80)->nullable();
             $table->unsignedBigInteger('id_referensi')->nullable();
             $table->dateTime('tanggal_pergerakan');
             $table->foreignId('gudang_id')->nullable()->constrained('gudang')->nullOnDelete();
             $table->text('catatan')->nullable();
             $table->foreignId('diposting_oleh')->nullable()->constrained('pengguna')->nullOnDelete();
-            $table->enum('status', ['draft','diposting','dibatalkan'])->default('draft');
+            $table->enum('status', ['draft', 'diposting', 'dibatalkan'])->default('draft');
             $table->foreignId('dibuat_oleh')->nullable()->constrained('pengguna')->nullOnDelete();
             $table->timestamp('dibuat_pada')->useCurrent();
             $table->timestamp('diubah_pada')->useCurrent()->useCurrentOnUpdate();
-            $table->unique(['instansi_id','nomor_pergerakan'], 'uq_pergerakan_no');
-            $table->index(['tipe_referensi','id_referensi'], 'idx_pergerakan_ref');
+            $table->unique(['instansi_id', 'nomor_pergerakan'], 'uq_pergerakan_no');
+            $table->index(['tipe_referensi', 'id_referensi'], 'idx_pergerakan_ref');
         });
 
         Schema::create('detail_pergerakan_stok', function (Blueprint $table) {
@@ -360,16 +360,16 @@ return new class extends Migration {
             $table->string('nomor_permintaan', 120);
             $table->dateTime('tanggal_permintaan');
             $table->foreignId('pemohon_id')->nullable()->constrained('pengguna')->nullOnDelete();
-            $table->enum('tipe_permintaan', ['habis_pakai','penugasan_aset','peminjaman_aset'])->default('habis_pakai');
-            $table->enum('prioritas', ['rendah','normal','tinggi','mendesak'])->default('normal');
-            $table->enum('status', ['draft','diajukan','disetujui','ditolak','dipenuhi','dibatalkan'])->default('draft');
+            $table->enum('tipe_permintaan', ['habis_pakai', 'penugasan_aset', 'peminjaman_aset'])->default('habis_pakai');
+            $table->enum('prioritas', ['rendah', 'normal', 'tinggi', 'mendesak'])->default('normal');
+            $table->enum('status', ['draft', 'diajukan', 'disetujui', 'ditolak', 'dipenuhi', 'dibatalkan'])->default('draft');
             $table->text('tujuan')->nullable();
             $table->date('dibutuhkan_pada')->nullable();
             $table->text('catatan_persetujuan')->nullable();
             $table->foreignId('dibuat_oleh')->nullable()->constrained('pengguna')->nullOnDelete();
             $table->timestamp('dibuat_pada')->useCurrent();
             $table->timestamp('diubah_pada')->useCurrent()->useCurrentOnUpdate();
-            $table->unique(['instansi_id','nomor_permintaan'], 'uq_permintaan_no');
+            $table->unique(['instansi_id', 'nomor_permintaan'], 'uq_permintaan_no');
         });
 
         Schema::create('permintaan_detail', function (Blueprint $table) {
@@ -382,7 +382,7 @@ return new class extends Migration {
             $table->text('catatan')->nullable();
             $table->timestamp('dibuat_pada')->useCurrent();
             $table->timestamp('diubah_pada')->useCurrent()->useCurrentOnUpdate();
-            $table->unique(['permintaan_id','barang_id'], 'uq_permintaan_detail');
+            $table->unique(['permintaan_id', 'barang_id'], 'uq_permintaan_detail');
         });
 
         Schema::create('pengeluaran', function (Blueprint $table) {
@@ -395,13 +395,13 @@ return new class extends Migration {
             $table->dateTime('tanggal_pengeluaran');
             $table->foreignId('diserahkan_ke_pengguna_id')->nullable()->constrained('pengguna')->nullOnDelete();
             $table->foreignId('diserahkan_ke_unit_id')->nullable()->constrained('unit_organisasi')->nullOnDelete();
-            $table->enum('status', ['draft','dipicking','dikeluarkan','dibatalkan'])->default('draft');
+            $table->enum('status', ['draft', 'dipicking', 'dikeluarkan', 'dibatalkan'])->default('draft');
             $table->text('catatan')->nullable();
             $table->foreignId('dibuat_oleh')->nullable()->constrained('pengguna')->nullOnDelete();
             $table->foreignId('diposting_oleh')->nullable()->constrained('pengguna')->nullOnDelete();
             $table->timestamp('dibuat_pada')->useCurrent();
             $table->timestamp('diubah_pada')->useCurrent()->useCurrentOnUpdate();
-            $table->unique(['instansi_id','nomor_pengeluaran'], 'uq_pengeluaran_no');
+            $table->unique(['instansi_id', 'nomor_pengeluaran'], 'uq_pengeluaran_no');
         });
 
         Schema::create('pengeluaran_detail', function (Blueprint $table) {
@@ -424,13 +424,13 @@ return new class extends Migration {
             $table->dateTime('tanggal_transfer');
             $table->foreignId('dari_gudang_id')->constrained('gudang');
             $table->foreignId('ke_gudang_id')->constrained('gudang');
-            $table->enum('status', ['draft','dikirim','diterima','dibatalkan'])->default('draft');
+            $table->enum('status', ['draft', 'dikirim', 'diterima', 'dibatalkan'])->default('draft');
             $table->text('catatan')->nullable();
             $table->foreignId('dibuat_oleh')->nullable()->constrained('pengguna')->nullOnDelete();
             $table->foreignId('diposting_oleh')->nullable()->constrained('pengguna')->nullOnDelete();
             $table->timestamp('dibuat_pada')->useCurrent();
             $table->timestamp('diubah_pada')->useCurrent()->useCurrentOnUpdate();
-            $table->unique(['instansi_id','nomor_transfer'], 'uq_transfer_no');
+            $table->unique(['instansi_id', 'nomor_transfer'], 'uq_transfer_no');
         });
 
         Schema::create('transfer_detail', function (Blueprint $table) {
@@ -463,15 +463,15 @@ return new class extends Migration {
             $table->foreignId('gudang_saat_ini_id')->nullable()->constrained('gudang')->nullOnDelete();
             $table->foreignId('lokasi_saat_ini_id')->nullable()->constrained('lokasi_gudang')->nullOnDelete();
             $table->foreignId('pemegang_pengguna_id')->nullable()->constrained('pengguna')->nullOnDelete();
-            $table->enum('status_kondisi', ['baik','rusak_ringan','rusak_berat','hilang','dalam_perbaikan','dihapus'])->default('baik');
-            $table->enum('status_siklus', ['tersedia','dipinjam','ditugaskan','disimpan','nonaktif','dihapus'])->default('tersedia');
+            $table->enum('status_kondisi', ['baik', 'rusak_ringan', 'rusak_berat', 'hilang', 'dalam_perbaikan', 'dihapus'])->default('baik');
+            $table->enum('status_siklus', ['tersedia', 'dipinjam', 'ditugaskan', 'disimpan', 'nonaktif', 'dihapus'])->default('tersedia');
             $table->decimal('biaya_perolehan', 18, 2)->default(0);
             $table->string('mata_uang', 10)->default('IDR');
             $table->json('extra')->nullable();
             $table->timestamp('dibuat_pada')->useCurrent();
             $table->timestamp('diubah_pada')->useCurrent()->useCurrentOnUpdate();
-            $table->unique(['instansi_id','tag_aset'], 'uq_aset_tag');
-            $table->unique(['instansi_id','no_serial'], 'uq_aset_serial');
+            $table->unique(['instansi_id', 'tag_aset'], 'uq_aset_tag');
+            $table->unique(['instansi_id', 'no_serial'], 'uq_aset_serial');
         });
 
         Schema::create('penugasan_aset', function (Blueprint $table) {
@@ -482,7 +482,7 @@ return new class extends Migration {
             $table->foreignId('ditugaskan_ke_unit_id')->nullable()->constrained('unit_organisasi')->nullOnDelete();
             $table->dateTime('tanggal_tugas');
             $table->dateTime('tanggal_kembali')->nullable();
-            $table->enum('status', ['aktif','dikembalikan','dibatalkan'])->default('aktif');
+            $table->enum('status', ['aktif', 'dikembalikan', 'dibatalkan'])->default('aktif');
             $table->string('nomor_dok_serah_terima', 120)->nullable();
             $table->text('catatan')->nullable();
             $table->foreignId('dibuat_oleh')->nullable()->constrained('pengguna')->nullOnDelete();
@@ -499,10 +499,10 @@ return new class extends Migration {
             $table->dateTime('tanggal_mulai');
             $table->dateTime('jatuh_tempo')->nullable();
             $table->dateTime('tanggal_kembali')->nullable();
-            $table->enum('status', ['aktif','terlambat','dikembalikan','dibatalkan'])->default('aktif');
+            $table->enum('status', ['aktif', 'terlambat', 'dikembalikan', 'dibatalkan'])->default('aktif');
             $table->text('tujuan')->nullable();
-            $table->enum('kondisi_keluar', ['baik','rusak_ringan','rusak_berat'])->default('baik');
-            $table->enum('kondisi_masuk', ['baik','rusak_ringan','rusak_berat'])->nullable();
+            $table->enum('kondisi_keluar', ['baik', 'rusak_ringan', 'rusak_berat'])->default('baik');
+            $table->enum('kondisi_masuk', ['baik', 'rusak_ringan', 'rusak_berat'])->nullable();
             $table->string('nomor_dok_serah_terima', 120)->nullable();
             $table->text('catatan')->nullable();
             $table->foreignId('dibuat_oleh')->nullable()->constrained('pengguna')->nullOnDelete();
@@ -515,7 +515,7 @@ return new class extends Migration {
             $table->foreignId('instansi_id')->constrained('instansi');
             $table->foreignId('aset_id')->constrained('aset')->cascadeOnDelete();
             $table->dateTime('tanggal_log');
-            $table->enum('status_kondisi', ['baik','rusak_ringan','rusak_berat','hilang','dalam_perbaikan','dihapus']);
+            $table->enum('status_kondisi', ['baik', 'rusak_ringan', 'rusak_berat', 'hilang', 'dalam_perbaikan', 'dihapus']);
             $table->text('catatan')->nullable();
             $table->foreignId('dicatat_oleh')->nullable()->constrained('pengguna')->nullOnDelete();
             $table->timestamp('dibuat_pada')->useCurrent();
@@ -527,14 +527,14 @@ return new class extends Migration {
             $table->foreignId('aset_id')->constrained('aset')->cascadeOnDelete();
             $table->string('nomor_penghapusan', 120);
             $table->date('tanggal_penghapusan');
-            $table->enum('metode', ['hapus','hibah','lelang','rusak_total','lainnya'])->default('hapus');
+            $table->enum('metode', ['hapus', 'hibah', 'lelang', 'rusak_total', 'lainnya'])->default('hapus');
             $table->text('alasan')->nullable();
             $table->foreignId('disetujui_oleh')->nullable()->constrained('pengguna')->nullOnDelete();
-            $table->enum('status', ['draft','disetujui','dieksekusi','dibatalkan'])->default('draft');
+            $table->enum('status', ['draft', 'disetujui', 'dieksekusi', 'dibatalkan'])->default('draft');
             $table->foreignId('dibuat_oleh')->nullable()->constrained('pengguna')->nullOnDelete();
             $table->timestamp('dibuat_pada')->useCurrent();
             $table->timestamp('diubah_pada')->useCurrent()->useCurrentOnUpdate();
-            $table->unique(['instansi_id','nomor_penghapusan'], 'uq_penghapusan_no');
+            $table->unique(['instansi_id', 'nomor_penghapusan'], 'uq_penghapusan_no');
         });
 
         Schema::create('rencana_perawatan', function (Blueprint $table) {
@@ -542,15 +542,15 @@ return new class extends Migration {
             $table->foreignId('instansi_id')->constrained('instansi');
             $table->string('kode', 80);
             $table->string('nama', 200);
-            $table->enum('tipe', ['berdasarkan_waktu','berdasarkan_pemakaian'])->default('berdasarkan_waktu');
+            $table->enum('tipe', ['berdasarkan_waktu', 'berdasarkan_pemakaian'])->default('berdasarkan_waktu');
             $table->unsignedInteger('interval_hari')->nullable();
             $table->decimal('interval_pemakaian', 18, 2)->nullable();
             $table->json('checklist')->nullable();
-            $table->enum('status', ['aktif','nonaktif'])->default('aktif');
+            $table->enum('status', ['aktif', 'nonaktif'])->default('aktif');
             $table->foreignId('dibuat_oleh')->nullable()->constrained('pengguna')->nullOnDelete();
             $table->timestamp('dibuat_pada')->useCurrent();
             $table->timestamp('diubah_pada')->useCurrent()->useCurrentOnUpdate();
-            $table->unique(['instansi_id','kode'], 'uq_rencana_perawatan_kode');
+            $table->unique(['instansi_id', 'kode'], 'uq_rencana_perawatan_kode');
         });
 
         Schema::create('rencana_perawatan_aset', function (Blueprint $table) {
@@ -563,7 +563,7 @@ return new class extends Migration {
             $table->decimal('nilai_pemakaian_jatuh_tempo', 18, 2)->nullable();
             $table->timestamp('dibuat_pada')->useCurrent();
             $table->timestamp('diubah_pada')->useCurrent()->useCurrentOnUpdate();
-            $table->unique(['rencana_perawatan_id','aset_id'], 'uq_rencana_perawatan_aset');
+            $table->unique(['rencana_perawatan_id', 'aset_id'], 'uq_rencana_perawatan_aset');
         });
 
         Schema::create('perintah_kerja', function (Blueprint $table) {
@@ -573,9 +573,9 @@ return new class extends Migration {
             $table->dateTime('tanggal_pk');
             $table->foreignId('aset_id')->constrained('aset')->cascadeOnDelete();
             $table->foreignId('rencana_perawatan_id')->nullable()->constrained('rencana_perawatan')->nullOnDelete();
-            $table->enum('tipe', ['preventif','korektif','inspeksi'])->default('preventif');
-            $table->enum('prioritas', ['rendah','normal','tinggi','mendesak'])->default('normal');
-            $table->enum('status', ['draft','dibuka','diproses','selesai','dibatalkan'])->default('draft');
+            $table->enum('tipe', ['preventif', 'korektif', 'inspeksi'])->default('preventif');
+            $table->enum('prioritas', ['rendah', 'normal', 'tinggi', 'mendesak'])->default('normal');
+            $table->enum('status', ['draft', 'dibuka', 'diproses', 'selesai', 'dibatalkan'])->default('draft');
             $table->text('masalah_dilaporkan')->nullable();
             $table->text('penyelesaian')->nullable();
             $table->string('nama_vendor', 255)->nullable();
@@ -588,14 +588,14 @@ return new class extends Migration {
             $table->foreignId('dibuat_oleh')->nullable()->constrained('pengguna')->nullOnDelete();
             $table->timestamp('dibuat_pada')->useCurrent();
             $table->timestamp('diubah_pada')->useCurrent()->useCurrentOnUpdate();
-            $table->unique(['instansi_id','nomor_pk'], 'uq_pk_no');
+            $table->unique(['instansi_id', 'nomor_pk'], 'uq_pk_no');
         });
 
         Schema::create('pembaruan_perintah_kerja', function (Blueprint $table) {
             $table->id();
             $table->foreignId('perintah_kerja_id')->constrained('perintah_kerja')->cascadeOnDelete();
             $table->dateTime('waktu_update');
-            $table->enum('status', ['dibuka','diproses','selesai','dibatalkan']);
+            $table->enum('status', ['dibuka', 'diproses', 'selesai', 'dibatalkan']);
             $table->text('catatan')->nullable();
             $table->foreignId('diupdate_oleh')->nullable()->constrained('pengguna')->nullOnDelete();
             $table->timestamp('dibuat_pada')->useCurrent();
@@ -617,15 +617,15 @@ return new class extends Migration {
             $table->foreignId('gudang_id')->constrained('gudang');
             $table->string('nomor_opname', 120);
             $table->date('tanggal_opname');
-            $table->enum('tipe', ['siklus','penuh'])->default('siklus');
-            $table->enum('status', ['draft','menghitung','rekonsiliasi','diposting','dibatalkan'])->default('draft');
+            $table->enum('tipe', ['siklus', 'penuh'])->default('siklus');
+            $table->enum('status', ['draft', 'menghitung', 'rekonsiliasi', 'diposting', 'dibatalkan'])->default('draft');
             $table->text('catatan')->nullable();
             $table->foreignId('dibuat_oleh')->nullable()->constrained('pengguna')->nullOnDelete();
             $table->foreignId('diposting_oleh')->nullable()->constrained('pengguna')->nullOnDelete();
             $table->dateTime('diposting_pada')->nullable();
             $table->timestamp('dibuat_pada')->useCurrent();
             $table->timestamp('diubah_pada')->useCurrent()->useCurrentOnUpdate();
-            $table->unique(['instansi_id','nomor_opname'], 'uq_opname_no');
+            $table->unique(['instansi_id', 'nomor_opname'], 'uq_opname_no');
         });
 
         Schema::create('stok_opname_detail', function (Blueprint $table) {
@@ -648,7 +648,7 @@ return new class extends Migration {
         Schema::create('berkas', function (Blueprint $table) {
             $table->id();
             $table->foreignId('instansi_id')->constrained('instansi');
-            $table->enum('penyedia', ['lokal','s3','gcs','azure','lainnya'])->default('lokal');
+            $table->enum('penyedia', ['lokal', 's3', 'gcs', 'azure', 'lainnya'])->default('lokal');
             $table->string('kunci_berkas', 600);
             $table->string('nama_berkas', 255);
             $table->string('tipe_mime', 160)->nullable();
@@ -669,7 +669,7 @@ return new class extends Migration {
             $table->text('catatan')->nullable();
             $table->foreignId('dibuat_oleh')->nullable()->constrained('pengguna')->nullOnDelete();
             $table->timestamp('dibuat_pada')->useCurrent();
-            $table->index(['tipe_entitas','id_entitas'], 'idx_lampiran_entitas');
+            $table->index(['tipe_entitas', 'id_entitas'], 'idx_lampiran_entitas');
         });
 
         Schema::create('tanda_tangan', function (Blueprint $table) {
@@ -680,10 +680,10 @@ return new class extends Migration {
             $table->foreignId('penanda_tangan_id')->constrained('pengguna');
             $table->string('peran_penanda', 160)->nullable();
             $table->dateTime('ditandatangani_pada');
-            $table->enum('metode', ['persetujuan','otp','sertifikat','manual'])->default('persetujuan');
+            $table->enum('metode', ['persetujuan', 'otp', 'sertifikat', 'manual'])->default('persetujuan');
             $table->json('data_tanda')->nullable();
             $table->timestamp('dibuat_pada')->useCurrent();
-            $table->index(['tipe_entitas','id_entitas'], 'idx_ttd_entitas');
+            $table->index(['tipe_entitas', 'id_entitas'], 'idx_ttd_entitas');
         });
 
         Schema::create('alur_persetujuan', function (Blueprint $table) {
@@ -692,12 +692,12 @@ return new class extends Migration {
             $table->string('kode', 80);
             $table->string('nama', 200);
             $table->string('berlaku_untuk', 80);
-            $table->enum('status', ['aktif','nonaktif'])->default('aktif');
+            $table->enum('status', ['aktif', 'nonaktif'])->default('aktif');
             $table->json('aturan')->nullable();
             $table->foreignId('dibuat_oleh')->nullable()->constrained('pengguna')->nullOnDelete();
             $table->timestamp('dibuat_pada')->useCurrent();
             $table->timestamp('diubah_pada')->useCurrent()->useCurrentOnUpdate();
-            $table->unique(['instansi_id','kode'], 'uq_alur_kode');
+            $table->unique(['instansi_id', 'kode'], 'uq_alur_kode');
         });
 
         Schema::create('langkah_alur_persetujuan', function (Blueprint $table) {
@@ -705,7 +705,7 @@ return new class extends Migration {
             $table->foreignId('alur_persetujuan_id')->constrained('alur_persetujuan')->cascadeOnDelete();
             $table->unsignedInteger('no_langkah');
             $table->string('nama_langkah', 200);
-            $table->enum('tipe_penyetuju', ['peran','pengguna','unit_peran'])->default('peran');
+            $table->enum('tipe_penyetuju', ['peran', 'pengguna', 'unit_peran'])->default('peran');
             $table->foreignId('peran_id')->nullable()->constrained('peran')->nullOnDelete();
             $table->foreignId('pengguna_id')->nullable()->constrained('pengguna')->nullOnDelete();
             $table->foreignId('unit_organisasi_id')->nullable()->constrained('unit_organisasi')->nullOnDelete();
@@ -713,7 +713,7 @@ return new class extends Migration {
             $table->json('kondisi')->nullable();
             $table->timestamp('dibuat_pada')->useCurrent();
             $table->timestamp('diubah_pada')->useCurrent()->useCurrentOnUpdate();
-            $table->unique(['alur_persetujuan_id','no_langkah'], 'uq_langkah_alur');
+            $table->unique(['alur_persetujuan_id', 'no_langkah'], 'uq_langkah_alur');
         });
 
         Schema::create('permintaan_persetujuan', function (Blueprint $table) {
@@ -725,13 +725,13 @@ return new class extends Migration {
             $table->string('nomor_persetujuan', 120);
             $table->foreignId('diminta_oleh')->nullable()->constrained('pengguna')->nullOnDelete();
             $table->dateTime('diminta_pada');
-            $table->enum('status', ['menunggu','disetujui','ditolak','dibatalkan'])->default('menunggu');
+            $table->enum('status', ['menunggu', 'disetujui', 'ditolak', 'dibatalkan'])->default('menunggu');
             $table->unsignedInteger('langkah_saat_ini')->default(1);
             $table->text('ringkasan')->nullable();
             $table->timestamp('dibuat_pada')->useCurrent();
             $table->timestamp('diubah_pada')->useCurrent()->useCurrentOnUpdate();
-            $table->unique(['instansi_id','nomor_persetujuan'], 'uq_permintaan_persetujuan_no');
-            $table->index(['tipe_entitas','id_entitas'], 'idx_permintaan_persetujuan_entitas');
+            $table->unique(['instansi_id', 'nomor_persetujuan'], 'uq_permintaan_persetujuan_no');
+            $table->index(['tipe_entitas', 'id_entitas'], 'idx_permintaan_persetujuan_entitas');
         });
 
         Schema::create('langkah_permintaan_persetujuan', function (Blueprint $table) {
@@ -739,21 +739,21 @@ return new class extends Migration {
             $table->foreignId('permintaan_persetujuan_id')->constrained('permintaan_persetujuan')->cascadeOnDelete();
             $table->unsignedInteger('no_langkah');
             $table->string('nama_langkah', 200);
-            $table->enum('status', ['menunggu','disetujui','ditolak','dilewati'])->default('menunggu');
+            $table->enum('status', ['menunggu', 'disetujui', 'ditolak', 'dilewati'])->default('menunggu');
             $table->foreignId('diputuskan_oleh')->nullable()->constrained('pengguna')->nullOnDelete();
             $table->dateTime('diputuskan_pada')->nullable();
             $table->text('catatan_keputusan')->nullable();
             $table->json('snapshot')->nullable();
             $table->timestamp('dibuat_pada')->useCurrent();
             $table->timestamp('diubah_pada')->useCurrent()->useCurrentOnUpdate();
-            $table->unique(['permintaan_persetujuan_id','no_langkah'], 'uq_langkah_permintaan');
+            $table->unique(['permintaan_persetujuan_id', 'no_langkah'], 'uq_langkah_permintaan');
         });
 
         Schema::create('notifikasi', function (Blueprint $table) {
             $table->id();
             $table->foreignId('instansi_id')->constrained('instansi');
             $table->foreignId('pengguna_id')->constrained('pengguna')->cascadeOnDelete();
-            $table->enum('kanal', ['aplikasi','email','sms','whatsapp','lainnya'])->default('aplikasi');
+            $table->enum('kanal', ['aplikasi', 'email', 'sms', 'whatsapp', 'lainnya'])->default('aplikasi');
             $table->string('judul', 255);
             $table->text('isi');
             $table->string('tipe_entitas', 80)->nullable();
@@ -761,14 +761,14 @@ return new class extends Migration {
             $table->boolean('sudah_dibaca')->default(false);
             $table->dateTime('dibaca_pada')->nullable();
             $table->timestamp('dibuat_pada')->useCurrent();
-            $table->index(['tipe_entitas','id_entitas'], 'idx_notif_entitas');
+            $table->index(['tipe_entitas', 'id_entitas'], 'idx_notif_entitas');
         });
 
         Schema::create('log_audit', function (Blueprint $table) {
             $table->id();
             $table->foreignId('instansi_id')->constrained('instansi');
             $table->foreignId('pengguna_id')->nullable()->constrained('pengguna')->nullOnDelete();
-            $table->enum('aksi', ['tambah','ubah','hapus','login','logout','setujui','tolak','posting','batal']);
+            $table->enum('aksi', ['tambah', 'ubah', 'hapus', 'login', 'logout', 'setujui', 'tolak', 'posting', 'batal']);
             $table->string('nama_tabel', 120)->nullable();
             $table->unsignedBigInteger('id_rekaman')->nullable();
             $table->string('tipe_referensi', 80)->nullable();
@@ -778,8 +778,17 @@ return new class extends Migration {
             $table->json('data_lama')->nullable();
             $table->json('data_baru')->nullable();
             $table->timestamp('dibuat_pada')->useCurrent();
-            $table->index(['nama_tabel','id_rekaman'], 'idx_audit_tabel');
-            $table->index(['tipe_referensi','id_referensi'], 'idx_audit_ref');
+            $table->index(['nama_tabel', 'id_rekaman'], 'idx_audit_tabel');
+            $table->index(['tipe_referensi', 'id_referensi'], 'idx_audit_ref');
+        });
+
+        Schema::create('sessions', function (Blueprint $table) {
+            $table->string('id')->primary();
+            $table->foreignId('user_id')->nullable()->index();
+            $table->string('ip_address', 45)->nullable();
+            $table->text('user_agent')->nullable();
+            $table->longText('payload');
+            $table->integer('last_activity')->index();
         });
     }
 

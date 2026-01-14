@@ -284,4 +284,24 @@ Route::middleware('auth')->group(function () {
         ->only(['index', 'show'])
         // ->middleware('izin:log_audit.lihat|log_audit.kelola');
         ->middleware('izin:audit.lihat');
+
+    Route::get('permintaan', [\App\Http\Controllers\PermintaanController::class, 'index'])
+        ->name('permintaan.index')
+        ->middleware('izin:permintaan.lihat');
+
+    Route::get('permintaan/create', [\App\Http\Controllers\PermintaanController::class, 'create'])
+        ->name('permintaan.create')
+        ->middleware('izin:permintaan.kelola');
+
+    Route::post('permintaan', [\App\Http\Controllers\PermintaanController::class, 'store'])
+        ->name('permintaan.store')
+        ->middleware('izin:permintaan.kelola');
+
+    Route::get('permintaan/{permintaan}/edit', [\App\Http\Controllers\PermintaanController::class, 'edit'])
+        ->name('permintaan.edit')
+        ->middleware('izin:permintaan.kelola');
+
+    Route::put('permintaan/{permintaan}', [\App\Http\Controllers\PermintaanController::class, 'update'])
+        ->name('permintaan.update')
+        ->middleware('izin:permintaan.kelola');
 });
