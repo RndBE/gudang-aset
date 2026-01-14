@@ -108,7 +108,7 @@
         </div>
 
         <div>
-            <label class="text-sm font-medium">Spesifikasi (JSON, opsional)</label>
+            <label class="text-sm font-medium">Spesifikasi Barang</label>
             <textarea name="spesifikasi_json" class="mt-1 w-full border rounded px-3 py-2" rows="5"
                 placeholder='{"warna":"hitam","ukuran":"M"}'>{{ old('spesifikasi_json') }}</textarea>
         </div>

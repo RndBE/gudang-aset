@@ -60,13 +60,42 @@ class BarangController extends Controller
         }
 
         $spesifikasi = null;
+
         if (!empty($payload['spesifikasi_json'])) {
-            $decoded = json_decode($payload['spesifikasi_json'], true);
-            if (!is_array($decoded)) {
-                return back()->withErrors(['spesifikasi_json' => 'Format JSON tidak valid.'])->withInput();
+            $raw = trim((string) $payload['spesifikasi_json']);
+
+            $decoded = json_decode($raw, true);
+
+            if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
+                $spesifikasi = $decoded;
+            } else {
+                $raw = str_replace(["\r\n", "\r"], "\n", $raw);
+                $parts = preg_split("/[,\n;]/", $raw);
+
+                $pairs = [];
+                foreach ($parts as $part) {
+                    $part = trim($part);
+                    if ($part === '') continue;
+
+                    if (str_contains($part, ':')) {
+                        [$k, $v] = explode(':', $part, 2);
+                        $k = trim($k);
+                        $v = trim($v);
+
+                        if ($k !== '') {
+                            $pairs[$k] = $v;
+                        } else {
+                            $pairs[] = $part;
+                        }
+                    } else {
+                        $pairs[] = $part;
+                    }
+                }
+
+                $spesifikasi = $pairs ?: ['keterangan' => $raw];
             }
-            $spesifikasi = $decoded;
         }
+
 
         unset($payload['spesifikasi_json']);
 
@@ -75,7 +104,8 @@ class BarangController extends Controller
 
         Barang::create($payload);
 
-        return redirect()->route('barang.index');
+        return redirect()->route('barang.index')
+        ->with('success','Barang Berhasil Ditambahkan');
     }
 
     public function edit(Barang $barang)
@@ -119,13 +149,42 @@ class BarangController extends Controller
         }
 
         $spesifikasi = null;
+
         if (!empty($payload['spesifikasi_json'])) {
-            $decoded = json_decode($payload['spesifikasi_json'], true);
-            if (!is_array($decoded)) {
-                return back()->withErrors(['spesifikasi_json' => 'Format JSON tidak valid.'])->withInput();
+            $raw = trim((string) $payload['spesifikasi_json']);
+
+            $decoded = json_decode($raw, true);
+
+            if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
+                $spesifikasi = $decoded;
+            } else {
+                $raw = str_replace(["\r\n", "\r"], "\n", $raw);
+                $parts = preg_split("/[,\n;]/", $raw);
+
+                $pairs = [];
+                foreach ($parts as $part) {
+                    $part = trim($part);
+                    if ($part === '') continue;
+
+                    if (str_contains($part, ':')) {
+                        [$k, $v] = explode(':', $part, 2);
+                        $k = trim($k);
+                        $v = trim($v);
+
+                        if ($k !== '') {
+                            $pairs[$k] = $v;
+                        } else {
+                            $pairs[] = $part;
+                        }
+                    } else {
+                        $pairs[] = $part;
+                    }
+                }
+
+                $spesifikasi = $pairs ?: ['keterangan' => $raw];
             }
-            $spesifikasi = $decoded;
         }
+
 
         unset($payload['spesifikasi_json']);
 
@@ -133,6 +192,7 @@ class BarangController extends Controller
 
         $barang->update($payload);
 
-        return redirect()->route('barang.index');
+        return redirect()->route('barang.index')
+        ->with('success', 'Barang Berhasil diubah');
     }
 }

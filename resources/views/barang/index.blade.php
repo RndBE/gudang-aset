@@ -5,6 +5,18 @@
         <h1 class="text-xl font-semibold">Barang</h1>
         <a href="{{ route('barang.create') }}" class="px-3 py-2 rounded bg-gray-900 text-white text-sm">Tambah</a>
     </div>
+    @if (session('success'))
+        <div id="alert-success" class="mb-4 p-3 rounded bg-green-50 border border-green-200 text-green-800 text-sm">
+            {{ session('success') }}
+        </div>
+
+        <script>
+            setTimeout(() => {
+                const el = document.getElementById('alert-success');
+                if (el) el.remove();
+            }, 3000);
+        </script>
+    @endif
 
     <div class="bg-white border rounded overflow-hidden">
         <table class="w-full text-sm">
