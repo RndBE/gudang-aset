@@ -121,9 +121,9 @@ class GudangAsetSeeder extends Seeder
                 ['kode' => 'penugasan_aset.lihat', 'nama' => 'Lihat aset penugasan'],
                 ['kode' => 'penugasan_aset.kelola', 'nama' => 'Kelola aset penugasan'],
                 ['kode' => 'peminjaman_aset.lihat', 'nama' => 'Lihat aset peminjaman '],
-                ['kode' => 'peminjaman_aset.kelola', 'nama'=> 'Kelola aset peminjaman'],
+                ['kode' => 'peminjaman_aset.kelola', 'nama' => 'Kelola aset peminjaman'],
                 ['kode' => 'penghapusan_aset.lihat', 'nama' => 'Lihat aset penghapusan '],
-                ['kode' => 'penghapusan_aset.kelola', 'nama'=> 'Kelola aset penghapusan'],
+                ['kode' => 'penghapusan_aset.kelola', 'nama' => 'Kelola aset penghapusan'],
 
                 ['kode' => 'permintaan.lihat', 'nama' => 'Lihat permintaan'],
                 ['kode' => 'permintaan.kelola', 'nama' => 'Kelola permintaan'],
@@ -144,7 +144,6 @@ class GudangAsetSeeder extends Seeder
                 ['kode' => 'permintaan_persetujuan.lihat', 'nama' => 'Lihat permintaan persetujuan'],
                 ['kode' => 'permintaan_persetujuan.kelola', 'nama' => 'Kelola permintaan persetujuan'],
 
-                ['kode' => 'audit.lihat', 'nama' => 'Lihat audit'],
             ];
 
             $izinMap = [];
