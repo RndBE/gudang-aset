@@ -131,6 +131,15 @@ class PeminjamanAsetController extends Controller
             ->orderBy('tag_aset')
             ->get();
 
+        $asetDipilih = Aset::query()
+            ->where('instansi_id', auth()->user()->instansi_id)
+            ->where('id', $peminjaman_aset->aset_id)
+            ->first();
+
+        if ($asetDipilih && !$aset->contains('id', $asetDipilih->id)) {
+            $aset->prepend($asetDipilih);
+        }
+
         return view('peminjaman_aset.edit', ['data' => $peminjaman_aset, 'aset' => $aset]);
     }
 

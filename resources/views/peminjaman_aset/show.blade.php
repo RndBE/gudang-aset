@@ -10,12 +10,12 @@
                 <a href="{{ route('peminjaman-aset.index') }}" class="px-3 py-2 border rounded text-sm hover:bg-gray-50">
                     Kembali
                 </a>
-                @if ($data->status === 'aktif' || $data->status === 'terlambat')
+                {{-- @if ($data->status === 'aktif' || $data->status === 'terlambat')
                     <a href="{{ route('peminjaman-aset.edit', $data->id) }}"
                         class="px-3 py-2 rounded border text-sm text-blue-600 hover:bg-blue-50">
                         Edit
                     </a>
-                @endif
+                @endif --}}
             </div>
         </div>
 
