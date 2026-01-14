@@ -17,6 +17,13 @@
             <div class="p-3 rounded bg-green-50 text-green-700 text-sm">
                 {{ session('success') }}
             </div>
+
+            <script>
+                setTimeout(() => {
+                    const el = document.getElementById('alert-success');
+                    if (el) el.remove();
+                }, 3000);
+            </script>
         @endif
 
         <!-- Search -->
@@ -50,7 +57,7 @@
                                 {{ $row->nomor_penghapusan ?? '-' }}
                             </td>
                             <td class="p-3 border-b">
-                                {{ optional($row->tanggal_penghapusan)->locale('id')->translatedFormat('j F Y')  }}
+                                {{ optional($row->tanggal_penghapusan)->locale('id')->translatedFormat('j F Y') }}
                             </td>
 
                             <td class="p-3 border-b">

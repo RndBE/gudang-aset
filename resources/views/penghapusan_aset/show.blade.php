@@ -94,7 +94,7 @@
             </div>
 
             <!-- Action Buttons -->
-            {{-- <div class="border-t p-4 bg-gray-50 flex gap-2 justify-end">
+            <div class="border-t p-4 bg-gray-50 flex gap-2 justify-end">
 
                 @if ($data->status === 'draft')
                     <form method="POST" action="{{ route('penghapusan-aset.setujui', $data->id) }}">
@@ -126,7 +126,7 @@
                     </form>
                 @endif
 
-            </div> --}}
+            </div>
         </div>
 
     </div>
