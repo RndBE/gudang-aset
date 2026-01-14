@@ -304,4 +304,16 @@ Route::middleware('auth')->group(function () {
     Route::put('permintaan/{permintaan}', [\App\Http\Controllers\PermintaanController::class, 'update'])
         ->name('permintaan.update')
         ->middleware('izin:permintaan.kelola');
+
+    Route::resource('pengeluaran', \App\Http\Controllers\PengeluaranController::class)
+        ->only(['index', 'create', 'store', 'edit', 'update'])
+        ->middleware('izin:pengeluaran.lihat|pengeluaran.kelola');
+
+    Route::post('pengeluaran/{pengeluaran}/posting', [\App\Http\Controllers\PengeluaranController::class, 'posting'])
+        ->name('pengeluaran.posting')
+        ->middleware('izin:pengeluaran.kelola');
+
+    Route::post('pengeluaran/{pengeluaran}/batalkan', [\App\Http\Controllers\PengeluaranController::class, 'batalkan'])
+        ->name('pengeluaran.batalkan')
+        ->middleware('izin:pengeluaran.kelola');
 });

@@ -3,7 +3,7 @@
 @section('content')
     @php
         $isEdit = $mode === 'edit';
-        $canManage = auth()->user()->bisa('pesanan_pembelian.kelola');
+        $canManage = auth()->user()->punyaIzin('pesanan_pembelian.kelola');
     @endphp
 
     <div class="flex items-start justify-between gap-4 mb-6">

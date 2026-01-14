@@ -7,7 +7,7 @@
             <p class="text-sm text-gray-600 mt-1">Kelola PO dari draft sampai disetujui dan siap diterima.</p>
         </div>
 
-        @if (auth()->user()->bisa('pesanan_pembelian.kelola'))
+        @if (auth()->user()->punyaIzin('pesanan_pembelian.kelola'))
             <a href="{{ route('pesanan-pembelian.create') }}"
                 class="inline-flex items-center px-4 py-2 rounded-lg bg-white border hover:bg-gray-50">
                 Buat PO
@@ -116,7 +116,7 @@
                                 </span>
                             </td>
                             <td class="px-4 py-3 text-right">
-                                @if (auth()->user()->bisa('pesanan_pembelian.kelola'))
+                                @if (auth()->user()->punyaIzin('pesanan_pembelian.kelola'))
                                     <a href="{{ route('pesanan-pembelian.edit', $r) }}"
                                         class="inline-flex items-center px-3 py-1.5 rounded-lg border bg-white hover:bg-gray-50">
                                         Buka
