@@ -3,14 +3,14 @@
 @section('content')
     <div class="flex items-center justify-between mb-4">
         <h1 class="text-xl font-semibold">Gudang</h1>
-        <a href="{{ route('gudang.create') }}" class="px-3 py-2 rounded bg-gray-900 text-white text-sm">Tambah</a>
+        <a href="{{ route('gudang.create') }}" class="btn-active px-6 py-3 rounded-lg text-sm">Tambah</a>
     </div>
 
     @if (session('status'))
         <div class="mb-4 p-3 rounded bg-green-50 text-green-700 text-sm">{{ session('status') }}</div>
     @endif
 
-    <div class="bg-white border rounded overflow-hidden">
+    <div class="bg-white border border-gray-300 rounded-lg overflow-hidden">
         <table class="w-full text-sm">
             <thead class="bg-gray-50">
                 <tr>
@@ -23,7 +23,7 @@
             </thead>
             <tbody>
                 @forelse($data as $row)
-                    <tr class="border-t">
+                    <tr class="border-t border-gray-300">
                         <td class="p-3">{{ $row->kode }}</td>
                         <td class="p-3">{{ $row->nama }}</td>
                         <td class="p-3">{{ $row->unitOrganisasi?->nama ?? '-' }}</td>

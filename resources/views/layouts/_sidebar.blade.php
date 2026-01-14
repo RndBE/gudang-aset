@@ -52,10 +52,10 @@
         color: #B27F26;
     }
 </style>
-<aside class="w-64 bg-white shadow-lg z-10">
+<aside class="w-64  z-10 h-full pt-3">
 
 
-    <nav class="px-3 py-3 space-y-2 mt-3 ">
+    <nav class="px-3 py-3 space-y-2 h-full">
         @foreach ($menu as $item)
             @php
                 $hasChildren = isset($item['children']) && is_array($item['children']);
@@ -89,19 +89,36 @@
                     $label = $item['label'] ?? '-';
                     $children = $visibleChildren($item['children']);
                     $open = $anyActiveInChildren($children);
+                    $groupLogo = $item['logo'] ?? '';
+                    $groupIconPath = resource_path('icon/' . $groupLogo . '.svg');
                 @endphp
 
                 @if (count($children))
-                    <div class=" rounded bg-white overflow-hidden">
-                        <div class="px-3 py-2 text-sm font-semibold tracking-wide">
-                            {{ $label }}
-                        </div>
-                        <div class="p-1 space-y-1">
+                    <details class="rounded-xl bg-white" {{ $open ? 'open' : '' }}>
+                        <summary
+                            class="flex items-center justify-between px-4 py-3 text-sm font-semibold rounded-xl cursor-pointer select-none hover:bg-gray-100">
+                            <div class="flex items-center gap-2">
+                                @if ($groupLogo && file_exists($groupIconPath))
+                                    <div class="w-6 shrink-0 [&_svg]:h-full [&_path]:stroke-current">
+                                        {!! file_get_contents($groupIconPath) !!}
+                                    </div>
+                                @endif
+                                <span>{{ $label }}</span>
+                            </div>
+
+                            <svg class="w-4 h-4 transition-transform duration-200 group-open:rotate-180"
+                                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </summary>
+
+                        <div class="pl-2 pr-2 pb-2 pt-1 space-y-1">
                             @foreach ($children as $ch)
                                 @php
                                     $route = $ch['route'] ?? '';
                                     $logo = $ch['logo'] ?? '';
-                                    $label = $ch['label'] ?? '-';
+                                    $childLabel = $ch['label'] ?? '-';
                                     $iconPath = resource_path('icon/' . $logo . '.svg');
                                 @endphp
 
@@ -109,22 +126,22 @@
                                     <a href="{{ route($route) }}"
                                         class="flex items-center px-4 py-3 rounded-xl text-sm {{ $isActive($route) ? 'bg-active font-bold' : 'hover:bg-gray-100' }}">
                                         <div
-                                            class="w-6 {{ $isActive($route) ? 'svg-active ' : '' }} [&_svg]:h-full [&_path]:stroke-current">
+                                            class="w-6 shrink-0 {{ $isActive($route) ? 'svg-active' : '' }} [&_svg]:h-full [&_path]:stroke-current">
                                             @if ($logo && file_exists($iconPath))
                                                 {!! file_get_contents($iconPath) !!}
                                             @endif
                                         </div>
-
-                                        <span class="ml-2">{{ $label }}</span>
+                                        <span class="ml-2">{{ $childLabel }}</span>
                                     </a>
                                 @endif
                             @endforeach
-
                         </div>
+
                         <div class="border-b border-gray-200 my-2 mx-2"></div>
-                    </div>
+                    </details>
                 @endif
             @endif
+
         @endforeach
 
         <div class="pt-2">

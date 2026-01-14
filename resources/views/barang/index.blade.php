@@ -3,7 +3,18 @@
 @section('content')
     <div class="flex items-center justify-between mb-4">
         <h1 class="text-xl font-semibold">Barang</h1>
-        <a href="{{ route('barang.create') }}" class="px-3 py-2 rounded bg-gray-900 text-white text-sm">Tambah</a>
+        <div class="flex items-center ">
+            <a href="" class="flex items-center btn-active px-5 py-3 rounded-lg text-sm me-3">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="icon icon-tabler icons-tabler-outline icon-tabler-sparkles me-2">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                    <path
+                        d="M16 18a2 2 0 0 1 2 2a2 2 0 0 1 2 -2a2 2 0 0 1 -2 -2a2 2 0 0 1 -2 2zm0 -12a2 2 0 0 1 2 2a2 2 0 0 1 2 -2a2 2 0 0 1 -2 -2a2 2 0 0 1 -2 2zm-7 12a6 6 0 0 1 6 -6a6 6 0 0 1 -6 -6a6 6 0 0 1 -6 6a6 6 0 0 1 6 6z">
+                    </path>
+                </svg>Mass Upload</a>
+            <a href="{{ route('barang.create') }}" class="btn-active px-6 py-3 rounded-lg text-sm">Tambah</a>
+        </div>
     </div>
     @if (session('success'))
         <div id="alert-success" class="mb-4 p-3 rounded bg-green-50 border border-green-200 text-green-800 text-sm">
@@ -18,7 +29,7 @@
         </script>
     @endif
 
-    <div class="bg-white border rounded overflow-hidden">
+    <div class="bg-white border border-gray-300 rounded-lg overflow-hidden">
         <table class="w-full text-sm">
             <thead class="bg-gray-50">
                 <tr>
@@ -34,7 +45,7 @@
             </thead>
             <tbody>
                 @forelse($data as $row)
-                    <tr class="border-t">
+                    <tr class="border-t border-gray-300 ">
                         <td class="p-3">{{ $row->sku }}</td>
                         <td class="p-3">
                             <div class="font-medium">{{ $row->nama }}</div>

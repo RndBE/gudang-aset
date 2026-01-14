@@ -16,19 +16,32 @@
         color: white;
         background-color: #C58D2A
     }
-</style>
 
-<body class="min-h-screen bg-gray-100 font-sans">
+    .btn-outline-active {
+        color: #C58D2A;
+        border: 1.5px solid #C58D2A;
+
+    }
+</style>
+@php
+    $user = auth()->user();
+@endphp
+
+<body class="min-h-screen bg-white font-sans">
     <div class="p-4 h-20 bg-white shadow-[0_1px_5px_2px_rgba(0,0,0,0.25)] sticky top-0 z-50">
         <div class="font-semibold">Gudang Aset</div>
         <div class="text-xs text-gray-500 mt-1">
             {{ $user?->nama_lengkap ?? '-' }} · {{ $user?->username ?? '-' }}
         </div>
     </div>
-    <div class="flex ">
-        @include('layouts._sidebar')
-        <main class="flex-1">
-            <div class="p-6 bg-white h-full">
+
+    <div class="flex min-h-screen items-stretch">
+        <aside class="sticky bg-white top-20 self-start min-h-screen shadow-xl z-10">
+            @include('layouts._sidebar')
+        </aside>
+
+        <main class="flex-1 min-min-h-screen">
+            <div class="p-6 bg-white min-min-h-screen">
                 @yield('content')
             </div>
         </main>

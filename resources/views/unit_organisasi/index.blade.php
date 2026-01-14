@@ -3,7 +3,7 @@
 @section('content')
     <div class="flex items-center justify-between mb-4">
         <div class="text-xl font-semibold">Unit Organisasi</div>
-        <a class="btn-active px-6 py-3 rounded-lg" href="{{ route('unit-organisasi.create') }}">Tambah</a>
+        <a class="btn-active px-6 py-3 rounded-lg text-sm" href="{{ route('unit-organisasi.create') }}">Tambah</a>
     </div>
 
     <div class="bg-white border border-gray-300 rounded-lg overflow-hidden">
