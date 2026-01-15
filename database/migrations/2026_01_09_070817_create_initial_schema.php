@@ -482,7 +482,7 @@ return new class extends Migration {
             $table->foreignId('ditugaskan_ke_unit_id')->nullable()->constrained('unit_organisasi')->nullOnDelete();
             $table->dateTime('tanggal_tugas');
             $table->dateTime('tanggal_kembali')->nullable();
-            $table->enum('status', ['aktif', 'dikembalikan', 'dibatalkan'])->default('aktif');
+            $table->enum('status', ['sedang ditugaskan', 'selesai ditugaskan', 'dibatalkan'])->default('sedang ditugaskan');
             $table->string('nomor_dok_serah_terima', 120)->nullable();
             $table->text('catatan')->nullable();
             $table->foreignId('dibuat_oleh')->nullable()->constrained('pengguna')->nullOnDelete();

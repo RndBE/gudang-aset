@@ -74,7 +74,7 @@ class PenugasanAsetController extends Controller
             'ditugaskan_ke_unit_id' => $validated['ditugaskan_ke_unit_id'] ?? null,
             'tanggal_tugas' => $validated['tanggal_tugas'],
             'tanggal_kembali' => null,
-            'status' => 'aktif',
+            'status' => 'sedang ditugaskan',
             'nomor_dok_serah_terima' => $validated['nomor_dok_serah_terima'],
             'catatan' => $validated['catatan'] ?? null,
             'dibuat_oleh' => auth()->user()->id,
@@ -103,9 +103,9 @@ class PenugasanAsetController extends Controller
      */
     public function edit(PenugasanAset $penugasan_aset)
     {
-        if ($penugasan_aset->status !== 'aktif') {
+        if ($penugasan_aset->status !== 'sedang ditugaskan') {
             return redirect()->route('penugasan-aset.index')
-                ->with('error', 'Data tidak bisa diedit karena tidak aktif.');
+                ->with('error', 'Data tidak bisa diedit karena tidak sedang ditugaskan.');
         }
 
         $aset = Aset::query()
@@ -174,12 +174,12 @@ class PenugasanAsetController extends Controller
 
     public function kembalikan(PenugasanAset $penugasan_aset)
     {
-        if ($penugasan_aset->status !== 'aktif') {
+        if ($penugasan_aset->status !== 'sedang ditugaskan') {
             return back()->with('error', 'Tidak dapat diproses.');
         }
 
         $penugasan_aset->update([
-            'status' => 'dikembalikan',
+            'status' => 'selesai ditugaskan',
             'tanggal_kembali' => now(),
         ]);
 
@@ -193,7 +193,7 @@ class PenugasanAsetController extends Controller
 
     public function batalkan(PenugasanAset $penugasan_aset)
     {
-        if ($penugasan_aset->status !== 'aktif') {
+        if ($penugasan_aset->status !== 'sedang ditugaskan') {
             return back()->with('error', 'Tidak dapat dibatalkan.');
         }
 

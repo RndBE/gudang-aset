@@ -17,6 +17,13 @@
             <div class="p-3 rounded bg-green-50 text-green-700 text-sm">
                 {{ session('success') }}
             </div>
+
+            <script>
+                setTimeout(() => {
+                    const el = document.getElementById('alert-success');
+                    if (el) el.remove();
+                }, 3000);
+            </script>
         @endif
 
         @if (session('error'))
@@ -56,10 +63,10 @@
                                 @php
                                     $color = 'bg-gray-100 text-gray-700'; // default
 
-                                    if ($row->status === 'aktif') {
-                                        $color = 'bg-green-100 text-green-700';
-                                    } elseif ($row->status === 'dikembalikan') {
-                                        $color = 'bg-gray-200 text-gray-800';
+                                    if ($row->status === 'sedang ditugaskan') {
+                                        $color = 'bg-blue-100 text-blue-700';
+                                    } elseif ($row->status === 'selesai ditugaskan') {
+                                        $color = 'bg-green-200 text-green-800';
                                     } elseif ($row->status === 'dibatalkan') {
                                         $color = 'bg-red-100 text-red-700';
                                     }
@@ -82,8 +89,8 @@
                                         class="px-3 py-1 border rounded text-xs hover:bg-gray-100">
                                         Detail
                                     </a>
-                                    {{-- @if ($row->status === 'aktif' || $row->status === 'terlambat') --}}
-                                    @if ($row->status === 'aktif')
+                                    {{-- button muncul jika status sedang ditugaskan dan punya izin kelola --}}
+                                    @if ($row->status === 'sedang ditugaskan' && auth()->user()->punyaIzin('penugasan_aset.kelola'))
                                         <a href="{{ route('penugasan-aset.edit', $row->id) }}"
                                             class="px-3 py-1 border rounded text-xs text-blue-700 hover:bg-blue-50">
                                             Edit
@@ -98,7 +105,6 @@
                                             </button>
                                         </form>
                                     @endif
-
                                 </div>
                             </td>
 

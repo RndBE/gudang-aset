@@ -30,10 +30,22 @@
 
                 <div>
                     <div class="text-xs text-gray-500">Status</div>
-                    <span
-                        class="px-2 py-1 rounded text-xs
-                    {{ $data->status === 'aktif' ? 'bg-green-50 text-green-700' : 'bg-gray-100 text-gray-700' }}">
-                        {{ ucfirst($data->status) }}
+                    @php
+                        $statusTampil = $data->status;
+
+                        $badge = 'bg-gray-100 text-gray-700';
+                        if ($statusTampil === 'sedang ditugaskan') {
+                            $badge = 'bg-blue-100 text-blue-700';
+                        }
+                        if ($statusTampil === 'selesai ditugaskan') {
+                            $badge = 'bg-green-100 text-green-700';
+                        }
+                        if ($statusTampil === 'dibatalkan') {
+                            $badge = 'bg-red-200 text-red-700';
+                        }
+                    @endphp
+                    <span class="px-2 py-1 rounded text-xs {{ $badge }}">
+                        {{ ucfirst($statusTampil) }}
                     </span>
                 </div>
 
@@ -61,6 +73,31 @@
                     <div class="text-sm whitespace-pre-line">{{ $data->catatan ?? '-' }}</div>
                 </div>
 
+                <div class="pt-2 border-t flex gap-2">
+                    @if ($data->status === 'sedang ditugaskan' && auth()->user()->punyaIzin('penugasan_aset.kelola'))
+                        <form method="POST" action="{{ route('penugasan-aset.kembalikan', $data->id) }}">
+
+                            @csrf
+                            <button class="px-3 py-2 rounded bg-green-600 text-white text-sm hover:bg-green-700"
+                                onclick="return confirm('Kembalikan aset ini?')">
+                                Kembalikan
+                            </button>
+                        </form>
+
+                        <form method="POST" action="{{ route('penugasan-aset.batalkan', $data->id) }}">
+
+                            @csrf
+                            <button class="px-3 py-2 rounded bg-yellow-500 text-white text-sm hover:bg-yellow-600"
+                                onclick="return confirm('Batalkan penugasan ini?')">
+                                Batalkan
+                            </button>
+                        </form>
+                    @else
+                        <span class="px-3 py-2 rounded bg-gray-100 text-gray-500 text-sm">
+                            Aksi tidak tersedia
+                        </span>
+                    @endif
+                </div>
                 {{-- <div class="pt-2 border-t flex gap-2">
                     @if ($data->status === 'aktif')
                         <form method="POST" action="{{ route('penugasan-aset.kembalikan', $data->id) }}">

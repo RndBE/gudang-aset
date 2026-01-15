@@ -50,10 +50,10 @@
                         <div class="text-gray-500">Status</div>
                         @php
                             $c = 'bg-gray-100 text-gray-700';
-                            if ($data->status === 'aktif') {
+                            if ($data->status === 'sedang ditugaskan') {
                                 $c = 'bg-green-100 text-green-700';
                             }
-                            if ($data->status === 'dikembalikan') {
+                            if ($data->status === 'selesai ditugaskan') {
                                 $c = 'bg-blue-100 text-blue-700';
                             }
                             if ($data->status === 'dibatalkan') {
@@ -90,32 +90,6 @@
                             {{ $data->catatan ?? '-' }}
                         </div>
                     </div>
-                    <div class="pt-2 border-t flex gap-2">
-                        @if ($data->status === 'aktif')
-                            <form method="POST" action="{{ route('penugasan-aset.kembalikan', $data->id) }}">
-
-                                @csrf
-                                <button class="px-3 py-2 rounded bg-green-600 text-white text-sm hover:bg-green-700"
-                                    onclick="return confirm('Kembalikan aset ini?')">
-                                    Kembalikan
-                                </button>
-                            </form>
-
-                            <form method="POST" action="{{ route('penugasan-aset.batalkan', $data->id) }}">
-
-                                @csrf
-                                <button class="px-3 py-2 rounded bg-yellow-500 text-white text-sm hover:bg-yellow-600"
-                                    onclick="return confirm('Batalkan penugasan ini?')">
-                                    Batalkan
-                                </button>
-                            </form>
-                        @else
-                            <span class="px-3 py-2 rounded bg-gray-100 text-gray-500 text-sm">
-                                Aksi tidak tersedia
-                            </span>
-                        @endif
-                    </div>
-
                 </div>
             </div>
 
@@ -223,7 +197,7 @@
                                 <label class="text-sm font-medium">Status</label>
                                 <select name="status"
                                     class="w-full border rounded px-3 py-2 text-sm mt-1 @error('status') border-red-400 @enderror">
-                                    @foreach (['aktif', 'dikembalikan', 'dibatalkan'] as $s)
+                                    @foreach (['sedang ditugaskan', 'selesai ditugaskan', 'dibatalkan'] as $s)
                                         <option value="{{ $s }}" @selected(old('status', $data->status) == $s)>
                                             {{ ucfirst($s) }}
                                         </option>
