@@ -30,10 +30,7 @@
                     @endforeach
                 </select>
             </div>
-            <div>
-                <label class="text-sm font-medium">Tag Aset</label>
-                <input name="tag_aset" value="{{ old('tag_aset') }}" class="mt-1 w-full border rounded px-3 py-2" required>
-            </div>
+
 
             <div>
                 <label class="text-sm font-medium">Status</label>
@@ -46,9 +43,31 @@
                 </select>
             </div>
             <div>
+                <label>Gudang</label>
+                <select name="gudang_saat_ini_id" class="mt-1 w-full border rounded px-3 py-2" required>
+                    <option value="">Pilih Gudang</option>
+                    @foreach ($gudang as $g)
+                        <option value="{{ $g->id }}" @selected(old('gudang_saat_ini_id') == $g->id)>
+                            {{ $g->nama }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+            <div>
+                <label>Lokasi Gudang</label>
+                <select name="lokasi_saat_ini_id" class="mt-1 w-full border rounded px-3 py-2" required>
+                    <option value="">Pilih Lokasi Gudang</option>
+                    @foreach ($lokasi as $l)
+                        <option value="{{ $l->id }}" @selected(old('lokasi_saat_ini_id') == $l->id)>
+                            {{ $l->nama }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+            {{-- <div>
                 <label class="text-sm font-medium">Nomor Polisi</label>
                 <input name="no_polisi" value="{{ old('no_polisi') }}" class="mt-1 w-full border rounded px-3 py-2">
-            </div>
+            </div> --}}
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -69,7 +88,12 @@
             </div>
             <div>
                 <label class="text-sm font-medium">Mata Uang</label>
-                <input name="mata_uang" value="{{ old('mata_uang') }}" class="mt-1 w-full border rounded px-3 py-2" placeholder="IDR/USD">
+                <input name="mata_uang" value="{{ old('mata_uang') }}" class="mt-1 w-full border rounded px-3 py-2"
+                    placeholder="IDR/USD">
+            </div>
+            <div>
+                <label class="text-sm font-medium">Tag Aset</label>
+                <input name="tag_aset" value="{{ old('tag_aset') }}" class="mt-1 w-full border rounded px-3 py-2" required>
             </div>
         </div>
 

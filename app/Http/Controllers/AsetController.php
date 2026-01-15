@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Aset;
 use App\Models\Barang;
+use App\Models\Gudang;
+use App\Models\LokasiGudang;
 
 class AsetController extends Controller
 {
@@ -40,7 +42,9 @@ class AsetController extends Controller
     public function create()
     {
         $barang = Barang::query()->orderBy('nama')->get();
-        return view('aset.create', compact('barang'));
+        $gudang = Gudang::query()->orderBy('nama')->get();
+        $lokasi = LokasiGudang::query()->orderBy('nama')->get();
+        return view('aset.create', compact('barang','gudang', 'lokasi'));
     }
 
     /**
@@ -80,7 +84,7 @@ class AsetController extends Controller
      */
     public function show(Aset $aset)
     {
-        $aset->load('barang', 'penerimaan', 'gudang');
+        $aset->load('barang', 'penerimaan.diterimaOleh', 'gudang');
         return view('aset.show', compact('aset'));
     }
 
@@ -90,7 +94,9 @@ class AsetController extends Controller
     public function edit(Aset $aset)
     {
         $barang = Barang::query()->orderBy('nama')->get();
-        return view('aset.edit', compact('aset', 'barang'));
+        $gudang = Gudang::query()->orderBy('nama')->get();
+        $lokasi = LokasiGudang::query()->orderBy('nama')->get();
+        return view('aset.edit', compact('aset', 'barang', 'gudang', 'lokasi'));
     }
 
     /**

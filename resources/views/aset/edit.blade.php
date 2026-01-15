@@ -24,9 +24,15 @@
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-                <label class="text-sm font-medium">Tag Aset</label>
-                <input name="tag_aset" value="{{ old('tag_aset', $aset->tag_aset) }}"
-                    class="mt-1 w-full border rounded px-3 py-2" required>
+                <label>Nama Barang</label>
+                <select name="barang_id" class="mt-1 w-full border rounded px-3 py-2" required>
+                    <option value="">Pilih Barang</option>
+                    @foreach ($barang as $b)
+                        <option value="{{ $b->id }}" @selected(old('barang_id', $aset->barang_id) == $b->id)>
+                            {{ $b->nama }}
+                        </option>
+                    @endforeach
+                </select>
             </div>
 
             <div>
@@ -39,13 +45,52 @@
                     @endforeach
                 </select>
             </div>
-        </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+                <label>Gudang</label>
+                <select name="gudang_saat_ini_id" class="mt-1 w-full border rounded px-3 py-2" required>
+                    <option value="">Pilih Gudang</option>
+                    @foreach ($gudang as $g)
+                        <option value="{{ $g->id }}" @selected(old('gudang_saat_ini_id', $aset->gudang_saat_ini_id) == $g->id)>
+                            {{ $g->nama }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+            <div>
+                <label>Lokasi Gudang</label>
+                <select name="lokasi_saat_ini_id" class="mt-1 w-full border rounded px-3 py-2" required>
+                    <option value="">Pilih Lokasi Gudang</option>
+                    @foreach ($lokasi as $l)
+                        <option value="{{ $l->id }}" @selected(old('lokasi_saat_ini_id', $aset->lokasi_saat_ini_id) == $l->id)>
+                            {{ $l->nama }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+            <div>
+                <label class="text-sm font-medium">Tag Aset</label>
+                <input name="tag_aset" value="{{ old('tag_aset', $aset->tag_aset) }}"
+                    class="mt-1 w-full border rounded px-3 py-2" required>
+            </div>
             <div>
                 <label class="text-sm font-medium">Nomor Serial</label>
                 <input name="no_serial" value="{{ old('no_serial', $aset->no_serial) }}"
                     class="mt-1 w-full border rounded px-3 py-2">
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+                <label class="text-sm font-medium">Biaya Perolehan</label>
+                <input type="number" name="biaya_perolehan" value="{{ old('biaya_perolehan', $aset->biaya_perolehan) }}"
+                    class="mt-1 w-full border rounded px-3 py-2" placeholder="Contoh: 15000000" min="0"
+                    step="1" required>
+            </div>
+            <div>
+                <label class="text-sm font-medium">Mata Uang</label>
+                <input name="mata_uang" value="{{ old('mata_uang', $aset->mata_uang) }}" class="mt-1 w-full border rounded px-3 py-2"
+                    placeholder="IDR/USD">
             </div>
 
             <div>
@@ -54,16 +99,21 @@
             </div>
         </div>
 
-        <div>
+        {{-- <div>
             <label class="text-sm font-medium">Nomor Polisi</label>
             <input name="no_polisi" value="{{ old('no_polisi', $aset->no_polisi) }}"
                 class="mt-1 w-full border rounded px-3 py-2">
-        </div>
+        </div> --}}
 
         <div>
             <label class="text-sm font-medium">Keterangan</label>
-            <input name="no_polisi" value="{{ old('no_polisi', $aset->status_kondisi) }}"
-                class="mt-1 w-full border rounded px-3 py-2">
+            <select name="status_kondisi" class="mt-1 w-full border rounded px-3 py-2" required>
+                @foreach (['baik', 'rusak_ringan', 'rusak_berat', 'hilang', 'dalam_perbaikan'] as $k)
+                    <option value="{{ $k }}" @selected(old('status_kondisi', $aset->status_kondisi) === $k)>
+                        {{ ucfirst($k) }}
+                    </option>
+                @endforeach
+            </select>
         </div>
 
         <div class="flex gap-2">
