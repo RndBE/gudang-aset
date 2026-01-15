@@ -29,7 +29,8 @@ class LangkahAlurPersetujuan extends Model
     ];
 
     protected $casts = [
-        'harus_semua' => 'boolean'
+        'harus_semua    ' => 'boolean',
+        'kondisi' => 'array'
     ];
 
     public function alur()

@@ -58,53 +58,49 @@ class AlurPersetujuanController extends Controller
             'dibuat_oleh' => auth()->user()->id,
         ]);
 
-        foreach ($validated['langkah'] as $l) {
+        $langkahSorted = collect($validated['langkah'])
+            ->sortBy(fn($x) => (int) ($x['no_langkah'] ?? $x['urutan'] ?? 0))
+            ->values();
+
+        $no = 1;
+        foreach ($langkahSorted as $l) {
+
+            $tipe = $l['tipe_penyetuju'] ?? 'peran';
+            // dd($langkahSorted);
             LangkahAlurPersetujuan::create([
                 'alur_persetujuan_id' => $alur->id,
-                'no_langkah' => $l['urutan'],
+                'no_langkah' => $no,
                 'nama_langkah' => $l['nama_langkah'],
-                'peran_id' => $l['peran_id'] ?? null,
-                'izin_id' => $l['izin_id'] ?? null,
-                'wajib_catatan' => isset($l['wajib_catatan']) ? 1 : 0,
-                'batas_waktu_hari' => $l['batas_waktu_hari'] ?? null,
+
+                'tipe_penyetuju' => $tipe,
+                'peran_id' => $tipe === 'peran' || $tipe === 'unit_peran' ? ($l['peran_id'] ?? null) : null,
+                'pengguna_id' => $tipe === 'pengguna' ? ($l['pengguna_id'] ?? null) : null,
+                'unit_organisasi_id' => $tipe === 'unit_peran' ? ($l['unit_organisasi_id'] ?? null) : null,
+
+                'harus_semua' => isset($l['harus_semua']) ? 1 : 0,
+
+                // 'kondisi' => [
+                //     'izin_id' => $l['izin_id'] ?? null,
+                // ],
+                'kondisi' => [
+                    'izin_id' => isset($l['izin_id']) ? (int) $l['izin_id'] : null,
+                ],
             ]);
+
+            $no++;
         }
-        // $langkahSorted = collect($validated['langkah'])
-        //     ->sortBy(fn($x) => (int) ($x['no_langkah'] ?? $x['urutan'] ?? 0))
-        //     ->values();
-
-        // $no = 1;
-        // foreach ($langkahSorted as $l) {
-
-        //     $tipe = $l['tipe_penyetuju'] ?? 'peran';
-
-        //     LangkahAlurPersetujuan::create([
-        //         'alur_persetujuan_id' => $alur->id,
-        //         'no_langkah' => $no,
-        //         'nama_langkah' => $l['nama_langkah'],
-
-        //         'tipe_penyetuju' => $tipe,
-        //         'peran_id' => $tipe === 'peran' || $tipe === 'unit_peran' ? ($l['peran_id'] ?? null) : null,
-        //         'pengguna_id' => $tipe === 'pengguna' ? ($l['pengguna_id'] ?? null) : null,
-        //         'unit_organisasi_id' => $tipe === 'unit_peran' ? ($l['unit_organisasi_id'] ?? null) : null,
-
-        //         'harus_semua' => isset($l['harus_semua']) ? 1 : 0,
-
-        //         'kondisi' => [
-        //             'izin_id' => $l['izin_id'] ?? null,
-        //         ],
-        //     ]);
-
-        //     $no++;
-        // }
 
         return redirect()->route('alur-persetujuan.index')->with('success', 'Alur persetujuan berhasil dibuat.');
     }
 
     public function show(AlurPersetujuan $alur_persetujuan)
     {
-        $alur_persetujuan->load('langkah.peran.izin');
-        return view('alur_persetujuan.show', ['data' => $alur_persetujuan]);
+        $alur_persetujuan->load('langkah.peran');
+
+        $izin = \App\Models\Izin::query()
+            ->orderBy('nama')
+            ->get();
+        return view('alur_persetujuan.show', ['data' => $alur_persetujuan, 'izin' =>$izin]);
     }
 
     public function edit(AlurPersetujuan $alur_persetujuan)
@@ -168,7 +164,7 @@ class AlurPersetujuanController extends Controller
         LangkahAlurPersetujuan::where('alur_persetujuan_id', $alur_persetujuan->id)->delete();
 
         $langkahSorted = collect($validated['langkah'])
-            ->sortBy(fn($x) => (int) $x['no_langkah'])
+            ->sortBy(fn($x) => (int) ($x['no_langkah'] ?? $x['urutan'] ?? 0))
             ->values();
 
         $no = 1;
@@ -178,9 +174,11 @@ class AlurPersetujuanController extends Controller
                 'no_langkah' => $no,
                 'nama_langkah' => $l['nama_langkah'],
                 'peran_id' => $l['peran_id'] ?? null,
-                'izin_id' => $l['izin_id'] ?? null,
                 'wajib_catatan' => isset($l['wajib_catatan']) ? 1 : 0,
                 'batas_waktu_hari' => $l['batas_waktu_hari'] ?? null,
+                'kondisi' => [
+                    'izin_id' => isset($l['izin_id']) ? (int) $l['izin_id'] : null,
+                ],
             ]);
             $no++;
         }

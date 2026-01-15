@@ -121,25 +121,23 @@
                                         </div>
                                     </td>
                                     <td class="px-4 py-2">{{ $l->peran->nama ?? '-' }}</td>
-                                    <td class="px-4 py-2">{{ $l->izin_id ?? '-' }}</td>
-                                    {{-- <td class="px-4 py-2">
+                                    {{-- <td class="px-4 py-2">{{ $l->izin_id ?? '-' }}</td> --}}
+                                    <td class="px-4 py-2">
                                         @php
-                                            $izinList = $l->peran?->izin ?? collect();
+                                            $izinId = data_get($l->kondisi, 'izin_id');
+                                            $izinObj = $izinId ? $izin->firstWhere('id', (int) $izinId) : null;
                                         @endphp
 
-                                        @if ($izinList->count())
-                                            <div class="flex flex-wrap gap-1">
-                                                @foreach ($izinList as $iz)
-                                                    <span
-                                                        class="px-2 py-0.5 rounded text-xs bg-blue-50 text-blue-700 border border-blue-100">
-                                                        {{ $iz->nama }}
-                                                    </span>
-                                                @endforeach
-                                            </div>
+                                        @if ($izinObj)
+                                            <span
+                                                class="px-2 py-0.5 rounded text-xs bg-blue-50 text-blue-700 border border-blue-100">
+                                                {{ $izinObj->nama }}
+                                            </span>
                                         @else
                                             <span class="text-gray-500 text-sm">-</span>
                                         @endif
-                                    </td> --}}
+                                    </td>
+
 
                                     <td class="px-4 py-2">
                                         @if ($l->harus_semua)

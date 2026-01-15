@@ -112,7 +112,8 @@
                     $noLangkah = $stepData['no_langkah'] ?? ($stepData->no_langkah ?? $i);
                     $namaLangkah = $stepData['nama_langkah'] ?? ($stepData->nama_langkah ?? "Persetujuan $i");
                     $peranId = $stepData['peran_id'] ?? ($stepData->peran_id ?? null);
-                    $izinId = $stepData['izin_id'] ?? ($stepData->izin_id ?? null);
+                    // $izinId = $stepData['izin_id'] ?? ($stepData->izin_id ?? null);
+                    $izinId = data_get($stepData?->kondisi, 'izin_id');
                     $wajibCatatan = $stepData['wajib_catatan'] ?? ($stepData->wajib_catatan ?? 0);
                     // $batasWaktuHari = $stepData['batas_waktu_hari'] ?? ($stepData->batas_waktu_hari ?? null);
                 @endphp
