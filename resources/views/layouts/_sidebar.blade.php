@@ -72,7 +72,7 @@
                 @endphp
 
                 @if ($route && $canAny($izin))
-                    <a class="flex items-center px-4 py-3  rounded-xl text-sm {{ $isActive($route) ? 'bg-active font-bold' : 'hover:bg-gray-100' }}"
+                    <a class="flex items-center px-4 py-3  rounded-xl text-sm {{ $isActive($route) ? 'bg-active font-semibold' : 'hover:bg-gray-100' }}"
                         href="{{ route($route) }}">
                         <div
                             class="w-7 {{ $isActive($route) ? 'svg-active [&_path]:fill-current ' : '' }} [&_svg]:h-full [&_path]:stroke-current">
