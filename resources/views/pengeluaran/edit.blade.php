@@ -14,7 +14,10 @@
                     Kembali
                 </a>
 
-                @if (auth()->user()->punyaIzin(['pengeluaran.kelola']) && !in_array($pengeluaran->status, ['dikeluarkan', 'dibatalkan'], true))
+                {{-- @if (auth()->user()->punyaIzin(['pengeluaran.kelola']) &&
+    !in_array($pengeluaran->status, ['dikeluarkan', 'dibatalkan'], true)) --}}
+                @if (auth()->user()->punyaIzin('pengeluaran.kelola') &&
+                        !in_array($pengeluaran->status, ['dikeluarkan', 'dibatalkan'], true))
                     <form method="post" action="{{ route('pengeluaran.posting', $pengeluaran->id) }}">
                         @csrf
                         <button
@@ -95,7 +98,8 @@
                             <option value="">-</option>
                             @foreach ($pengguna as $p)
                                 <option value="{{ $p->id }}" @selected(old('diserahkan_ke_pengguna_id', $pengeluaran->diserahkan_ke_pengguna_id) == $p->id)>{{ $p->nama_lengkap }}
-                                    ({{ $p->username }})</option>
+                                    ({{ $p->username }})
+                                </option>
                             @endforeach
                         </select>
                     </div>
@@ -156,20 +160,36 @@
             </div>
         </form>
     </div>
+    @php
+        $readOnly = in_array($pengeluaran->status, ['dikeluarkan', 'dibatalkan'], true);
 
+        $barangOptions = $barang
+            ->map(
+                fn($b) => [
+                    'id' => $b->id,
+                    'text' => $b->sku . ' — ' . $b->nama,
+                ],
+            )
+            ->values();
+
+        $existing = $pengeluaran->detail
+            ->map(
+                fn($d) => [
+                    'barang_id' => $d->barang_id,
+                    'lokasi_id' => $d->lokasi_id,
+                    'no_lot' => $d->no_lot,
+                    'tanggal_kedaluwarsa' => $d->tanggal_kedaluwarsa ? $d->tanggal_kedaluwarsa->format('Y-m-d') : null,
+                    'qty' => (string) $d->qty,
+                    'biaya_satuan' => (string) ($d->biaya_satuan ?? 0),
+                ],
+            )
+            ->values();
+    @endphp
     <script>
-        const readOnly = @json(in_array($pengeluaran->status, ['dikeluarkan', 'dibatalkan'], true));
-        const barangOptions = @json($barang->map(fn($b) => ['id' => $b->id, 'text' => $b->sku . ' — ' . $b->nama])->values());
+        const readOnly = @json($readOnly);
+        const barangOptions = @json($barangOptions);
         const lokasiByGudang = @json($lokasiByGudang);
-        const existing = @json(
-            $pengeluaran->detail->map(fn($d) => [
-                        'barang_id' => $d->barang_id,
-                        'lokasi_id' => $d->lokasi_id,
-                        'no_lot' => $d->no_lot,
-                        'tanggal_kedaluwarsa' => $d->tanggal_kedaluwarsa ? $d->tanggal_kedaluwarsa->format('Y-m-d') : null,
-                        'qty' => (string) $d->qty,
-                        'biaya_satuan' => (string) ($d->biaya_satuan ?? 0),
-                    ])->values());
+        const existing = @json($existing);
 
         const tbody = document.getElementById('detailBody');
         const gudangSelect = document.getElementById('gudang_id');
