@@ -52,7 +52,7 @@
                             </td>
 
                             <td class="p-3">
-                                @if ($row->status)
+                                @if ($row->status === 'aktif')
                                     <span class="px-2 py-1 rounded text-xs bg-green-50 text-green-700">
                                         Aktif
                                     </span>

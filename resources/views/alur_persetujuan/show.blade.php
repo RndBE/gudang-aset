@@ -54,6 +54,11 @@
                 </div>
 
                 <div>
+                    <div class="text-xs text-gray-500">Berlaku Untuk</div>
+                    <div>{{ $data->berlaku_untuk }}</div>
+                </div>
+
+                <div>
                     <div class="text-xs text-gray-500">Status</div>
                     @if ($data->status)
                         <span class="px-2 py-1 text-xs rounded bg-green-100 text-green-700">Aktif</span>
@@ -116,7 +121,26 @@
                                         </div>
                                     </td>
                                     <td class="px-4 py-2">{{ $l->peran->nama ?? '-' }}</td>
-                                    <td class="px-4 py-2">{{ $l->izin_khusus ?? '-' }}</td>
+                                    <td class="px-4 py-2">{{ $l->izin_id ?? '-' }}</td>
+                                    {{-- <td class="px-4 py-2">
+                                        @php
+                                            $izinList = $l->peran?->izin ?? collect();
+                                        @endphp
+
+                                        @if ($izinList->count())
+                                            <div class="flex flex-wrap gap-1">
+                                                @foreach ($izinList as $iz)
+                                                    <span
+                                                        class="px-2 py-0.5 rounded text-xs bg-blue-50 text-blue-700 border border-blue-100">
+                                                        {{ $iz->nama }}
+                                                    </span>
+                                                @endforeach
+                                            </div>
+                                        @else
+                                            <span class="text-gray-500 text-sm">-</span>
+                                        @endif
+                                    </td> --}}
+
                                     <td class="px-4 py-2">
                                         @if ($l->harus_semua)
                                             <span class="badge bg-warning text-dark">Harus Semua</span>
