@@ -182,6 +182,18 @@ Route::middleware('auth')->group(function () {
         ->only(['index', 'create', 'store', 'show', 'edit', 'update', 'destroy'])
         ->middleware('izin:penghapusan_aset.lihat|penghapusan_aset.kelola');
 
+    Route::post('penghapusan-aset/{penghapusan_aset}/setujui', [PenghapusanAsetController::class, 'setujui'])
+        ->name('penghapusan-aset.setujui')
+        ->middleware('izin:penghapusan_aset.kelola');
+
+    Route::post('penghapusan-aset/{penghapusan_aset}/eksekusi', [PenghapusanAsetController::class, 'eksekusi'])
+        ->name('penghapusan-aset.eksekusi')
+        ->middleware('izin:penghapusan_aset.kelola');
+
+    Route::post('penghapusan-aset/{penghapusan_aset}/batalkan', [PenghapusanAsetController::class, 'batalkan'])
+        ->name('penghapusan-aset.batalkan')
+        ->middleware('izin:penghapusan_aset.kelola');
+
     Route::resource('rencana-perawatan', RencanaPerawatanController::class)
         ->only(['index', 'create', 'store', 'show', 'edit', 'update', 'destroy'])
         ->middleware('izin:perawatan.lihat|perawatan.kelola');
@@ -269,7 +281,7 @@ Route::middleware('auth')->group(function () {
         ->middleware('izin:alur_persetujuan.lihat|alur_persetujuan.kelola');
 
     Route::resource('permintaan-persetujuan', PermintaanPersetujuanController::class)
-        ->only(['index', 'show'])
+        ->only(['index', 'create', 'store', 'show'])
         ->middleware('izin:permintaan_persetujuan.lihat|permintaan_persetujuan.kelola');
 
     Route::post('permintaan-persetujuan/{permintaan_persetujuan}/setujui', [PermintaanPersetujuanController::class, 'setujui'])
