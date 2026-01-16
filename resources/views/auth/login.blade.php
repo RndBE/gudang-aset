@@ -4,13 +4,18 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Login</title>
+    <title>AWASS - Login</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Sora:wght@100..800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Sonsie+One&display=swap" rel="stylesheet">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <style>
+    .font-sonsie {
+        font-family: "Sonsie One", serif;
+    }
+
     .btn-active {
         color: white;
         background-color: #C58D2A
@@ -23,27 +28,35 @@
     }
 </style>
 
-<body class="min-h-screen bg-white overflow-hidden">
+<body class="min-h-screen bg-[#F6F6F6] overflow-hidden">
     <div class="min-h-screen flex items-center">
-        <div class="w-full max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-12">
+        <div class="w-full bg-white max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-12 rounded-2xl shadow-lg">
 
             {{-- LEFT --}}
-            <div class="md:col-span-6 hidden md:block ">
-                <div class="h-full min-h-[95vh] bg-center bg-no-repeat bg-cover rounded-2xl flex items-end"
+            <div class="md:col-span-7 hidden md:block px-6 py-6 ">
+                <div class="h-full min-h-[50vh] bg-center bg-no-repeat bg-cover rounded-xl flex items-end"
                     style="background-image: url('{{ Vite::asset('resources/icon/hero_login.png') }}');">
                     <div class="px-8 mb-8">
                         <div class="text-3xl font-bold text-white">Advance Warehouse Smart System</div>
-                        <div class="text-md font-bold text-white">Kontrol Stok Lebih Rapi, Operasional Lebih Pasti</div>
-                        <div class="text-md text-white mt-4">Sistem gudang yang membantu menjaga ketersediaan barang.
+                        <div class="text-md font-semibold text-white">Kontrol Stok Lebih Rapi, Operasional Lebih Pasti
+                        </div>
+                        <div class="text-md text-white mt-8">Sistem gudang yang membantu menjaga ketersediaan barang.
                             Minim kesalahan, maksimal efisiensi, setiap hari.</div>
                     </div>
                 </div>
             </div>
 
             {{-- RIGHT --}}
-            <div class="md:col-span-6 flex items-center justify-center p-6">
+            <div class="md:col-span-5 flex items-center justify-center p-6">
                 <div class="w-full max-w-md bg-white p-6 ">
-                    <div class="text-2xl font-bold mb-2 text-center">Masuk ke Akun </div>
+
+                    <div
+                        class="text-7xl font-sonsie text-center bg-linear-to-r from-[#FFD07D] to-[#C58D2A] bg-clip-text text-transparent">
+                        awass</div>
+                    <div class="text-md text-[#B27F26] font-bold mb-6 text-center uppercase">Advance Warehouse Smart
+                        System
+                    </div>
+                    <div class="text-xl font-bold mb-1 text-center">Masuk ke Akun </div>
                     <div class="text-sm text-center mb-6">Masukkan detail akun Anda untuk melanjutkan</div>
                     @if ($errors->any())
                         <div class="mb-4 text-sm text-red-600">
@@ -100,9 +113,31 @@
                                 </svg>
                             </button>
                         </div>
-                        <div class="mt-10">
-                            <div class="text-sm fw-semibold text-end mb-2 text-[#C58D2A]">Lupa Kata Sandi ?</div>
-                            <button class="w-full btn-active rounded-lg px-3 py-2 hover:opacity-90">
+                        <div class="mt-7">
+                            <div class="flex justify-between  mb-3">
+                                <label class="flex items-center gap-3 cursor-pointer select-none">
+                                    <input type="checkbox" class="peer sr-only">
+
+                                    <div
+                                        class="h-4 w-4 rounded border border-gray-300 bg-white
+flex items-center justify-center
+peer-checked:bg-[#C58D2A] peer-checked:border-[#C58D2A]
+[&>svg]:hidden peer-checked:[&>svg]:block
+transition ">
+                                        <svg class="h-3.5 w-3.5 text-white" viewBox="0 0 20 20" fill="currentColor">
+                                            <path fill-rule="evenodd"
+                                                d="M16.704 5.29a1 1 0 010 1.42l-7.5 7.5a1 1 0 01-1.42 0l-3.5-3.5a1 1 0 011.42-1.42l2.79 2.79 6.79-6.79a1 1 0 011.42 0z"
+                                                clip-rule="evenodd" />
+                                        </svg>
+                                    </div>
+
+                                    <span class="text-sm text-gray-700 peer-checked:text-gray-900">Ingat saya</span>
+                                </label>
+
+
+                                <div class="text-sm fw-semibold text-end text-[#C58D2A]">Lupa Kata Sandi ?</div>
+                            </div>
+                            <button class="cursor-pointer w-full btn-active rounded-lg px-3 py-2 hover:opacity-90">
                                 Masuk
                             </button>
                         </div>

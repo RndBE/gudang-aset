@@ -1,15 +1,14 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="flex items-start justify-between gap-4 mb-6">
+    <div class="flex items-center justify-between gap-4 mb-4">
         <div>
-            <h1 class="text-2xl font-semibold">Pesanan Pembelian (PO)</h1>
-            <p class="text-sm text-gray-600 mt-1">Kelola PO dari draft sampai disetujui dan siap diterima.</p>
+            <h1 class="text-xl font-semibold">Pesanan Pembelian (PO)</h1>
         </div>
 
         @if (auth()->user()->punyaIzin('pesanan_pembelian.kelola'))
             <a href="{{ route('pesanan-pembelian.create') }}"
-                class="inline-flex items-center px-4 py-2 rounded-lg bg-white border hover:bg-gray-50">
+                class="inline-flex items-center px-6 text-sm py-3 rounded-lg btn-active hover:bg-gray-50">
                 Buat PO
             </a>
         @endif
@@ -32,11 +31,12 @@
         </div>
     @endif
 
-    <form class="bg-white border rounded-xl p-4 mb-4" method="get" action="{{ route('pesanan-pembelian.index') }}">
+    <form class="bg-white border border-gray-300 rounded-lg p-4 mb-4" method="get"
+        action="{{ route('pesanan-pembelian.index') }}">
         <div class="grid grid-cols-1 md:grid-cols-12 gap-3">
             <div class="md:col-span-3">
                 <label class="text-sm text-gray-700 block mb-1">Status</label>
-                <select name="status" class="w-full border rounded-lg px-3 py-2">
+                <select name="status" class="text-sm  w-full border border-gray-300 rounded-lg px-3 py-2">
                     <option value="">Semua</option>
                     @foreach (['draft', 'diajukan', 'disetujui', 'diterima', 'diterima_sebagian', 'dibatalkan'] as $st)
                         <option value="{{ $st }}" @selected(request('status') === $st)>{{ $st }}</option>
@@ -46,23 +46,24 @@
 
             <div class="md:col-span-7">
                 <label class="text-sm text-gray-700 block mb-1">Kata kunci</label>
-                <input name="keyword" value="{{ request('keyword') }}" class="w-full border rounded-lg px-3 py-2"
-                    placeholder="Nomor PO / catatan">
+                <input name="keyword" value="{{ request('keyword') }}"
+                    class="text-sm w-full border border-gray-300 rounded-lg px-3 py-2" placeholder="Nomor PO / catatan">
             </div>
 
             <div class="md:col-span-2 flex items-end gap-2">
-                <button class="w-full px-4 py-2 rounded-lg bg-white border hover:bg-gray-50">Filter</button>
+                <button
+                    class="text-sm w-full px-4 py-2 rounded-lg btn-outline-active border hover:bg-gray-50">Filter</button>
                 <a href="{{ route('pesanan-pembelian.index') }}"
-                    class="w-full px-4 py-2 rounded-lg bg-white border hover:bg-gray-50 text-center">Reset</a>
+                    class="text-sm w-full px-4 py-2 rounded-lg btn-active hover:bg-gray-50 text-center">Reset</a>
             </div>
         </div>
     </form>
 
-    <div class="bg-white border rounded-xl overflow-hidden">
+    <div class="bg-white border rounded-lg border-gray-300 overflow-hidden">
         <div class="overflow-x-auto">
             <table class="min-w-full text-sm">
                 <thead class="bg-gray-50">
-                    <tr class="border-b">
+                    <tr class="border-b border-gray-300">
                         <th class="text-left px-4 py-3">Nomor PO</th>
                         <th class="text-left px-4 py-3">Tanggal</th>
                         <th class="text-left px-4 py-3">Pemasok</th>
@@ -91,7 +92,7 @@
                                 $badge = 'bg-red-100 text-red-700';
                             }
                         @endphp
-                        <tr class="border-b hover:bg-gray-50">
+                        <tr class="border-b border-gray-300 hover:bg-gray-50">
                             <td class="px-4 py-3 font-medium text-gray-900">
                                 {{ $r->nomor_po }}
                             </td>

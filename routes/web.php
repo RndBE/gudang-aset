@@ -130,7 +130,10 @@ Route::middleware('auth')->group(function () {
         ->only(['create', 'store', 'edit', 'update'])
         ->middleware('izin:barang.kelola');
 
+    Route::get('/barang/import-ocr', [BarangController::class, 'importOcr'])->name('barang.import_ocr');
+    Route::post('/barang/import-ocr/scan', [BarangController::class, 'scanOcr'])->name('barang.import_ocr.scan');
 
+    Route::post('/barang/import-ocr', [BarangController::class, 'importOcrStore'])->name('barang.import_ocr.store');
     Route::resource('pemasok', PemasokController::class)
         ->only(['index'])
         ->middleware('izin:pemasok.lihat');

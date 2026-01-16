@@ -119,22 +119,45 @@
                                     $route = $ch['route'] ?? '';
                                     $logo = $ch['logo'] ?? '';
                                     $childLabel = $ch['label'] ?? '-';
-                                    $iconPath = resource_path('icon/' . $logo . '.svg');
+
+                                    $is_active = $route && $isActive($route);
+
+                                    $svgPath = resource_path('icon/' . $logo . '.svg');
+                                    $pngPath = resource_path('icon/' . $logo . '_solid.png'); // icon active (png)
+
+                                    $pngUrl = Vite::asset('resources/icon/' . $logo . '_solid.png');
                                 @endphp
 
                                 @if ($route)
                                     <a href="{{ route($route) }}"
-                                        class="flex items-center px-4 py-3 rounded-xl text-sm {{ $isActive($route) ? 'bg-active font-bold' : 'hover:bg-gray-100' }}">
+                                        class="flex items-center px-4 py-3 rounded-xl text-sm {{ $is_active ? 'bg-active font-bold' : 'hover:bg-gray-100' }}">
+
                                         <div
-                                            class="w-6 shrink-0 {{ $isActive($route) ? 'svg-active' : '' }} [&_svg]:h-full [&_path]:stroke-current">
-                                            @if ($logo && file_exists($iconPath))
-                                                {!! file_get_contents($iconPath) !!}
+                                            class="w-5 h-5 me-1 shrink-0 flex items-center justify-center
+                {{ $is_active ? '' : 'svg-active' }}
+                [&_svg]:w-5 [&_svg]:h-5 [&_svg]:block
+                [&_svg]:overflow-visible
+                [&_path]:stroke-current">
+
+                                            @if ($is_active)
+                                                {{-- ACTIVE = PNG --}}
+                                                @if ($logo && file_exists($pngPath))
+                                                    <img src="{{ $pngUrl }}" class="w-5 h-5 object-contain"
+                                                        alt="">
+                                                @endif
+                                            @else
+                                                {{-- NOT ACTIVE = SVG --}}
+                                                @if ($logo && file_exists($svgPath))
+                                                    {!! file_get_contents($svgPath) !!}
+                                                @endif
                                             @endif
                                         </div>
+
                                         <span class="ml-2">{{ $childLabel }}</span>
                                     </a>
                                 @endif
                             @endforeach
+
                         </div>
 
                         <div class="border-b border-gray-200 my-2 mx-2"></div>

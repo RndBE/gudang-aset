@@ -7,6 +7,10 @@ use App\Models\Barang;
 use App\Models\KategoriBarang;
 use App\Models\SatuanBarang;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Http;
+use GuzzleHttp\Promise\PromiseInterface;
 
 class BarangController extends Controller
 {
@@ -105,7 +109,7 @@ class BarangController extends Controller
         Barang::create($payload);
 
         return redirect()->route('barang.index')
-        ->with('success','Barang Berhasil Ditambahkan');
+            ->with('success', 'Barang Berhasil Ditambahkan');
     }
 
     public function edit(Barang $barang)
@@ -193,6 +197,96 @@ class BarangController extends Controller
         $barang->update($payload);
 
         return redirect()->route('barang.index')
-        ->with('success', 'Barang Berhasil diubah');
+            ->with('success', 'Barang Berhasil diubah');
+    }
+    public function importOcr()
+    {
+        $instansiId = Auth::user()->instansi_id;
+
+        $kategori = KategoriBarang::where('instansi_id', $instansiId)->orderBy('nama')->get(['id', 'nama']);
+        $satuan = SatuanBarang::orderBy('nama')->get(['id', 'nama']);
+
+        return view('barang.import_ocr', compact('kategori', 'satuan'));
+    }
+
+    public function importOcrStore(Request $request)
+    {
+        $instansiId = Auth::user()->instansi_id;
+
+        $payload = $request->validate([
+            'items' => ['required', 'array', 'min:1'],
+            'items.*.nama' => ['required', 'string', 'max:255'],
+            'items.*.kategori_id' => ['required', 'integer', 'exists:kategori_barang,id'],
+            'items.*.satuan_id' => ['required', 'integer', 'exists:satuan_barang,id'],
+        ]);
+
+        $items = $payload['items'];
+
+        $created = 0;
+
+        DB::transaction(function () use ($items, $instansiId, &$created) {
+            foreach ($items as $row) {
+                $nama = trim((string) $row['nama']);
+                if ($nama === '') continue;
+
+                $sku = $this->generateUniqueSkuForInstansi($instansiId);
+
+                Barang::create([
+                    'instansi_id' => $instansiId,
+                    'kategori_id' => (int) $row['kategori_id'],
+                    'satuan_id' => (int) $row['satuan_id'],
+                    'sku' => $sku,
+                    'nama' => $nama,
+                ]);
+
+                $created++;
+            }
+        });
+
+        return redirect()->route('barang.index')->with('success', "Berhasil import {$created} barang.");
+    }
+
+    private function generateUniqueSkuForInstansi(int $instansiId): string
+    {
+        do {
+            $sku = 'OCR-' . strtoupper(Str::random(10));
+        } while (
+            Barang::where('instansi_id', $instansiId)->where('sku', $sku)->exists()
+        );
+
+        return $sku;
+    }
+    public function scanOcr(Request $request)
+    {
+        $request->validate([
+            'image' => ['required', 'image', 'max:10240'],
+        ]);
+
+        $url = config('services.ocr_barang.url');
+
+        if (!$url) {
+            return response()->json(['message' => 'OCR endpoint belum dikonfigurasi.'], 422);
+        }
+
+        $file = $request->file('image');
+
+        $resp = Http::timeout(120)
+            ->acceptJson()
+            ->attach('image', file_get_contents($file->getRealPath()), $file->getClientOriginalName())
+            ->post($url);
+
+        if ($resp instanceof PromiseInterface) {
+            $resp = $resp->wait();
+        }
+
+        if ($resp->failed()) {
+            return response()->json([
+                'message' => 'OCR gagal.',
+                'status' => $resp->status(),
+                'body' => $resp->json() ?? $resp->body(),
+            ], 422);
+        }
+
+        return response()->json($resp->json() ?? []);
     }
 }

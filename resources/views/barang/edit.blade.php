@@ -10,7 +10,7 @@
     </div>
 
     @if ($errors->any())
-        <div class="mb-4 p-3 rounded bg-red-50 text-red-700 text-sm">
+        <div class="mb-4 p-3 rounded-lg bg-red-50 text-red-700 text-sm">
             <ul class="list-disc pl-5">
                 @foreach ($errors->all() as $e)
                     <li>{{ $e }}</li>
@@ -19,14 +19,16 @@
         </div>
     @endif
 
-    <form method="post" action="{{ route('barang.update', $barang->id) }}" class="bg-white border rounded p-4 space-y-4">
+    <form method="post" action="{{ route('barang.update', $barang->id) }}"
+        class="bg-white border rounded-lg text-sm border-gray-300     p-4 space-y-4">
         @csrf
         @method('PUT')
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
                 <label class="text-sm font-medium">Kategori</label>
-                <select name="kategori_id" class="mt-1 w-full border rounded px-3 py-2" required>
+                <select name="kategori_id" class="mt-1 w-full border rounded-lg text-sm border-gray-300  px-3 py-2"
+                    required>
                     <option value="">Pilih</option>
                     @foreach ($kategori as $k)
                         <option value="{{ $k->id }}"
@@ -39,7 +41,8 @@
 
             <div>
                 <label class="text-sm font-medium">Satuan</label>
-                <select name="satuan_id" class="mt-1 w-full border rounded px-3 py-2" required>
+                <select name="satuan_id" class="mt-1 w-full border rounded-lg text-sm border-gray-300    px-3 py-2"
+                    required>
                     <option value="">Pilih</option>
                     @foreach ($satuan as $s)
                         <option value="{{ $s->id }}"
@@ -54,13 +57,13 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
                 <label class="text-sm font-medium">SKU</label>
-                <input name="sku" value="{{ old('sku', $barang->sku) }}" class="mt-1 w-full border rounded px-3 py-2"
-                    maxlength="120" required>
+                <input name="sku" value="{{ old('sku', $barang->sku) }}"
+                    class="mt-1 w-full border rounded-lg text-sm border-gray-300     px-3 py-2" maxlength="120" required>
             </div>
 
             <div>
                 <label class="text-sm font-medium">Status</label>
-                <select name="status" class="mt-1 w-full border rounded px-3 py-2" required>
+                <select name="status" class="mt-1 w-full border rounded-lg text-sm border-gray-300   px-3 py-2" required>
                     <option value="aktif" {{ old('status', $barang->status) === 'aktif' ? 'selected' : '' }}>aktif
                     </option>
                     <option value="nonaktif" {{ old('status', $barang->status) === 'nonaktif' ? 'selected' : '' }}>nonaktif
@@ -71,28 +74,29 @@
 
         <div>
             <label class="text-sm font-medium">Nama</label>
-            <input name="nama" value="{{ old('nama', $barang->nama) }}" class="mt-1 w-full border rounded px-3 py-2"
-                maxlength="255" required>
+            <input name="nama" value="{{ old('nama', $barang->nama) }}"
+                class="mt-1 w-full border rounded-lg text-sm border-gray-300     px-3 py-2" maxlength="255" required>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
                 <label class="text-sm font-medium">Merek (opsional)</label>
                 <input name="merek" value="{{ old('merek', $barang->merek) }}"
-                    class="mt-1 w-full border rounded px-3 py-2" maxlength="160">
+                    class="mt-1 w-full border rounded-lg text-sm border-gray-300     px-3 py-2" maxlength="160">
             </div>
 
             <div>
                 <label class="text-sm font-medium">Model (opsional)</label>
                 <input name="model" value="{{ old('model', $barang->model) }}"
-                    class="mt-1 w-full border rounded px-3 py-2" maxlength="160">
+                    class="mt-1 w-full border rounded-lg text-sm border-gray-300     px-3 py-2" maxlength="160">
             </div>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
                 <label class="text-sm font-medium">Tipe Barang</label>
-                <select name="tipe_barang" class="mt-1 w-full border rounded px-3 py-2" required>
+                <select name="tipe_barang" class="mt-1 w-full border rounded-lg text-sm border-gray-300  px-3 py-2"
+                    required>
                     @foreach (['habis_pakai', 'aset', 'keduanya'] as $t)
                         <option value="{{ $t }}"
                             {{ old('tipe_barang', $barang->tipe_barang) === $t ? 'selected' : '' }}>
@@ -104,7 +108,7 @@
 
             <div>
                 <label class="text-sm font-medium">Metode Pelacakan</label>
-                <select name="metode_pelacakan" class="mt-1 w-full border rounded px-3 py-2" required>
+                <select name="metode_pelacakan" class="mt-1 w-full border rounded-lg px-3 py-2" required>
                     @foreach (['tanpa', 'lot', 'kedaluwarsa', 'serial'] as $m)
                         <option value="{{ $m }}"
                             {{ old('metode_pelacakan', $barang->metode_pelacakan) === $m ? 'selected' : '' }}>
@@ -169,8 +173,7 @@
 
         <div>
             <label class="text-sm font-medium">Spesifikasi</label>
-            <textarea name="spesifikasi_json" class="mt-1 w-full border rounded px-3 py-2" rows="6"
-                >{{ $spJson }}</textarea>
+            <textarea name="spesifikasi_json" class="mt-1 w-full border rounded px-3 py-2" rows="6">{{ $spJson }}</textarea>
 
             {{-- <div class="text-xs text-gray-500 mt-1">
                 Bisa input kalimat biasa atau JSON valid.
