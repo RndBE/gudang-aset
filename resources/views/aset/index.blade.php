@@ -12,6 +12,13 @@
         <div class="mb-3 p-3 rounded bg-green-50 text-green-700 text-sm">
             {{ session('success') }}
         </div>
+
+        <script>
+            setTimeout(() => {
+                const el = document.getElementById('alert-success');
+                if (el) el.remove();
+            }, 3000);
+        </script>
     @endif
 
     <form class="flex gap-2 mb-4">
@@ -50,7 +57,7 @@
                 @forelse($data as $row)
                     <tr class="border-t">
                         <td class="p-3 font-medium">{{ $row->barang?->nama ?? '-' }}</td>
-                        <td class="p-3 font-medium">{{ optional($row->tanggal_beli)->locale('id')->translatedFormat('j F Y') }}</td>
+                        <td class="p-3 font-medium">{{ $row->dibuat_pada?->translatedFormat('d F Y, H:i') ?? '-' }}</td>
                         <td class="p-3 font-medium">{{ $row->tag_aset }}</td>
                         <td class="p-3">{{ $row->no_serial ?? '-' }}</td>
                         <td class="p-3">{{ $row->imei ?? '-' }}</td>

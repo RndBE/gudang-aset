@@ -16,7 +16,7 @@
             </div>
             <div>
                 <div class="text-xs text-gray-500">Penerima</div>
-                <div class="font-medium">{{ $aset->penerimaan?->diterima_oleh ?? '-' }}</div>
+                <div class="font-medium">{{ $aset->penerimaan?->diterimaOleh?->nama_lengkap ?? '-' }}</div>
             </div>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -28,9 +28,19 @@
             <div>
                 <div class="text-xs text-gray-500">Status</div>
                 <div class="font-medium">
+                    @php
+                        $warna = match ($aset->status_siklus) {
+                            'tersedia' => 'bg-green-100 text-green-800',
+                            'dipinjam' => 'bg-sky-100 text-sky-800',
+                            'ditugaskan' => 'bg-lime-100 text-lime-800',
+                            'disimpan' => 'bg-blue-100 text-blue-800',
+                            'perawatan' => 'bg-yellow-100 text-yellow-800',
+                            'dihapus' => 'bg-red-100 text-red-800',
+                            default => 'bg-gray-100 text-gray-700',
+                        };
+                    @endphp
                     <span
-                        class="px-2 py-1 rounded text-xs
-                {{ $aset->status_siklus === 'tersedia' ? 'bg-green-50 text-green-700' : 'bg-gray-100 text-gray-700' }}">
+                        class="px-2 py-1 rounded text-xs {{ $warna }}">
                         {{ $aset->status_siklus }}
                     </span>
                 </div>
@@ -50,10 +60,10 @@
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
+            {{-- <div>
                 <div class="text-xs text-gray-500">Nomor Polisi</div>
                 <div>{{ $aset->no_polisi ?? '-' }}</div>
-            </div>
+            </div> --}}
             <div>
                 <div class="text-xs text-gray-500">Biaya</div>
                 <div class="font-medium">
@@ -65,16 +75,16 @@
                     @endif
                 </div>
             </div>
+            <div>
+                <div class="text-xs text-gray-500">Tempat disimpan</div>
+                <div class="font-medium">{{ $aset->gudang?->nama ?? '-' }}, {{ $aset->gudang?->alamat }}</div>
+            </div>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
                 <div class="text-xs text-gray-500">Keterangan</div>
                 <div class="font-medium">{{ $aset->status_kondisi ?? '-' }}</div>
-            </div>
-            <div>
-                <div class="text-xs text-gray-500">Tempat disimpan</div>
-                <div class="font-medium">{{ $aset->gudang?->nama ?? '-' }}, {{ $aset->gudang?->alamat }}</div>
             </div>
         </div>
 
