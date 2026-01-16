@@ -41,7 +41,7 @@ class AsetController extends Controller
      */
     public function create()
     {
-        $barang = Barang::query()->orderBy('nama')->get();
+        $barang = Barang::query()->where('tipe_barang','aset')->orderBy('nama')->get();
         $gudang = Gudang::query()->orderBy('nama')->get();
         $lokasi = LokasiGudang::query()->orderBy('nama')->get();
         return view('aset.create', compact('barang','gudang', 'lokasi'));
