@@ -232,13 +232,13 @@ class GudangAsetSeeder extends Seeder
 
             $grant = [
                 'superadmin' => array_keys($izinMap),
-                'kepala_unit' => ['master.lihat', 'stok.lihat', 'permintaan.setujui', 'approval.proses', 'notif.lihat', 'aset.lihat'],
-                'kepala_gudang' => ['master.lihat', 'stok.lihat', 'pesanan_pembelian.kelola', 'permintaan.setujui', 'stok.posting', 'qc.proses', 'opname.kelola', 'audit.lihat', 'notif.lihat', 'aset.lihat', 'aset.kelola', 'aset.hapus', 'perawatan.kelola', 'approval.proses'],
-                'petugas_gudang' => ['master.lihat', 'stok.lihat', 'pesanan_pembelian.lihat', 'pesanan_pembelian.kelola', 'penerimaan.buat', 'pengeluaran.buat', 'qc.proses', 'stok.posting', 'opname.kelola', 'notif.lihat', 'aset.lihat', 'aset.kelola', 'approval.proses'],
+                'kepala_unit' => ['master.lihat', 'stok.lihat', 'permintaan.setujui', 'approval.proses', 'notif.lihat', 'aset.lihat','permintaan_persetujuan.kelola'],
+                'kepala_gudang' => ['master.lihat', 'stok.lihat', 'pesanan_pembelian.kelola', 'permintaan.setujui', 'stok.posting', 'qc.proses', 'opname.kelola', 'audit.lihat', 'notif.lihat', 'aset.lihat', 'aset.kelola', 'aset.hapus', 'perawatan.kelola', 'approval.proses', 'permintaan_persetujuan.kelola'],
+                'petugas_gudang' => ['master.lihat', 'stok.lihat', 'pesanan_pembelian.lihat', 'pesanan_pembelian.kelola', 'penerimaan.buat', 'pengeluaran.buat', 'qc.proses', 'stok.posting', 'opname.kelola', 'notif.lihat', 'aset.lihat', 'aset.kelola', 'approval.proses', 'permintaan_persetujuan.kelola'],
                 'pemohon' => ['permintaan.buat', 'permintaan.ajukan', 'stok.lihat', 'aset.lihat', 'notif.lihat'],
-                'pejabat_pengadaan' => ['pesanan_pembelian.kelola', 'approval.proses', 'audit.lihat', 'notif.lihat'],
-                'keuangan' => ['pesanan_pembelian.kelola', 'aset.hapus', 'approval.proses', 'audit.lihat', 'notif.lihat'],
-                'auditor_aset' => ['audit.lihat', 'aset.lihat', 'aset.hapus', 'approval.proses', 'notif.lihat'],
+                'pejabat_pengadaan' => ['pesanan_pembelian.kelola', 'approval.proses', 'audit.lihat', 'notif.lihat', 'permintaan_persetujuan.kelola'],
+                'keuangan' => ['pesanan_pembelian.kelola', 'aset.hapus', 'approval.proses', 'audit.lihat', 'notif.lihat', 'permintaan_persetujuan.kelola'],
+                'auditor_aset' => ['audit.lihat', 'aset.lihat', 'aset.hapus', 'approval.proses', 'notif.lihat','permintaan_persetujuan.kelola'],
                 'teknisi' => ['perawatan.kelola', 'aset.lihat', 'notif.lihat'],
             ];
 
