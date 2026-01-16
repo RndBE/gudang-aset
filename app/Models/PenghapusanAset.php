@@ -37,12 +37,18 @@ class PenghapusanAset extends Model
         return $this->belongsTo(Pengguna::class, 'disetujui_oleh');
     }
 
-    public function dibuat()
+    public function dibuat_oleh()
     {
         return $this->belongsTo(Pengguna::class, 'dibuat_oleh');
     }
     public function instansi()
     {
         return $this->belongsTo(Instansi::class, 'instansi_id');
+    }
+
+    public function permintaanPersetujuan()
+    {
+        return $this->hasOne(\App\Models\PermintaanPersetujuan::class, 'id_entitas', 'id')
+            ->where('tipe_entitas', 'penghapusan_aset');
     }
 }

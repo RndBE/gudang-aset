@@ -36,6 +36,20 @@
                         </option>
                     @endforeach
                 </select>
+
+
+                {{-- <div>
+                    <label class="text-sm font-medium">Instansi</label>
+                    <select name="instansi_id" class="mt-1 w-full border rounded px-3 py-2">
+                        <option value="">Pilih instansi</option>
+                        @foreach ($instansi as $a)
+                            <option value="{{ $a->id }}" @selected(old('instansi_id') == $a->id)>
+                                {{ $a->tag_aset }} — {{ $a->no_serial ?? '-' }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div> --}}
+
             </div>
 
             <!-- Tanggal & Nomor Dok -->
@@ -50,6 +64,31 @@
                     <label class="text-sm font-medium">Nomor Dokumen Serah Terima</label>
                     <input name="nomor_dok_serah_terima" value="{{ old('nomor_dok_serah_terima', $nomor) }}"
                         class="mt-1 w-full border rounded px-3 py-2">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label class="text-sm font-medium">Orang ditugaskan</label>
+                    <select name="ditugaskan_ke_pengguna_id" class="mt-1 w-full border rounded px-3 py-2">
+                        <option value="">Pilih Orang</option>
+                        @foreach ($pengguna as $p)
+                            <option value="{{ $p->id }}" @selected(old('ditugaskan_ke_pengguna_id') == $p->id)>
+                                {{ $p->nama_lengkap }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+                <div>
+                    <label class="text-sm font-medium">Unit ditugaskan</label>
+                    <select name="ditugaskan_ke_unit_id" class="mt-1 w-full border rounded px-3 py-2">
+                        <option value="">Pilih Unit</option>
+                        @foreach ($unit as $u)
+                            <option value="{{ $u->id }}" @selected(old('ditugaskan_ke_unit_id') == $u->id)>
+                                {{ $u->nama }}
+                            </option>
+                        @endforeach
+                    </select>
                 </div>
             </div>
 

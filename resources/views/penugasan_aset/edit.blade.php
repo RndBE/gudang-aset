@@ -106,6 +106,15 @@
                         <div class="font-semibold mb-3">Informasi Aset</div>
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                            {{-- <div>
+                                <label class="text-sm font-medium">Aset yang ditugaskan</label>
+                                <div>
+                                    <input type="text" class=" px-3 py-2 text-sm bg-gray-50"
+                                        value="{{ $data->aset?->tag_aset }} | {{ $data->aset?->no_serial ?? '-' }}"
+                                        readonly>
+                                    <input type="hidden" name="aset_id" value="{{ $data->aset_id }}">
+                                </div>
+                            </div> --}}
                             <div>
                                 <div class="text-gray-500">Tag Aset</div>
                                 <div class="font-medium">{{ $data->aset->tag_aset ?? '-' }}</div>
@@ -121,16 +130,18 @@
                                 <div class="font-medium">{{ $data->aset->imei ?? '-' }}</div>
                             </div>
 
-                            <div>
+                            {{-- <div>
                                 <div class="text-gray-500">No Polisi</div>
                                 <div class="font-medium">{{ $data->aset->no_polisi ?? '-' }}</div>
-                            </div>
+                            </div> --}}
                         </div>
                     </div>
 
                     <form method="POST" action="{{ route('penugasan-aset.update', $data->id) }}" class="space-y-5">
                         @csrf
                         @method('PUT')
+
+                        <input type="hidden" name="aset_id" value="{{ old('aset_id', $data->aset_id) }}">
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 

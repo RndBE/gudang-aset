@@ -16,7 +16,7 @@
             <div class="p-3 rounded bg-green-50 text-green-700 text-sm">
                 {{ session('success') }}
             </div>
-            
+
             <script>
                 setTimeout(() => {
                     const el = document.getElementById('alert-success');
@@ -109,49 +109,58 @@
                             </td>
 
                             <td class="p-3">
-                                {{-- @php
+                                @php
                                     $statusTampil = $row->status;
-
-                                    if ($row->status === 'aktif' && $row->jatuh_tempo && now()->gt($row->jatuh_tempo)) {
-                                        $statusTampil = 'terlambat';
+                                    $pp = $row->permintaanPersetujuan; // relasi hasOne
+                                    $apprStatus = $pp?->status; // menunggu/disetujui/ditolak/null
+                                    // kalau ada permintaan persetujuan yg masih menunggu → override status tampilan
+                                    if ($apprStatus === 'menunggu') {
+                                        $statusTampil = 'menunggu persetujuan';
                                     }
-
+                                    // default
                                     $color = 'bg-gray-100 text-gray-700';
-                                    if ($statusTampil === 'aktif') {
+
+                                    if ($statusTampil === 'menunggu persetujuan') {
+                                        $color = 'bg-yellow-100 text-yellow-800';
+                                    } elseif ($statusTampil === 'aktif') {
                                         $color = 'bg-blue-100 text-blue-700';
-                                    }
-                                    if ($statusTampil === 'terlambat') {
+                                    } elseif ($statusTampil === 'terlambat') {
                                         $color = 'bg-red-100 text-red-700';
-                                    }
-                                    if ($statusTampil === 'dikembalikan') {
+                                    } elseif ($statusTampil === 'dikembalikan') {
                                         $color = 'bg-green-100 text-green-700';
-                                    }
-                                    if ($statusTampil === 'dibatalkan') {
+                                    } else if ($statusTampil === 'dibatalkan') {
                                         $color = 'bg-gray-200 text-gray-600';
                                     }
+
+                                    $showLink = $pp && $apprStatus === 'menunggu'; // ✅ link hanya kalau masih menunggu
                                 @endphp
 
-                                <span class="px-2 py-1 text-xs rounded {{ $color }}">
+                                <span class="px-2 py-1 rounded text-xs font-semibold {{ $color }}">
                                     {{ ucfirst($statusTampil) }}
-                                </span> --}}
-                                @php
-                                    $color = 'bg-gray-100 text-gray-700';
-                                    if ($row->status == 'aktif') {
-                                        $color = 'bg-blue-100 text-blue-700';
-                                    }
-                                    if ($row->status == 'terlambat') {
-                                        $color = 'bg-red-100 text-red-700';
-                                    }
-                                    if ($row->status == 'dikembalikan') {
-                                        $color = 'bg-green-100 text-green-700';
-                                    }
-                                    if ($row->status == 'dibatalkan') {
-                                        $color = 'bg-gray-200 text-gray-600';
-                                    }
+                                </span>
+                                @if ($showLink)
+                                    <a href="{{ route('permintaan-persetujuan.show', $pp->id) }}"
+                                        class="ml-2 text-xs text-blue-600 hover:underline">
+                                        Lihat
+                                    </a>
+                                @endif
+                                {{-- $color = 'bg-gray-100 text-gray-700';
+                                if ($row->status == 'aktif') {
+                                $color = 'bg-blue-100 text-blue-700';
+                                }
+                                if ($row->status == 'terlambat') {
+                                $color = 'bg-red-100 text-red-700';
+                                }
+                                if ($row->status == 'dikembalikan') {
+                                $color = 'bg-green-100 text-green-700';
+                                }
+                                if ($row->status == 'dibatalkan') {
+                                $color = 'bg-gray-200 text-gray-600';
+                                }
                                 @endphp
                                 <span class="px-2 py-1 text-xs rounded {{ $color }}">
                                     {{ ucfirst($row->status) }}
-                                </span>
+                                </span>  --}}
                             </td>
 
                             <td class="p-3">

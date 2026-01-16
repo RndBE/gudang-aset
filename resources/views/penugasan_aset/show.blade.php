@@ -33,18 +33,29 @@
                     @php
                         $statusTampil = $data->status;
 
-                        $badge = 'bg-gray-100 text-gray-700';
-                        if ($statusTampil === 'sedang ditugaskan') {
-                            $badge = 'bg-blue-100 text-blue-700';
+                        $pp = $data->permintaanPersetujuan; // relasi hasOne
+                        $apprStatus = $pp?->status; // menunggu/disetujui/ditolak/null
+
+                        // kalau ada permintaan persetujuan yg masih menunggu → override status tampilan
+                        if ($apprStatus === 'menunggu') {
+                            $statusTampil = 'menunggu persetujuan';
                         }
-                        if ($statusTampil === 'selesai ditugaskan') {
-                            $badge = 'bg-green-100 text-green-700';
-                        }
-                        if ($statusTampil === 'dibatalkan') {
-                            $badge = 'bg-red-200 text-red-700';
+
+                        // default
+                        $color = 'bg-gray-100 text-gray-700';
+
+                        if ($statusTampil === 'menunggu persetujuan') {
+                            $color = 'bg-yellow-100 text-yellow-800';
+                        } elseif ($statusTampil === 'sedang ditugaskan') {
+                            $color = 'bg-blue-100 text-blue-700';
+                        } elseif ($statusTampil === 'selesai ditugaskan') {
+                            $color = 'bg-green-200 text-green-800';
+                        } elseif ($statusTampil === 'dibatalkan') {
+                            $color = 'bg-red-100 text-red-700';
                         }
                     @endphp
-                    <span class="px-2 py-1 rounded text-xs {{ $badge }}">
+
+                    <span class="px-2 py-1 rounded text-xs font-semibold {{ $color }}">
                         {{ ucfirst($statusTampil) }}
                     </span>
                 </div>

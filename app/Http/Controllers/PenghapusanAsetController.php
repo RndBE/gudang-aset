@@ -6,9 +6,14 @@ use Illuminate\Http\Request;
 use App\Models\Aset;
 use App\Models\PenghapusanAset;
 use Illuminate\Support\Str;
+use App\Services\ApprovalService;
+use Illuminate\Support\Facades\DB;
 
 class PenghapusanAsetController extends Controller
 {
+
+    public function __construct(private ApprovalService $approvalService) {}
+
     /**
      * Display a listing of the resource.
      */
@@ -16,23 +21,36 @@ class PenghapusanAsetController extends Controller
     {
         $q = $request->query('q');
         $status = $request->query('status');
+        $approvalStatus = $request->query('approval_status');
 
-        $data = PenghapusanAset::query()
-            ->with('aset')
+        $data = \App\Models\PenghapusanAset::query()
+            ->with(['aset', 'permintaanPersetujuan'])
             ->where('instansi_id', auth()->user()->instansi_id)
+
             ->when($q, function ($query) use ($q) {
-                $query->where('nomor_penghapusan', 'like', "%$q%")
-                    ->orWhereHas('aset', function ($qa) use ($q) {
-                        $qa->where('tag_aset', 'like', "%$q%")
-                            ->orWhere('no_serial', 'like', "%$q%");
-                    });
+                $query->where(function ($qq) use ($q) {
+                    $qq->where('nomor_dokumen', 'like', "%$q%")
+                        ->orWhere('alasan', 'like', "%$q%")
+                        ->orWhereHas('aset', function ($qa) use ($q) {
+                            $qa->where('tag_aset', 'like', "%$q%")
+                                ->orWhere('no_serial', 'like', "%$q%");
+                        });
+                });
             })
+
             ->when($status, fn($query) => $query->where('status', $status))
+
+            ->when($approvalStatus, function ($query) use ($approvalStatus) {
+                $query->whereHas('permintaanPersetujuan', function ($q) use ($approvalStatus) {
+                    $q->where('status', $approvalStatus);
+                });
+            })
+
             ->latest('dibuat_pada')
             ->paginate(15)
             ->withQueryString();
 
-        return view('penghapusan_aset.index', compact('data', 'q', 'status'));
+        return view('penghapusan_aset.index', compact('data', 'q', 'status', 'approvalStatus'));
     }
 
     /**
@@ -42,7 +60,7 @@ class PenghapusanAsetController extends Controller
     {
         $aset = Aset::query()
             ->where('instansi_id', auth()->user()->instansi_id)
-            ->where('status_siklus', '!=', 'dihapus')
+            ->where('status_siklus', 'tersedia')
             ->orderBy('tag_aset')
             ->get();
 
@@ -64,19 +82,52 @@ class PenghapusanAsetController extends Controller
             'alasan' => ['required', 'string'],
         ]);
 
-        PenghapusanAset::create([
-            'instansi_id' => auth()->user()->instansi_id,
-            'aset_id' => $validated['aset_id'],
-            'nomor_penghapusan' => $validated['nomor_penghapusan'],
-            'tanggal_penghapusan' => $validated['tanggal_penghapusan'],
-            'metode' => $validated['metode'],
-            'alasan' => $validated['alasan'],
-            'status' => 'draft',
-            'dibuat_oleh' => auth()->user()->id,
-            'disetujui_oleh' => null,
-        ]);
+        // PenghapusanAset::create([
+        //     'instansi_id' => auth()->user()->instansi_id,
+        //     'aset_id' => $validated['aset_id'],
+        //     'nomor_penghapusan' => $validated['nomor_penghapusan'],
+        //     'tanggal_penghapusan' => $validated['tanggal_penghapusan'],
+        //     'metode' => $validated['metode'],
+        //     'alasan' => $validated['alasan'],
+        //     'status' => 'draft',
+        //     'dibuat_oleh' => auth()->user()->id,
+        //     'disetujui_oleh' => null,
+        // ]);
+        return DB::transaction(function () use ($validated) {
+            $penghapusan = PenghapusanAset::create([
+                'instansi_id' => auth()->user()->instansi_id,
+                'aset_id' => $validated['aset_id'],
+                'nomor_penghapusan' => $validated['nomor_penghapusan'],
+                'tanggal_penghapusan' => $validated['tanggal_penghapusan'],
+                'metode' => $validated['metode'],
+                'alasan' => $validated['alasan'],
+                'status' => 'draft',
+                'dibuat_oleh' => auth()->user()->id,
+                'disetujui_oleh' => null,
+            ]);
+            Aset::where('id', $penghapusan->aset_id)->update([
+                'status_siklus' => 'dihapus',
+                'pemegang_pengguna_id' => $penghapusan->ditugaskan_ke_pengguna_id,
+                'unit_organisasi_saat_ini_id' => $penghapusan->ditugaskan_ke_unit_id,
+            ]);
 
-        return redirect()->route('penghapusan-aset.index')->with('success', 'Pengajuan penghapusan berhasil dibuat.');
+            $permintaan = $this->approvalService->buatPermintaan(
+                berlakuUntuk: 'penghapusan_aset',
+                tipeEntitas: 'penghapusan_aset',
+                idEntitas: $penghapusan->id,
+                ringkasan: "penghapusan aset #" . ($penghapusan->aset?->tag_aset ?? $penghapusan->aset_id)
+            );
+
+            $penghapusan->update([
+                'permintaan_persetujuan_id' => $permintaan->id,
+            ]);
+
+            return redirect()
+                ->route('penghapusan-aset.index', $penghapusan->id)
+                ->with('success', 'Pengajuan penghapusan berhasil dibuat dan diajukan ke approval.');
+        });
+
+        // return redirect()->route('penghapusan-aset.index')->with('success', 'Pengajuan penghapusan berhasil dibuat.');
     }
 
     /**
@@ -190,6 +241,10 @@ class PenghapusanAsetController extends Controller
 
         $penghapusan_aset->update([
             'status' => 'dibatalkan',
+        ]);
+
+        Aset::where('id', $penghapusan_aset->aset_id)->update([
+            'status_siklus' => 'tersedia',
         ]);
 
         return back()->with('success', 'Penghapusan aset dibatalkan.');

@@ -36,7 +36,7 @@ class PenugasanAset extends Model
 
     public function instansi()
     {
-        return $this->belongsTo(Instansi::class,'instansi_id');
+        return $this->belongsTo(Instansi::class, 'instansi_id');
     }
 
     public function dibuat_oleh()
@@ -52,5 +52,11 @@ class PenugasanAset extends Model
     public function petugas_ditugaskan()
     {
         return $this->belongsTo(Pengguna::class, 'ditugaskan_ke_pengguna_id');
+    }
+
+    public function permintaanPersetujuan()
+    {
+        return $this->hasOne(\App\Models\PermintaanPersetujuan::class, 'id_entitas', 'id')
+            ->where('tipe_entitas', 'penugasan_aset');
     }
 }

@@ -73,13 +73,51 @@
                             </td>
 
                             <td class="p-3 border-b">
-                                <span
+                                @php
+                                    $statusTampil = $row->status;
+
+                                    $pp = $row->permintaanPersetujuan; // relasi hasOne
+                                    $apprStatus = $pp?->status; // menunggu/disetujui/ditolak/null
+
+                                    // kalau ada permintaan persetujuan yg masih menunggu → override status tampilan
+                                    if ($apprStatus === 'menunggu') {
+                                        $statusTampil = 'menunggu persetujuan';
+                                    }
+
+                                    // default
+                                    $color = 'bg-gray-100 text-gray-700';
+
+                                    if ($statusTampil === 'menunggu persetujuan') {
+                                        $color = 'bg-yellow-100 text-yellow-800';
+                                    } elseif ($statusTampil === 'draft') {
+                                        $color = 'bg-gray-100 text-gray-700';
+                                    } elseif ($statusTampil === 'disetujui') {
+                                        $color = 'bg-blue-100 text-blue-700';
+                                    } elseif ($statusTampil === 'eksekusi') {
+                                        $color = 'bg-green-200 text-green-800';
+                                    } elseif ($statusTampil === 'dibatalkan') {
+                                        $color = 'bg-red-100 text-red-700';
+                                    }
+
+                                    $showLink = $pp && $apprStatus === 'menunggu'; // ✅ link hanya kalau masih menunggu
+                                @endphp
+                                <span class="px-2 py-1 rounded text-xs font-semibold {{ $color }}">
+                                    {{ ucfirst($statusTampil) }}
+                                </span>
+                                @if ($showLink)
+                                    <a href="{{ route('permintaan-persetujuan.show', $pp->id) }}"
+                                        class="ml-2 text-xs text-blue-600 hover:underline">
+                                        Lihat
+                                    </a>
+                                @endif
+
+                                {{-- <span
                                     class="px-2 py-1 rounded text-xs
                                 {{ $row->status == 'disetujui' ? 'bg-green-50 text-green-700' : '' }}
-                                {{ $row->status == 'menunggu' ? 'bg-yellow-50 text-yellow-700' : '' }}
-                                {{ $row->status == 'ditolak' ? 'bg-red-50 text-red-700' : '' }}">
+                                {{ $row->status == 'dieksekusi' ? 'bg-yellow-50 text-yellow-700' : '' }}
+                                {{ $row->status == 'dibatalkan' ? 'bg-red-50 text-red-700' : '' }}">
                                     {{ ucfirst($row->status) }}
-                                </span>
+                                </span> --}}
                             </td>
 
                             <td class="p-3 border-b">

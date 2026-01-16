@@ -24,12 +24,13 @@ class LangkahPermintaanPersetujuan extends Model
     ];
 
     protected $casts = [
-        'disetujui_pada' => 'datetime',
+        'diputuskan_pada' => 'datetime',
+        'snapshot' => 'array'
     ];
 
     public function permintaan()
     {
-        return $this->belongsTo(PermintaanPersetujuan::class, 'permintaan_id');
+        return $this->belongsTo(PermintaanPersetujuan::class, 'permintaan_persetujuan_id');
     }
 
     public function langkahAlur()
@@ -40,5 +41,22 @@ class LangkahPermintaanPersetujuan extends Model
     public function diputuskan()
     {
         return $this->belongsTo(Pengguna::class, 'diputuskan_oleh');
+    }
+
+    public function izinIdDariKondisi(): ?int
+    {
+        $izinId = data_get($this->langkahAlur?->kondisi, 'izin_id');
+        return $izinId ? (int) $izinId : null;
+    }
+
+    public function bolehDiputuskanOleh(Pengguna $user): bool
+    {
+        $izinId = $this->izinIdDariKondisi();
+        if (!$izinId) return false;
+
+        $izinKode = \App\Models\Izin::where('id', $izinId)->value('kode');
+        if (!$izinKode) return false;
+
+        return $user->punyaIzin($izinKode);
     }
 }

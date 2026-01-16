@@ -65,6 +65,148 @@
             </div>
         </div>
 
+
+        <div class="bg-white border rounded p-4 grid grid-cols-1 md:grid-cols-4 gap-4">
+            {{-- aset tugas yang diajukan --}}
+            @if ($data->tipe_entitas === 'penugasan_aset')
+                <div class="bg-white border rounded">
+                    <div class="border-b px-4 py-3 font-semibold">Detail Penugasan Aset</div>
+
+                    <div class="p-4 text-sm">
+                        @if ($entitas)
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                <div>
+                                    <div class="text-gray-500">Tag Aset</div>
+                                    <div class="font-medium">{{ $entitas->aset?->tag_aset ?? '-' }}</div>
+                                </div>
+
+                                <div>
+                                    <div class="text-gray-500">Barang</div>
+                                    <div class="font-medium">
+                                        {{ $entitas->aset?->barang?->sku ?? '-' }} —
+                                        {{ $entitas->aset?->barang?->nama ?? '-' }}
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <div class="text-gray-500">Ditugaskan ke Pengguna</div>
+                                    <div class="font-medium">{{ $entitas->ditugaskanKePengguna?->nama_lengkap ?? '-' }}
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <div class="text-gray-500">Ditugaskan ke Unit</div>
+                                    <div class="font-medium">
+                                        {{ $entitas->ditugaskanKeUnit?->nama_unit ?? ($entitas->ditugaskanKeUnit?->nama ?? '-') }}
+                                    </div>
+                                </div>
+
+                                <div class="md:col-span-2">
+                                    <div class="text-gray-500">Catatan</div>
+                                    <div class="font-medium" style="white-space: pre-line">{{ $entitas->catatan ?? '-' }}
+                                    </div>
+                                </div>
+                            </div>
+                        @else
+                            <div class="text-gray-500">Data penugasan tidak ditemukan.</div>
+                        @endif
+                    </div>
+                </div>
+            @endif
+
+            {{-- aset peminjaman yang diajukan --}}
+            @if ($data->tipe_entitas === 'peminjaman_aset')
+                <div class="bg-white border rounded">
+                    <div class="border-b px-4 py-3 font-semibold">Detail Peminjaman Aset</div>
+
+                    <div class="p-4 text-sm">
+                        @if ($entitas)
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                <div>
+                                    <div class="text-gray-500">Tag Aset</div>
+                                    <div class="font-medium">{{ $entitas->aset?->tag_aset ?? '-' }}</div>
+                                </div>
+
+                                <div>
+                                    <div class="text-gray-500">Barang</div>
+                                    <div class="font-medium">
+                                        {{ $entitas->aset?->barang?->sku ?? '-' }} —
+                                        {{ $entitas->aset?->barang?->nama ?? '-' }}
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <div class="text-gray-500">Dipinjamkan ke Pengguna</div>
+                                    <div class="font-medium">{{ $entitas->dipinjamkanKePengguna?->nama_lengkap ?? '-' }}
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <div class="text-gray-500">Dipinjamkan ke Unit</div>
+                                    <div class="font-medium">
+                                        {{ $entitas->dipinjamkanKeUnit?->nama_unit ?? ($entitas->dipinjamkanKeUnit?->nama ?? '-') }}
+                                    </div>
+                                </div>
+
+                                <div class="md:col-span-2">
+                                    <div class="text-gray-500">Catatan</div>
+                                    <div class="font-medium" style="white-space: pre-line">{{ $entitas->catatan ?? '-' }}
+                                    </div>
+                                </div>
+                            </div>
+                        @else
+                            <div class="text-gray-500">Data peminjaman tidak ditemukan.</div>
+                        @endif
+                    </div>
+                </div>
+            @endif
+
+            {{-- aset penugasan yang diajukan --}}
+            @if ($data->tipe_entitas === 'penghapusan_aset')
+                <div class="bg-white border rounded">
+                    <div class="border-b px-4 py-3 font-semibold">Detail Penghapusan Aset</div>
+
+                    <div class="p-4 text-sm">
+                        @if ($entitas)
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                <div>
+                                    <div class="text-gray-500">Tag Aset</div>
+                                    <div class="font-medium">{{ $entitas->aset?->tag_aset ?? '-' }}</div>
+                                </div>
+
+                                <div>
+                                    <div class="text-gray-500">Barang</div>
+                                    <div class="font-medium">
+                                        {{ $entitas->aset?->barang?->sku ?? '-' }} —
+                                        {{ $entitas->aset?->barang?->nama ?? '-' }}
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <div class="text-gray-500">Status Kondisi</div>
+                                    <div class="font-medium">{{ $entitas->aset?->status_kondisi ?? '-' }}</div>
+                                </div>
+
+                                <div>
+                                    <div class="text-gray-500">Alasan Penghapusan</div>
+                                    <div class="font-medium">{{ $entitas->alasan ?? '-' }}</div>
+                                </div>
+
+                                <div class="md:col-span-2">
+                                    <div class="text-gray-500">Catatan</div>
+                                    <div class="font-medium" style="white-space: pre-line">{{ $entitas->catatan ?? '-' }}
+                                    </div>
+                                </div>
+                            </div>
+                        @else
+                            <div class="text-gray-500">Data penghapusan tidak ditemukan.</div>
+                        @endif
+                    </div>
+                </div>
+            @endif
+
+        </div>
+
         <!-- Steps -->
         <div class="bg-white border rounded">
             <div class="border-b px-4 py-3 font-semibold">
@@ -108,7 +250,8 @@
         @endphp
 
         <!-- Action -->
-        @if ($step && $step->status === 'menunggu')
+        @if ($step && $step->status === 'menunggu' && $bolehApproveStep)
+            {{-- @if ($step && $step->status === 'menunggu') --}}
             <div class="bg-white border rounded">
                 <div class="border-b px-4 py-3 font-semibold">
                     Aksi Persetujuan – {{ $step->nama_langkah }}

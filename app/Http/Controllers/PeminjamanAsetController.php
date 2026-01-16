@@ -8,9 +8,14 @@ use App\Models\Pengguna;
 use App\Models\UnitOrganisasi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use App\Services\ApprovalService;
+use Illuminate\Support\Facades\DB;
 
 class PeminjamanAsetController extends Controller
 {
+
+    public function __construct(private ApprovalService $approvalService) {}
+
     /**
      * Display a listing of the resource.
      */
@@ -18,23 +23,36 @@ class PeminjamanAsetController extends Controller
     {
         $q = $request->query('q');
         $status = $request->query('status');
+        $approvalStatus = $request->query('approval_status');
 
-        $data = PeminjamanAset::query()
-            ->with('aset')
+        $data = \App\Models\PeminjamanAset::query()
+            ->with(['aset', 'permintaanPersetujuan'])
             ->where('instansi_id', auth()->user()->instansi_id)
+
             ->when($q, function ($query) use ($q) {
-                $query->where('nomor_dok_serah_terima', 'like', "%$q%")
-                    ->orWhereHas('aset', function ($qa) use ($q) {
-                        $qa->where('tag_aset', 'like', "%$q%")
-                            ->orWhere('no_serial', 'like', "%$q%");
-                    });
+                $query->where(function ($qq) use ($q) {
+                    $qq->where('nomor_dok_serah_terima', 'like', "%$q%")
+                        ->orWhere('tujuan', 'like', "%$q%")
+                        ->orWhereHas('aset', function ($qa) use ($q) {
+                            $qa->where('tag_aset', 'like', "%$q%")
+                                ->orWhere('no_serial', 'like', "%$q%");
+                        });
+                });
             })
+
             ->when($status, fn($query) => $query->where('status', $status))
+
+            ->when($approvalStatus, function ($query) use ($approvalStatus) {
+                $query->whereHas('permintaanPersetujuan', function ($q) use ($approvalStatus) {
+                    $q->where('status', $approvalStatus);
+                });
+            })
+
             ->latest('dibuat_pada')
             ->paginate(15)
             ->withQueryString();
 
-        return view('peminjaman_aset.index', compact('data', 'q', 'status'));
+        return view('peminjaman_aset.index', compact('data', 'q', 'status', 'approvalStatus'));
     }
 
     /**
@@ -45,7 +63,7 @@ class PeminjamanAsetController extends Controller
         $instansiId = auth()->user()->instansi_id;
         $aset = Aset::query()
             ->where('instansi_id', auth()->user()->instansi_id)
-            ->whereNotIn('status_siklus', ['dihapus'])
+            ->whereNotIn('status_siklus', 'tersedia')
             ->orderBy('tag_aset')
             ->get();
 
@@ -81,30 +99,68 @@ class PeminjamanAsetController extends Controller
             'catatan' => ['nullable', 'string'],
         ]);
 
-        $peminjaman = PeminjamanAset::create([
-            'instansi_id' => auth()->user()->instansi_id,
-            'aset_id' => $validated['aset_id'],
-            'peminjam_pengguna_id' => $validated['peminjam_pengguna_id'] ?? null,
-            'peminjam_unit_id' => $validated['peminjam_unit_id'] ?? null,
-            'tanggal_mulai' => $validated['tanggal_mulai'],
-            'jatuh_tempo' => $validated['jatuh_tempo'],
-            'tanggal_kembali' => null,
-            'status' => 'aktif',
-            'tujuan' => $validated['tujuan'],
-            'kondisi_keluar' => $validated['kondisi_keluar'],
-            'kondisi_masuk' => null,
-            'nomor_dok_serah_terima' => $validated['nomor_dok_serah_terima'],
-            'catatan' => $validated['catatan'] ?? null,
-            'dibuat_oleh' => auth()->user()->id,
-        ]);
+        // $peminjaman = PeminjamanAset::create([
+        //     'instansi_id' => auth()->user()->instansi_id,
+        //     'aset_id' => $validated['aset_id'],
+        //     'peminjam_pengguna_id' => $validated['peminjam_pengguna_id'] ?? null,
+        //     'peminjam_unit_id' => $validated['peminjam_unit_id'] ?? null,
+        //     'tanggal_mulai' => $validated['tanggal_mulai'],
+        //     'jatuh_tempo' => $validated['jatuh_tempo'],
+        //     'tanggal_kembali' => null,
+        //     'status' => 'aktif',
+        //     'tujuan' => $validated['tujuan'],
+        //     'kondisi_keluar' => $validated['kondisi_keluar'],
+        //     'kondisi_masuk' => null,
+        //     'nomor_dok_serah_terima' => $validated['nomor_dok_serah_terima'],
+        //     'catatan' => $validated['catatan'] ?? null,
+        //     'dibuat_oleh' => auth()->user()->id,
+        // ]);
 
-        Aset::where('id', $peminjaman->aset_id)->update([
-            'status_siklus' => 'dipinjam',
-            'pemegang_pengguna_id' => $peminjaman->peminjam_pengguna_id,
-            'unit_organisasi_saat_ini_id' => $peminjaman->peminjam_unit_id,
-        ]);
+        // Aset::where('id', $peminjaman->aset_id)->update([
+        //     'status_siklus' => 'dipinjam',
+        //     'pemegang_pengguna_id' => $peminjaman->peminjam_pengguna_id,
+        //     'unit_organisasi_saat_ini_id' => $peminjaman->peminjam_unit_id,
+        // ]);
 
-        return redirect()->route('peminjaman-aset.index')->with('success', 'Peminjaman aset berhasil dibuat.');
+        return DB::transaction(function () use ($validated) {
+
+            $peminjaman = PeminjamanAset::create([
+                'instansi_id' => auth()->user()->instansi_id,
+                'aset_id' => $validated['aset_id'],
+                'peminjam_pengguna_id' => $validated['peminjam_pengguna_id'] ?? null,
+                'peminjam_unit_id' => $validated['peminjam_unit_id'] ?? null,
+                'tanggal_mulai' => $validated['tanggal_mulai'],
+                'jatuh_tempo' => $validated['jatuh_tempo'],
+                'tanggal_kembali' => null,
+                'status' => 'aktif',
+                'tujuan' => $validated['tujuan'],
+                'kondisi_keluar' => $validated['kondisi_keluar'],
+                'kondisi_masuk' => null,
+                'nomor_dok_serah_terima' => $validated['nomor_dok_serah_terima'],
+                'catatan' => $validated['catatan'] ?? null,
+                'dibuat_oleh' => auth()->user()->id,
+            ]);
+
+            Aset::where('id', $peminjaman->aset_id)->update([
+                'status_siklus' => 'dipinjam',
+                'pemegang_pengguna_id' => $peminjaman->peminjam_pengguna_id,
+                'unit_organisasi_saat_ini_id' => $peminjaman->peminjam_unit_id,
+            ]);
+
+            $permintaan = $this->approvalService->buatPermintaan(
+                berlakuUntuk: 'peminjaman_aset',
+                tipeEntitas: 'peminjaman_aset',
+                idEntitas: $peminjaman->id,
+                ringkasan: "peminjaman aset #" . ($peminjaman->aset?->tag_aset ?? $peminjaman->aset_id)
+            );
+
+            $peminjaman->update([
+                'permintaan_persetujuan_id' => $permintaan->id,
+            ]);
+
+            return redirect()->route('peminjaman-aset.index')->with('success', 'Pengajuan peminjaman aset berhasil dibuat.');
+        });
+        // return redirect()->route('peminjaman-aset.index')->with('success', 'Peminjaman aset berhasil dibuat.');
     }
 
     /**

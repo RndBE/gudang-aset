@@ -6,10 +6,10 @@
         <!-- Header -->
         <div class="flex items-center justify-between">
             <h1 class="text-xl font-semibold">Permintaan Persetujuan</h1>
-            <a href="{{ route('permintaan-persetujuan.create') }}"
+            {{-- <a href="{{ route('permintaan-persetujuan.create') }}"
                 class="px-3 py-2 rounded bg-gray-900 text-white text-sm hover:bg-gray-800">
                 Tambah
-            </a>
+            </a> --}}
         </div>
 
         @if (session('success'))
@@ -69,7 +69,7 @@
                                 <td class="px-4 py-2">
                                     @php
                                         $color = 'bg-gray-200 text-gray-700';
-                                        if ($row->status == 'berjalan') {
+                                        if ($row->status == 'menunggu') {
                                             $color = 'bg-blue-100 text-blue-700';
                                         }
                                         if ($row->status == 'disetujui') {

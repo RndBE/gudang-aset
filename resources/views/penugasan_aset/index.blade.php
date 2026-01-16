@@ -41,6 +41,7 @@
                         <th class="p-3 text-left">Tag Aset</th>
                         <th class="p-3 text-left">No Dokumen</th>
                         <th class="p-3 text-left">Status</th>
+                        {{-- <th class="p-3 text-left">Persetujuan</th> --}}
                         <th class="text-right p-3">Aksi</th>
                     </tr>
                 </thead>
@@ -61,26 +62,44 @@
 
                             <td class="p-3 border-b">
                                 @php
-                                    $color = 'bg-gray-100 text-gray-700'; // default
+                                    $statusTampil = $row->status;
 
-                                    if ($row->status === 'sedang ditugaskan') {
+                                    $pp = $row->permintaanPersetujuan; // relasi hasOne
+                                    $apprStatus = $pp?->status; // menunggu/disetujui/ditolak/null
+
+                                    // kalau ada permintaan persetujuan yg masih menunggu → override status tampilan
+                                    if ($apprStatus === 'menunggu') {
+                                        $statusTampil = 'menunggu persetujuan';
+                                    }
+
+                                    // default
+                                    $color = 'bg-gray-100 text-gray-700';
+
+                                    if ($statusTampil === 'menunggu persetujuan') {
+                                        $color = 'bg-yellow-100 text-yellow-800';
+                                    } elseif ($statusTampil === 'sedang ditugaskan') {
                                         $color = 'bg-blue-100 text-blue-700';
-                                    } elseif ($row->status === 'selesai ditugaskan') {
+                                    } elseif ($statusTampil === 'selesai ditugaskan') {
                                         $color = 'bg-green-200 text-green-800';
-                                    } elseif ($row->status === 'dibatalkan') {
+                                    } elseif ($statusTampil === 'dibatalkan') {
                                         $color = 'bg-red-100 text-red-700';
                                     }
+
+                                    $showLink = $pp && $apprStatus === 'menunggu'; // ✅ link hanya kalau masih menunggu
                                 @endphp
 
                                 <span class="px-2 py-1 rounded text-xs font-semibold {{ $color }}">
-                                    {{ ucfirst($row->status) }}
+                                    {{ ucfirst($statusTampil) }}
                                 </span>
-                                {{-- <span
-                                    class="px-2 py-1 rounded text-xs
-                                {{ $row->status == 'aktif' ? 'bg-green-50 text-green-700' : 'bg-gray-100 text-gray-700' }}">
-                                    {{ ucfirst($row->status) }}
-                                </span> --}}
+                                @if ($showLink)
+                                    <a href="{{ route('permintaan-persetujuan.show', $pp->id) }}"
+                                        class="ml-2 text-xs text-blue-600 hover:underline">
+                                        Lihat
+                                    </a>
+                                @endif
                             </td>
+
+
 
                             <td class="p-3 border-b">
                                 <div class="flex items-center justify-end gap-2 whitespace-nowrap">

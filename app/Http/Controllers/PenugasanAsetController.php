@@ -8,9 +8,14 @@ use App\Models\Pengguna;
 use App\Models\UnitOrganisasi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use App\Services\ApprovalService;
+use Illuminate\Support\Facades\DB;
 
 class PenugasanAsetController extends Controller
 {
+
+    public function __construct(private ApprovalService $approvalService) {}
+
     /**
      * Display a listing of the resource.
      */
@@ -18,24 +23,33 @@ class PenugasanAsetController extends Controller
     {
         $q = $request->query('q');
         $status = $request->query('status');
+        $approvalStatus = $request->query('approval_status');
 
         $data = PenugasanAset::query()
-            ->with('aset')
+            ->with(['aset', 'permintaanPersetujuan'])
             ->where('instansi_id', auth()->user()->instansi_id)
             ->when($q, function ($query) use ($q) {
-                $query->where('nomor_dok_serah_terima', 'like', "%$q%")
-                    ->orWhereHas('aset', function ($qa) use ($q) {
-                        $qa->where('tag_aset', 'like', "%$q%")
-                            ->orWhere('no_serial', 'like', "%$q%");
-                    });
+                $query->where(function ($qq) use ($q) {
+                    $qq->where('nomor_dok_serah_terima', 'like', "%$q%")
+                        ->orWhereHas('aset', function ($qa) use ($q) {
+                            $qa->where('tag_aset', 'like', "%$q%")
+                                ->orWhere('no_serial', 'like', "%$q%");
+                        });
+                });
             })
             ->when($status, fn($query) => $query->where('status', $status))
+            ->when($approvalStatus, function ($query) use ($approvalStatus) {
+                $query->whereHas('permintaanPersetujuan', function ($q) use ($approvalStatus) {
+                    $q->where('status', $approvalStatus);
+                });
+            })
             ->latest('dibuat_pada')
             ->paginate(15)
             ->withQueryString();
 
-        return view('penugasan_aset.index', compact('data', 'q', 'status'));
+        return view('penugasan_aset.index', compact('data', 'q', 'status', 'approvalStatus'));
     }
+
 
     /**
      * Show the form for creating a new resource.
@@ -44,13 +58,16 @@ class PenugasanAsetController extends Controller
     {
         $aset = Aset::query()
             ->where('instansi_id', auth()->user()->instansi_id)
-            ->whereNotIn('status_siklus', ['dihapus'])
+            ->whereNotIn('status_siklus', 'tersedia')
             ->orderBy('tag_aset')
             ->get();
 
         $nomor = 'ST-' . now()->format('Ymd') . '-' . Str::upper(Str::random(5));
 
-        return view('penugasan_aset.create', compact('aset', 'nomor'));
+        $pengguna = Pengguna::query()->orderBy('nama_lengkap')->get();
+        $unit = UnitOrganisasi::query()->orderBy('nama')->get();
+
+        return view('penugasan_aset.create', compact('aset', 'nomor', 'pengguna', 'unit'));
     }
 
     /**
@@ -67,26 +84,61 @@ class PenugasanAsetController extends Controller
             'catatan' => ['nullable', 'string'],
         ]);
 
-        $penugasan = PenugasanAset::create([
-            'instansi_id' => auth()->user()->instansi_id,
-            'aset_id' => $validated['aset_id'],
-            'ditugaskan_ke_pengguna_id' => $validated['ditugaskan_ke_pengguna_id'] ?? null,
-            'ditugaskan_ke_unit_id' => $validated['ditugaskan_ke_unit_id'] ?? null,
-            'tanggal_tugas' => $validated['tanggal_tugas'],
-            'tanggal_kembali' => null,
-            'status' => 'sedang ditugaskan',
-            'nomor_dok_serah_terima' => $validated['nomor_dok_serah_terima'],
-            'catatan' => $validated['catatan'] ?? null,
-            'dibuat_oleh' => auth()->user()->id,
-        ]);
+        // $penugasan = PenugasanAset::create([
+        //     'instansi_id' => auth()->user()->instansi_id,
+        //     'aset_id' => $validated['aset_id'],
+        //     'ditugaskan_ke_pengguna_id' => $validated['ditugaskan_ke_pengguna_id'] ?? null,
+        //     'ditugaskan_ke_unit_id' => $validated['ditugaskan_ke_unit_id'] ?? null,
+        //     'tanggal_tugas' => $validated['tanggal_tugas'],
+        //     'tanggal_kembali' => null,
+        //     'status' => 'sedang ditugaskan',
+        //     'nomor_dok_serah_terima' => $validated['nomor_dok_serah_terima'],
+        //     'catatan' => $validated['catatan'] ?? null,
+        //     'dibuat_oleh' => auth()->user()->id,
+        // ]);
 
-        Aset::where('id', $penugasan->aset_id)->update([
-            'status_siklus' => 'ditugaskan',
-            'pemegang_pengguna_id' => $penugasan->ditugaskan_ke_pengguna_id,
-            'unit_organisasi_saat_ini_id' => $penugasan->ditugaskan_ke_unit_id,
-        ]);
+        // Aset::where('id', $penugasan->aset_id)->update([
+        //     'status_siklus' => 'ditugaskan',
+        //     'pemegang_pengguna_id' => $penugasan->ditugaskan_ke_pengguna_id,
+        //     'unit_organisasi_saat_ini_id' => $penugasan->ditugaskan_ke_unit_id,
+        // ]);
 
-        return redirect()->route('penugasan-aset.index')->with('success', 'Penugasan aset berhasil dibuat.');
+        // return redirect()->route('penugasan-aset.index')->with('success', 'Penugasan aset berhasil dibuat.');
+        return DB::transaction(function () use ($validated) {
+
+            $penugasan = PenugasanAset::create([
+                'instansi_id' => auth()->user()->instansi_id,
+                'aset_id' => $validated['aset_id'],
+                'ditugaskan_ke_pengguna_id' => $validated['ditugaskan_ke_pengguna_id'] ?? null,
+                'ditugaskan_ke_unit_id' => $validated['ditugaskan_ke_unit_id'] ?? null,
+                'tanggal_tugas' => $validated['tanggal_tugas'],
+                'nomor_dok_serah_terima' => $validated['nomor_dok_serah_terima'],
+                'catatan' => $validated['catatan'] ?? null,
+                'status' => 'sedang ditugaskan',
+                'dibuat_oleh' => auth()->user()->id,
+            ]);
+
+            Aset::where('id', $penugasan->aset_id)->update([
+                'status_siklus' => 'ditugaskan',
+                'pemegang_pengguna_id' => $penugasan->ditugaskan_ke_pengguna_id,
+                'unit_organisasi_saat_ini_id' => $penugasan->ditugaskan_ke_unit_id,
+            ]);
+
+            $permintaan = $this->approvalService->buatPermintaan(
+                berlakuUntuk: 'penugasan_aset',
+                tipeEntitas: 'penugasan_aset',
+                idEntitas: $penugasan->id,
+                ringkasan: "Penugasan aset #" . ($penugasan->aset?->tag_aset ?? $penugasan->aset_id)
+            );
+
+            $penugasan->update([
+                'permintaan_persetujuan_id' => $permintaan->id,
+            ]);
+
+            return redirect()
+                ->route('penugasan-aset.index', $penugasan->id)
+                ->with('success', 'Pengajuan penugasan berhasil dibuat dan diajukan ke approval.');
+        });
     }
 
     /**
@@ -137,7 +189,7 @@ class PenugasanAsetController extends Controller
      */
     public function update(Request $request, PenugasanAset $penugasan_aset)
     {
-        if ($penugasan_aset->status !== 'aktif') {
+        if ($penugasan_aset->status !== 'sedang ditugaskan') {
             return redirect()->route('penugasan-aset.index')->with('error', 'Data tidak dapat diubah.');
         }
 

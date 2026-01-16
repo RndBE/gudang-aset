@@ -26,6 +26,7 @@ class PeminjamanAset extends Model
         'nomor_dok_serah_terima',
         'catatan',
         'dibuat_oleh',
+        // 'permintaan_persetujuan_id',
     ];
 
     protected $casts = [
@@ -57,5 +58,11 @@ class PeminjamanAset extends Model
     public function peminjam_unit()
     {
         return $this->belongsTo(UnitOrganisasi::class, 'peminjam_unit_id');
+    }
+
+    public function permintaanPersetujuan()
+    {
+        return $this->hasOne(\App\Models\PermintaanPersetujuan::class, 'id_entitas', 'id')
+            ->where('tipe_entitas', 'peminjaman_aset');
     }
 }
