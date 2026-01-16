@@ -63,7 +63,7 @@ class PeminjamanAsetController extends Controller
         $instansiId = auth()->user()->instansi_id;
         $aset = Aset::query()
             ->where('instansi_id', auth()->user()->instansi_id)
-            ->whereNotIn('status_siklus', 'tersedia')
+            ->where('status_siklus', 'tersedia')
             ->orderBy('tag_aset')
             ->get();
 
