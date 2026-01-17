@@ -160,18 +160,11 @@
 
                         </div>
 
-                        <div class="border-b border-gray-200 my-2 mx-2"></div>
+                        <div class="border-b border-gray-200 my-2  mx-2"></div>
                     </details>
                 @endif
             @endif
 
         @endforeach
-
-        <div class="pt-2">
-            <form method="post" action="{{ route('logout') }}">
-                @csrf
-                <button class="w-full text-left px-3 py-2 rounded text-sm hover:bg-gray-100">Logout</button>
-            </form>
-        </div>
     </nav>
 </aside>

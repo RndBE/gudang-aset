@@ -25,7 +25,7 @@
 
             <div class="space-y-2">
                 <label for="imgInput"
-                    class="group block cursor-pointer rounded-2xl border border-gray-200 bg-white p-4 transition
+                    class="group block cursor-pointer rounded-lg border border-gray-200 bg-white p-4 transition
                hover:border-gray-400 hover:bg-gray-50 active:scale-[0.99]">
                     <div class="flex items-center justify-between gap-4">
                         <div class="min-w-0">

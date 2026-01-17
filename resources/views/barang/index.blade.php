@@ -4,7 +4,7 @@
     <div class="flex items-center justify-between mb-4">
         <h1 class="text-xl font-semibold">Barang</h1>
         <div class="flex items-center ">
-            <a href="" class="flex items-center btn-active px-5 py-3 rounded-lg text-sm me-3">
+            <a href="{{ route('barang.import_ocr') }}" class="flex items-center btn-active px-5 py-3 rounded-lg text-sm me-3">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                     class="icon icon-tabler icons-tabler-outline icon-tabler-sparkles me-2">

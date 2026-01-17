@@ -16,17 +16,18 @@
     @endif
 
     <form method="post" action="{{ route('kategori-barang.update', $kategori_barang->id) }}"
-        class="bg-white border rounded p-4 space-y-4">
+        class="bg-white border border-gray-300   rounded-lg p-4 space-y-4">
         @csrf
         @method('put')
 
         <div>
             <label class="text-sm font-medium">Induk (opsional)</label>
-            <select name="induk_id" class="mt-1 w-full border rounded px-3 py-2">
+            <select name="induk_id" class="mt-1 w-full border border-gray-300 rounded-lg px-3 py-2">
                 <option value="">-</option>
                 @foreach ($induk as $i)
                     <option value="{{ $i->id }}" @selected((string) old('induk_id', $kategori_barang->induk_id) === (string) $i->id)>{{ $i->nama }}
-                        ({{ $i->kode }})</option>
+                        ({{ $i->kode }})
+                    </option>
                 @endforeach
             </select>
         </div>
@@ -35,11 +36,11 @@
             <div>
                 <label class="text-sm font-medium">Kode</label>
                 <input name="kode" value="{{ old('kode', $kategori_barang->kode) }}"
-                    class="mt-1 w-full border rounded px-3 py-2" maxlength="80" required>
+                    class="mt-1 w-full border border-gray-300 rounded-lg px-3 py-2" maxlength="80" required>
             </div>
             <div>
                 <label class="text-sm font-medium">Default Aset</label>
-                <select name="default_aset" class="mt-1 w-full border rounded px-3 py-2" required>
+                <select name="default_aset" class="mt-1 w-full border border-gray-300 rounded-lg px-3 py-2" required>
                     <option value="0" @selected((string) old('default_aset', (int) $kategori_barang->default_aset) === '0')>tidak</option>
                     <option value="1" @selected((string) old('default_aset', (int) $kategori_barang->default_aset) === '1')>ya</option>
                 </select>
@@ -49,13 +50,13 @@
         <div>
             <label class="text-sm font-medium">Nama</label>
             <input name="nama" value="{{ old('nama', $kategori_barang->nama) }}"
-                class="mt-1 w-full border rounded px-3 py-2" maxlength="200" required>
+                class="mt-1 w-full border border-gray-300 rounded-lg px-3 py-2" maxlength="200" required>
         </div>
 
         <div class="flex gap-2">
             <a href="{{ route('kategori-barang.index') }}"
-                class="px-3 py-2 rounded border text-sm hover:bg-gray-50">Kembali</a>
-            <button class="px-3 py-2 rounded bg-gray-900 text-white text-sm">Update</button>
+                class="px-3 py-2 rounded-lg border text-sm hover:bg-gray-50 btn-outline-active">Kembali</a>
+            <button class="px-3 py-2 rounded-lg bg-gray-900 text-white text-sm btn-active">Update</button>
         </div>
     </form>
 @endsection

@@ -137,7 +137,7 @@ return [
             [
                 'label' => 'Saldo Stok',
                 'route' => 'saldo-stok.index',
-                'logo' => 'penghapusan_aset',
+                'logo' => 'saldo_stok',
                 'izin'  => ['saldo_stok.lihat'],
             ],
             [

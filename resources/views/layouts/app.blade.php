@@ -28,11 +28,65 @@
 @endphp
 
 <body class="min-h-screen bg-white font-sans">
+    <div class="fixed bottom-6 right-6 z-50">
+        <button id="chatFab"
+            class="px-5 py-3 cursor-pointer rounded-2xl bg-[#C58D2A] text-white shadow-lg hover:bg-amber-700 active:scale-95 transition flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                class="icon icon-tabler icons-tabler-outline icon-tabler-sparkles me-2">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                <path
+                    d="M16 18a2 2 0 0 1 2 2a2 2 0 0 1 2 -2a2 2 0 0 1 -2 -2a2 2 0 0 1 -2 2zm0 -12a2 2 0 0 1 2 2a2 2 0 0 1 2 -2a2 2 0 0 1 -2 -2a2 2 0 0 1 -2 2zm-7 12a6 6 0 0 1 6 -6a6 6 0 0 1 -6 -6a6 6 0 0 1 -6 6a6 6 0 0 1 6 6z">
+                </path>
+            </svg>
+            <div class="text-base">Tanya Awass</div>
+
+        </button>
+    </div>
+
     <div class="p-4 h-20 bg-white shadow-[0_1px_5px_2px_rgba(0,0,0,0.25)] sticky top-0 z-50">
-        <div class="font-semibold">Gudang Aset</div>
-        <div class="text-xs text-gray-500 mt-1">
-            {{ $user?->nama_lengkap ?? '-' }} · {{ $user?->username ?? '-' }}
+        <div class="flex justify-between items-center ">
+            <div class="w-6 shrink-0 [&_svg]:h-full ">
+                {!! file_get_contents(resource_path('icon/icon-head.svg')) !!}
+            </div>
+            <div x-data="{ open: false }" class="relative ">
+                <button type="button" @click="open = !open" @keydown.escape.window="open = false"
+                    class="flex items-center rounded-lg px-2 py-1 hover:bg-gray-100 focus:outline-none cursor-pointer">
+                    <div class="text-end me-3">
+                        <div class="font-semibold">Gudang Aset</div>
+                        <div class="text-xs text-gray-500 mt-1">
+                            {{ $user?->nama_lengkap ?? '-' }}
+                        </div>
+                    </div>
+
+                    <div class="flex items-center">
+                        <div class="w-6 shrink-0 [&_svg]:h-full me-3">
+                            {!! file_get_contents(resource_path('icon/avatar.svg')) !!}
+                        </div>
+
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round" class="ms-2 transition-transform duration-200"
+                            :class="open ? 'rotate-180' : ''">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                            <path d="M6 9l6 6l6 -6" />
+                        </svg>
+                    </div>
+                </button>
+
+                <div x-show="open" x-transition @click.outside="open = false"
+                    class="absolute right-0 mt-2 w-44 rounded-xl border border-gray-200 bg-white shadow-lg overflow-hidden z-50"
+                    style="display: none;">
+                    <form method="post" action="{{ route('logout') }}">
+                        @csrf
+                        <button
+                            class="w-full text-left px-3 py-3 rounded text-sm hover:bg-gray-100 cursor-pointer">Logout</button>
+                    </form>
+                </div>
+            </div>
+
         </div>
+
     </div>
 
     <div class="flex min-h-screen items-stretch">
@@ -47,5 +101,127 @@
         </main>
     </div>
 </body>
+<div id="chatOverlay" class="fixed inset-0 z-50 hidden">
+    <div class="absolute inset-0 bg-black/40"></div>
+
+    <div class="absolute inset-0 flex items-center justify-center p-4">
+        <div id="chatModal"
+            class="w-[95vw] max-w-5xl h-[90vh] rounded-xl bg-white shadow-2xl border border-gray-200 overflow-hidden hidden">
+            <div class="px-6 py-4 flex items-center justify-between bg-white border-b border-gray-200">
+                <div class="flex items-center gap-3">
+                    <span class="inline-flex h-9 w-9 items-center justify-center rounded-full  text-[#C58D2A]">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-sparkles">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                            <path
+                                d="M16 18a2 2 0 0 1 2 2a2 2 0 0 1 2 -2a2 2 0 0 1 -2 -2a2 2 0 0 1 -2 2zm0 -12a2 2 0 0 1 2 2a2 2 0 0 1 2 -2a2 2 0 0 1 -2 -2a2 2 0 0 1 -2 2zm-7 12a6 6 0 0 1 6 -6a6 6 0 0 1 -6 -6a6 6 0 0 1 -6 6a6 6 0 0 1 6 6z">
+                            </path>
+                        </svg>
+                    </span>
+                    <div class="font-semibold text-2xl"> {!! file_get_contents(resource_path('icon/header_chatbot.svg')) !!}</div>
+                </div>
+
+                <button id="chatClose"
+                    class="h-10 w-10 rounded-full cursor-pointer hover:bg-gray-100 flex [&_svg]:h-full [&_path]:stroke-[#C58D2A] items-center justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+                        class="h-6 w-6 text-gray-500">
+                        <path fill-rule="evenodd"
+                            d="M6.22 6.22a.75.75 0 0 1 1.06 0L12 10.94l4.72-4.72a.75.75 0 1 1 1.06 1.06L13.06 12l4.72 4.72a.75.75 0 1 1-1.06 1.06L12 13.06l-4.72 4.72a.75.75 0 0 1-1.06-1.06L10.94 12 6.22 7.28a.75.75 0 0 1 0-1.06Z"
+                            clip-rule="evenodd" />
+                    </svg>
+                </button>
+            </div>
+
+            <div class="h-[calc(85vh-140px)] px-6 py-6 space-y-5 bg-white overflow-y-auto">
+                <div class="flex items-start gap-4">
+                    <div class="h-11 w-11 rounded-full bg-[#F3E8D4] flex items-center justify-center shrink-0">
+                        {!! file_get_contents(resource_path('icon/robot.svg')) !!}
+                    </div>
+                    <div
+                        class="max-w-[70%] rounded-3xl border border-gray-200 bg-gray-50 px-5 py-4 text-base text-gray-800">
+                        Halo! Apakah ada yang bisa saya bantu?
+                    </div>
+                </div>
+
+                <div class="flex items-start gap-4 justify-end">
+                    <div class="max-w-[70%] rounded-xl bg-[#F3E8D4] px-5 py-4 text-base text-gray-900">
+                        Barang yang menipis di gudang utama apa aja?
+                    </div>
+                    <div
+                        class="h-11 w-11 rounded-full bg-gray-100 text-gray-600 flex items-center justify-center shrink-0">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+                            class="h-6 w-6">
+                            <path fill-rule="evenodd"
+                                d="M7.5 7.5a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z"
+                                clip-rule="evenodd" />
+                        </svg>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="px-6 py-5  bg-white">
+                <div class="flex items-center gap-4">
+                    <div class="flex-1">
+                        <div
+                            class="rounded-3xl border border-gray-200 bg-white px-5 py-4 flex items-center gap-4 shadow-sm">
+                            <input id="chatInput" type="text" placeholder="Ketik pesan disini..."
+                                class="w-full outline-none text-base text-gray-800 placeholder:text-gray-400" />
+                            <button id="chatMic"
+                                class="h-10 w-10 rounded-full hover:bg-gray-100 flex items-center justify-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+                                    class="h-6 w-6 text-gray-600">
+                                    <path d="M12 1.5a3 3 0 0 0-3 3v7.5a3 3 0 0 0 6 0V4.5a3 3 0 0 0-3-3Z" />
+                                    <path
+                                        d="M6 10.5a.75.75 0 0 1 .75.75 5.25 5.25 0 0 0 10.5 0 .75.75 0 0 1 1.5 0 6.75 6.75 0 0 1-6 6.714V21a.75.75 0 0 1-1.5 0v-3.036A6.75 6.75 0 0 1 5.25 11.25.75.75 0 0 1 6 10.5Z" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <button id="chatSend"
+                        class="h-14 w-14 cursor-pointer rounded-full bg-[#C58D2A] text-white shadow-lg hover:bg-amber-700 active:scale-95 transition flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+                            class="h-7 w-7">
+                            <path
+                                d="M3.478 2.405a.75.75 0 0 1 .822-.122l18 9a.75.75 0 0 1 0 1.34l-18 9A.75.75 0 0 1 3.2 20.7l2.09-6.968a.75.75 0 0 1 .69-.532H13.5a.75.75 0 0 0 0-1.5H5.98a.75.75 0 0 1-.69-.532L3.2 4.2a.75.75 0 0 1 .278-.795Z" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    (() => {
+        const fab = document.getElementById('chatFab')
+        const overlay = document.getElementById('chatOverlay')
+        const modal = document.getElementById('chatModal')
+        const closeBtn = document.getElementById('chatClose')
+
+        const open = () => {
+            overlay.classList.remove('hidden')
+            modal.classList.remove('hidden')
+        }
+
+        const close = () => {
+            modal.classList.add('hidden')
+            overlay.classList.add('hidden')
+        }
+
+        fab?.addEventListener('click', open)
+        closeBtn?.addEventListener('click', close)
+
+        overlay?.addEventListener('click', (e) => {
+            if (e.target === overlay.firstElementChild) close()
+        })
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && !overlay.classList.contains('hidden')) close()
+        })
+    })()
+</script>
 
 </html>

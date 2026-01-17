@@ -4,7 +4,7 @@
     <div class="mb-4 flex items-center justify-between">
         <h1 class="text-xl font-semibold">Edit Barang</h1>
 
-        <a href="{{ route('barang.index') }}" class="px-3 py-2 rounded border text-sm hover:bg-gray-50">
+        <a href="{{ route('barang.index') }}" class="px-3 py-2 rounded-lg btn-active  border text-sm hover:bg-gray-50">
             Kembali
         </a>
     </div>
@@ -108,7 +108,7 @@
 
             <div>
                 <label class="text-sm font-medium">Metode Pelacakan</label>
-                <select name="metode_pelacakan" class="mt-1 w-full border rounded-lg px-3 py-2" required>
+                <select name="metode_pelacakan" class="mt-1 w-full border border-gray-300 rounded-lg px-3 py-2" required>
                     @foreach (['tanpa', 'lot', 'kedaluwarsa', 'serial'] as $m)
                         <option value="{{ $m }}"
                             {{ old('metode_pelacakan', $barang->metode_pelacakan) === $m ? 'selected' : '' }}>
@@ -137,14 +137,14 @@
                 <label class="text-sm font-medium">Stok Minimum</label>
                 <input type="number" step="0.01" inputmode="decimal" min="0" name="stok_minimum"
                     value="{{ old('stok_minimum', $fmtDecimal($barang->stok_minimum ?? 0)) }}"
-                    class="mt-1 w-full border rounded px-3 py-2" required>
+                    class="mt-1 w-full border border-gray-300 rounded px-3 py-2" required>
             </div>
 
             <div>
                 <label class="text-sm font-medium">Titik Pesan Ulang</label>
                 <input type="number" step="0.01" inputmode="decimal" min="0" name="titik_pesan_ulang"
                     value="{{ old('titik_pesan_ulang', $fmtDecimal($barang->titik_pesan_ulang ?? 0)) }}"
-                    class="mt-1 w-full border rounded px-3 py-2" required>
+                    class="mt-1 w-full border border-gray-300 rounded px-3 py-2" required>
             </div>
         </div>
 
@@ -173,7 +173,7 @@
 
         <div>
             <label class="text-sm font-medium">Spesifikasi</label>
-            <textarea name="spesifikasi_json" class="mt-1 w-full border rounded px-3 py-2" rows="6">{{ $spJson }}</textarea>
+            <textarea name="spesifikasi_json" class="mt-1 w-full border border-gray-300 rounded px-3 py-2" rows="6">{{ $spJson }}</textarea>
 
             {{-- <div class="text-xs text-gray-500 mt-1">
                 Bisa input kalimat biasa atau JSON valid.
@@ -181,11 +181,11 @@
         </div>
 
         <div class="flex gap-2">
-            <a href="{{ route('barang.index') }}" class="px-3 py-2 rounded border text-sm hover:bg-gray-50">
+            <a href="{{ route('barang.index') }}" class="px-3 py-2 rounded-lg btn-active border text-sm hover:bg-gray-50">
                 Batal
             </a>
 
-            <button class="px-3 py-2 rounded bg-gray-900 text-white text-sm">
+            <button class="px-3 py-2 rounded-lg  btn-outline-active text-white text-sm">
                 Simpan Perubahan
             </button>
         </div>
