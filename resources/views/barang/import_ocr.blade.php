@@ -19,51 +19,35 @@
         </div>
     @endif
 
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
-        <div class="rounded-lg border border-gray-300 bg-white p-5 space-y-4">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 mb-4">
+        <div class="lg:col-span-4 rounded-lg  bg-white space-y-2">
             <div class="font-semibold">Upload Gambar</div>
 
             <div class="space-y-2">
-                <label for="imgInput"
-                    class="group block cursor-pointer rounded-lg border border-gray-200 bg-white p-4 transition
-               hover:border-gray-400 hover:bg-gray-50 active:scale-[0.99]">
-                    <div class="flex items-center justify-between gap-4">
-                        <div class="min-w-0">
-                            <div class="text-sm font-semibold text-gray-900">
-                                Pilih file gambar
-                            </div>
-                            <div class="text-xs text-gray-500 mt-0.5">
-                                JPG / PNG, max 10MB
-                            </div>
+                <div class="relative rounded-lg bg-white p-6">
+                    <svg class="pointer-events-none absolute inset-0 h-full w-full text-gray-300">
+                        <rect x="8" y="8" width="calc(100% - 16px)" height="calc(100% - 16px)" rx="8" ry="8"
+                            fill="none" stroke="currentColor" stroke-width="2" stroke-dasharray="24 12" />
+                    </svg>
+
+                    <div class="relative flex flex-col items-center justify-center gap-2 text-center">
+                        <div class=" text-center h-full ">
+                            {!! file_get_contents(resource_path('icon/image_upload.svg')) !!}
                         </div>
-
-                        <div class="shrink-0">
-                            <span
-                                class="inline-flex items-center rounded-lg btn-active px-3 py-2 text-xs font-semibold text-white transition
-                           group-hover:opacity-90">
-                                Browse
-                            </span>
-                        </div>
+                        <div class="text-sm font-medium text-gray-800">Unggah <span class="text-[#C58D2A]">gambar</span>
+                            disini</div>
+                        <small class="text-xs text-gray-500">Ukuran maksimum 10 MB</small>
+                        <input id="imgInput" type="file" accept="image/*"
+                            class="absolute inset-0 cursor-pointer opacity-0" />
                     </div>
-
-                    <div id="fileMeta"
-                        class="mt-3 hidden rounded-xl border border-gray-200 bg-white px-3 py-2 text-xs text-gray-700">
-                    </div>
-
-                    <div class="mt-3 flex items-center gap-2 text-xs text-gray-500">
-                        <span class="inline-block h-2 w-2 rounded-full bg-gray-300 group-hover:bg-black transition"></span>
-                        Klik area ini untuk memilih file
-                    </div>
-                </label>
-                <input id="imgInput" type="file" accept="image/*" class="hidden">
-
+                </div>
             </div>
 
             <div class="rounded-lg border-gray-300 border bg-gray-50 p-3">
                 <div class="text-xs text-gray-600 mb-2">Preview</div>
                 <img id="imgPreview" class="w-full max-h-[360px] object-contain rounded-lg bg-white" alt="">
-
             </div>
+
             <div class="flex items-center gap-3">
                 <button type="button" id="btnScan" hidden
                     class="px-3 py-2 rounded-lg btn-outline-active cursor-pointer text-sm">
@@ -73,52 +57,51 @@
             </div>
         </div>
 
-        <div class="rounded-lg border border-gray-300 bg-white px-5 pt-5 pb-4 space-y-3">
+        <div class="lg:col-span-8 rounded-lg bg-white space-y-3">
             <div class="font-semibold">Hasil OCR</div>
-            <textarea id="ocrJson" readonly
-                class="w-full h-[420px] border rounded-lg border-gray-300 p-3 font-mono text-xs bg-gray-50 focus:outline-none"></textarea>
+
+            <form method="POST" action="{{ route('barang.import_ocr.store') }}" class="space-y-2">
+                @csrf
+
+                <div class="rounded-lg border border-gray-300 bg-white overflow-hidden">
+                    <div class="p-5 flex items-center justify-between gap-3">
+                        <div>
+                            <div class="font-semibold">Koreksi Data</div>
+                        </div>
+                        <div class="text-sm text-gray-600">
+                            Total: <span id="rowCount">0</span>
+                        </div>
+                    </div>
+
+                    <div class="overflow-auto">
+                        <table class="min-w-full text-sm">
+                            <thead class="bg-gray-50 border-y border-gray-300">
+                                <tr class="text-left">
+                                    <th class="p-3 w-12">#</th>
+                                    <th class="p-3 min-w-[320px]">Nama</th>
+                                    <th class="p-3 min-w-[260px]">Kategori</th>
+                                    <th class="p-3 min-w-[260px]">Satuan</th>
+                                    <th class="p-3 w-16"></th>
+                                </tr>
+                            </thead>
+                            <tbody id="rowsBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-between gap-3">
+                    <button type="button" id="btnAddRow"
+                        class="px-5 cursor-pointer py-2 rounded-lg border text-sm btn-outline-active ">Tambah
+                        Baris</button>
+
+                    <button type="submit" class="px-5 cursor-pointer py-2 rounded-lg btn-active text-sm">
+                        Simpan Massal
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 
-    <form method="POST" action="{{ route('barang.import_ocr.store') }}" class="space-y-4">
-        @csrf
-
-        <div class="rounded-lg border border-gray-300 bg-white overflow-hidden">
-            <div class="p-5 flex items-center justify-between gap-3">
-                <div>
-                    <div class="font-semibold">Koreksi Data</div>
-                </div>
-                <div class="text-sm text-gray-600">
-                    Total: <span id="rowCount">0</span>
-                </div>
-            </div>
-
-            <div class="overflow-auto">
-                <table class="min-w-full text-sm">
-                    <thead class="bg-gray-50 border-y border-gray-300">
-                        <tr class="text-left">
-                            <th class="p-3 w-12">#</th>
-                            <th class="p-3 min-w-[320px]">Nama</th>
-                            <th class="p-3 min-w-[260px]">Kategori</th>
-                            <th class="p-3 min-w-[260px]">Satuan</th>
-                            <th class="p-3 w-16"></th>
-                        </tr>
-                    </thead>
-                    <tbody id="rowsBody"></tbody>
-                </table>
-            </div>
-        </div>
-
-        <div class="flex items-center justify-between gap-3">
-            <button type="button" id="btnAddRow"
-                class="px-5 cursor-pointer py-2 rounded-lg border text-sm btn-outline-active ">Tambah
-                Baris</button>
-
-            <button type="submit" class="px-5 cursor-pointer py-2 rounded-lg btn-active text-sm">
-                Simpan Massal
-            </button>
-        </div>
-    </form>
 
     <script>
         const kategoriOptions = @json($kategori->map(fn($k) => ['id' => $k->id, 'nama' => $k->nama])->values());
@@ -128,8 +111,6 @@
         const imgPreview = document.getElementById('imgPreview');
         const btnScan = document.getElementById('btnScan');
         const scanStatus = document.getElementById('scanStatus');
-        const ocrJson = document.getElementById('ocrJson');
-        const fileMeta = document.getElementById('fileMeta');
 
         const rowsBody = document.getElementById('rowsBody');
         const rowCount = document.getElementById('rowCount');
@@ -151,6 +132,7 @@
                     return `<option value="${escapeHtml(x.id)}" ${sel}>${escapeHtml(x.nama)}</option>`;
                 }))
                 .join('');
+
             return `<select name="${name}" required class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-black">${opts}</select>`;
         }
 
@@ -230,63 +212,43 @@
                 .filter(x => String(x.nama).trim() !== '');
         }
 
+        function toggleScanButton() {
+            btnScan.hidden = !imgInput.files?.[0];
+        }
+
         function setBusy(isBusy) {
             btnScan.disabled = isBusy;
             btnAddRow.disabled = isBusy;
             imgInput.disabled = isBusy;
-
-            if (isBusy) {
-                btnScan.setAttribute('aria-busy', 'true');
-            } else {
-                btnScan.removeAttribute('aria-busy');
-            }
         }
 
-        function resetOcrResult() {
+        function resetResult() {
             scanStatus.textContent = '';
-            ocrJson.value = '';
             clearRows();
             addRow({});
             toggleScanButton();
         }
 
-
-        function toggleScanButton() {
-            const hasFile = !!imgInput.files?.[0];
-            btnScan.hidden = !hasFile;
-        }
-
-
         imgInput.addEventListener('change', () => {
             const f = imgInput.files?.[0];
 
             if (!f) {
-                if (fileMeta) {
-                    fileMeta.classList.add('hidden');
-                    fileMeta.textContent = '';
-                }
                 imgPreview.removeAttribute('src');
-                resetOcrResult();
+                resetResult();
                 return;
             }
 
             const url = URL.createObjectURL(f);
             imgPreview.src = url;
 
-            if (fileMeta) {
-                const sizeMb = (f.size / (1024 * 1024)).toFixed(2);
-                fileMeta.textContent = `${f.name} • ${sizeMb} MB`;
-                fileMeta.classList.remove('hidden');
-            }
-
-            resetOcrResult();
+            resetResult();
         });
-
 
         btnScan.addEventListener('click', async () => {
             const f = imgInput.files?.[0];
             if (!f) {
                 scanStatus.textContent = 'Pilih gambar dulu.';
+                toggleScanButton();
                 return;
             }
 
@@ -309,17 +271,13 @@
                 const data = await res.json().catch(() => null);
 
                 if (!res.ok) {
-                    const msg = data?.message ?? 'OCR gagal.';
-                    scanStatus.textContent = msg;
-                    ocrJson.value = data ? JSON.stringify(data, null, 2) : '';
+                    scanStatus.textContent = data?.message ?? 'OCR gagal.';
                     return;
                 }
 
-                ocrJson.value = JSON.stringify(data, null, 2);
-
                 const items = normalizeOcrItems(data);
-                clearRows();
 
+                clearRows();
                 if (items.length) {
                     items.forEach(it => addRow(it));
                     scanStatus.textContent = `Selesai. ${items.length} baris dimuat.`;
@@ -331,6 +289,7 @@
                 scanStatus.textContent = 'Error network/endpoint.';
             } finally {
                 setBusy(false);
+                toggleScanButton();
             }
         });
 
@@ -339,5 +298,4 @@
         addRow({});
         toggleScanButton();
     </script>
-
 @endsection
