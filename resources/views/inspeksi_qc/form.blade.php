@@ -3,7 +3,12 @@
 @section('content')
     @php
         $isEdit = $mode === 'edit';
-        $canManage = auth()->user()->punyaIzin('inspeksi_qc.kelola');
+
+        $canManage = $isEdit
+            ? auth()->user()->punyaIzin('qc.kelola')
+            : true;
+
+        $bolehPosting = in_array($penerimaan->status, ['qc_lulus', 'qc_sebagian'], true);
     @endphp
 
     <div class="flex items-start justify-between gap-4 mb-6">
@@ -36,7 +41,7 @@
         </div>
     @endif
 
-    <form method="post" action="{{ $isEdit ? route('inspeksi-qc.update', $row) : route('inspeksi-qc.store') }}">
+    <form id="qcMulai" method="post" action="{{ $isEdit ? route('inspeksi-qc.update', $row) : route('inspeksi-qc.store') }}">
         @csrf
         @if ($isEdit)
             @method('PUT')
@@ -47,22 +52,22 @@
         <div class="bg-white border rounded-xl p-5">
             <div class="flex items-center justify-between mb-4">
                 <div class="font-semibold text-gray-900">Header QC</div>
+
                 @if ($isEdit)
                     @php
                         $badge = 'bg-gray-100 text-gray-700';
+
                         if ($row->status === 'menunggu') {
                             $badge = 'bg-yellow-100 text-yellow-700';
-                        }
-                        if ($row->status === 'lulus') {
+                        } elseif ($row->status === 'lulus') {
                             $badge = 'bg-green-100 text-green-700';
-                        }
-                        if ($row->status === 'sebagian') {
+                        } elseif ($row->status === 'sebagian') {
                             $badge = 'bg-indigo-100 text-indigo-700';
-                        }
-                        if ($row->status === 'gagal') {
+                        } elseif ($row->status === 'gagal') {
                             $badge = 'bg-red-100 text-red-700';
                         }
                     @endphp
+
                     <span class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium {{ $badge }}">
                         Status: {{ $row->status }}
                     </span>
@@ -126,17 +131,14 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($detail as $i => $d)
+                        @foreach (($detail ?? collect()) as $i => $d)
                             @php
-                                $existing =
-                                    $qcDetail instanceof \Illuminate\Support\Collection ? $qcDetail->get($d->id) : null;
+                                $existing = $qcDetail instanceof \Illuminate\Support\Collection ? $qcDetail->get($d->id) : null;
 
-                                $hasilVal = $oldPd ? $oldHasil[$i] ?? 'menunggu' : $existing?->hasil ?? 'menunggu';
-                                $qtyLulusVal = $oldPd
-                                    ? $oldTerima[$i] ?? $d->qty_diterima
-                                    : $existing?->qty_diterima ?? $d->qty_diterima;
-                                $qtyTolakVal = $oldPd ? $oldTolak[$i] ?? 0 : $existing?->qty_ditolak ?? 0;
-                                $catVal = $oldPd ? $oldCat[$i] ?? '' : $existing?->catatan_cacat ?? '';
+                                $hasilVal = $oldPd ? ($oldHasil[$i] ?? 'menunggu') : ($existing?->hasil ?? 'menunggu');
+                                $qtyLulusVal = $oldPd ? ($oldTerima[$i] ?? $d->qty_diterima) : ($existing?->qty_diterima ?? $d->qty_diterima);
+                                $qtyTolakVal = $oldPd ? ($oldTolak[$i] ?? 0) : ($existing?->qty_ditolak ?? 0);
+                                $catVal = $oldPd ? ($oldCat[$i] ?? '') : ($existing?->catatan_cacat ?? '');
                             @endphp
 
                             <tr class="border-b">
@@ -150,11 +152,9 @@
                                     <div class="text-xs text-gray-500">{{ $d->no_lot ? 'Lot: ' . $d->no_lot : '' }}</div>
                                 </td>
                                 <td class="px-3 py-2">
-                                    <select name="hasil[]" class="w-full border rounded-lg px-2 py-2"
-                                        {{ $canManage ? '' : 'disabled' }}>
+                                    <select name="hasil[]" class="w-full border rounded-lg px-2 py-2" {{ $canManage ? '' : 'disabled' }}>
                                         @foreach (['menunggu', 'lulus', 'gagal'] as $h)
-                                            <option value="{{ $h }}" @selected($hasilVal === $h)>
-                                                {{ $h }}</option>
+                                            <option value="{{ $h }}" @selected($hasilVal === $h)>{{ $h }}</option>
                                         @endforeach
                                     </select>
                                     @if (!$canManage)
@@ -180,23 +180,24 @@
             </div>
 
             <div class="text-xs text-gray-500 mt-3">
-                Saran: jika hasil <span class="font-medium">gagal</span>, isi qty ditolak. Item gagal tidak akan diposting
-                ke saldo stok.
+                Saran: jika hasil <span class="font-medium">gagal</span>, isi qty ditolak. Item gagal tidak akan diposting ke saldo stok.
             </div>
         </div>
-
-        <div class="mt-5 flex flex-wrap gap-2">
-            @if ($canManage)
-                <button
-                    class="px-5 py-2.5 rounded-lg bg-white border hover:bg-gray-50">{{ $isEdit ? 'Simpan Perubahan' : 'Simpan QC' }}</button>
-            @endif
-
-            @if (auth()->user()->punyaIzin('penerimaan.kelola'))
-                <form method="post" action="{{ route('penerimaan.postingStokMasuk', $penerimaan) }}">
-                    @csrf
-                    <button class="px-5 py-2.5 rounded-lg bg-white border hover:bg-gray-50">Posting Stok Masuk</button>
-                </form>
-            @endif
-        </div>
     </form>
+
+    <div class="mt-5 flex flex-wrap items-center gap-2">
+        @if ($canManage)
+            <button type="submit" form="qcMulai"
+                class="px-5 py-2.5 rounded-lg bg-white border hover:bg-gray-50">
+                {{ $isEdit ? 'Simpan Perubahan' : 'Simpan QC' }}
+            </button>
+        @endif
+
+        @if (auth()->user()->punyaIzin('penerimaan.kelola'))
+            <form method="post" action="{{ route('penerimaan.postingStokMasuk', $penerimaan) }}">
+                @csrf
+                <button class="px-5 py-2.5 rounded-lg bg-white border hover:bg-gray-50">Posting Stok Masuk</button>
+            </form>
+        @endif
+    </div>
 @endsection
