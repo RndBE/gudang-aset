@@ -39,7 +39,7 @@
                     <option value="">-- pilih aset --</option>
                     @foreach ($aset as $a)
                         <option value="{{ $a->id }}" @selected(old('aset_id') == $a->id)>
-                            {{ $a->tag_aset }} | Serial: {{ $a->no_serial ?? '-' }} | IMEI: {{ $a->imei ?? '-' }}
+                            {{ $a->barang?->nama}} | Serial: {{ $a->no_serial ?? '-' }} | IMEI: {{ $a->imei ?? '-' }}
                         </option>
                     @endforeach
                 </select>
