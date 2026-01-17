@@ -121,6 +121,26 @@
                 </div>
 
                 <div class="md:col-span-4">
+                    <label class="text-sm text-gray-700 block mb-1">Nomor PO</label>
+                    @if ($isEdit)
+                        <input type="text" class="w-full border rounded-lg px-3 py-2 bg-gray-50"
+                            value="{{ old('nomor_po', $row->pesananPembelian->nomor_po ?? '-') }}" readonly>
+
+                        <input type="hidden" name="pesanan_pembelian_id"
+                            value="{{ old('pesanan_pembelian_id', $row->pesanan_pembelian_id ?? '') }}">
+                    @else
+                        <select name="pesanan_pembelian_id" class="w-full border rounded-lg px-3 py-2" required>
+                            <option value="">- Pilih Nomor PO -</option>
+                            @foreach ($listPO as $p)
+                                <option value="{{ $p->id }}" @selected(old('pesanan_pembelian_id') == $p->id)>
+                                    {{ $p->nomor_po }}
+                                </option>
+                            @endforeach
+                        </select>
+                    @endif
+                </div>
+
+                <div class="md:col-span-4">
                     <label class="text-sm text-gray-700 block mb-1">Nomor Penerimaan</label>
                     <input name="nomor_penerimaan" value="{{ old('nomor_penerimaan', $row->nomor_penerimaan) }}"
                         class="w-full border rounded-lg px-3 py-2" {{ $canManage ? '' : 'readonly' }}>
@@ -286,36 +306,35 @@
                 </table>
             </div>
         </div>
-
-        <div class="mt-5 flex flex-wrap gap-2">
-            @if ($canManage && $row->status !== 'diposting')
-                <button class="px-5 py-2.5 rounded-lg bg-white border hover:bg-gray-50">Simpan</button>
-            @endif
-
-            @if ($isEdit && $canManage)
-                @if (!in_array($row->status, ['diposting', 'dibatalkan'], true))
-                    <form method="post" action="{{ route('penerimaan.qcMulai', $row) }}">
-                        @csrf
-                        <button class="px-5 py-2.5 rounded-lg bg-white border hover:bg-gray-50">Mulai QC</button>
-                    </form>
-                @endif
-
-                @if (!in_array($row->status, ['diposting', 'dibatalkan'], true))
-                    <a href="{{ route('inspeksi-qc.create', ['penerimaan_id' => $row->id]) }}"
-                        class="px-5 py-2.5 rounded-lg bg-white border hover:bg-gray-50">
-                        Buat / Ubah QC
-                    </a>
-                @endif
-
-                @if (auth()->user()->punyaIzin('stok.posting') || auth()->user()->punyaIzin('pergerakan_stok.kelola'))
-                    <form method="post" action="{{ route('penerimaan.postingStokMasuk', $row) }}">
-                        @csrf
-                        <button class="px-5 py-2.5 rounded-lg bg-white border hover:bg-gray-50">Posting Stok Masuk</button>
-                    </form>
-                @endif
-            @endif
-        </div>
     </form>
+    <div class="mt-5 flex flex-wrap gap-2">
+        @if ($canManage && $row->status !== 'diposting')
+            <button form="penerimaanForm" class="px-5 py-2.5 rounded-lg bg-white border hover:bg-gray-50">Simpan</button>
+        @endif
+
+        @if ($isEdit && $canManage)
+            @if (!in_array($row->status, ['diposting', 'dibatalkan'], true))
+                <form method="post" action="{{ route('penerimaan.qcMulai', $row) }}">
+                    @csrf
+                    <button class="px-5 py-2.5 rounded-lg bg-white border hover:bg-gray-50">Mulai QC</button>
+                </form>
+            @endif
+
+            @if (!in_array($row->status, ['diposting', 'dibatalkan'], true))
+                <a href="{{ route('inspeksi-qc.create', ['penerimaan_id' => $row->id]) }}"
+                    class="px-5 py-2.5 rounded-lg bg-white border hover:bg-gray-50">
+                    Buat / Ubah QC
+                </a>
+            @endif
+
+            @if (auth()->user()->punyaIzin('stok.posting') || auth()->user()->punyaIzin('pergerakan_stok.kelola'))
+                <form method="post" action="{{ route('penerimaan.postingStokMasuk', $row) }}">
+                    @csrf
+                    <button class="px-5 py-2.5 rounded-lg bg-white border hover:bg-gray-50">Posting Stok Masuk</button>
+                </form>
+            @endif
+        @endif
+    </div>
 
     <script>
         (function() {
