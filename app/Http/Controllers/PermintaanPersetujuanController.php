@@ -196,38 +196,6 @@ class PermintaanPersetujuanController extends Controller
         });
     }
 
-
-
-
-
-    // public function show(PermintaanPersetujuan $permintaan_persetujuan)
-    // {
-    //     $permintaan_persetujuan->load([
-    //         'alur',
-    //         'langkah.diputuskan',
-    //     ]);
-
-    //     $step = $permintaan_persetujuan->langkah
-    //         ->firstWhere('no_langkah', $permintaan_persetujuan->langkah_saat_ini);
-
-    //     $bolehApproveStep = false;
-
-    //     if ($step && $step->status === 'menunggu') {
-
-    //         $tipe = data_get($step->snapshot, 'tipe_penyetuju');
-    //         $peranId = (int) data_get($step->snapshot, 'peran_id');
-
-    //         if ($tipe === 'peran' && $peranId > 0) {
-    //             $bolehApproveStep = ((int) auth()->user()->id === $peranId);
-    //         }
-    //     }
-
-    //     return view('permintaan_persetujuan.show', [
-    //         'data' => $permintaan_persetujuan,
-    //         'step' => $step,
-    //         'bolehApproveStep' => $bolehApproveStep,
-    //     ]);
-    // }
     public function show(PermintaanPersetujuan $permintaan_persetujuan)
     {
         $permintaan_persetujuan->load([
@@ -364,6 +332,19 @@ class PermintaanPersetujuanController extends Controller
                 \App\Models\Aset::where('id', $hapus->aset_id)->update([
                     'status_siklus' => 'tersedia',
                 ]);
+            }
+
+            return;
+        }
+        
+        if ($tipe === 'pesanan_pembelian') {
+            $po = \App\Models\PesananPembelian::find($idEntitas);
+            if (!$po) return;
+
+            if ($statusAkhir === 'disetujui') {
+                $po->update(['status' => 'disetujui']);
+            } else {
+                $po->update(['status' => 'ditolak']);
             }
 
             return;

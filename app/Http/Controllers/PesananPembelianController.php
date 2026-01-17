@@ -9,24 +9,31 @@ use App\Models\PesananPembelian;
 use App\Models\PesananPembelianDetail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Services\ApprovalService;
 
 class PesananPembelianController extends Controller
 {
+
+    public function __construct(private ApprovalService $approvalService) {}
+
     public function index(Request $request)
     {
         $instansiId = Auth::user()->instansi_id;
 
         $q = PesananPembelian::query()
-            ->with(['pemasok'])
+            ->with(['pemasok', 'permintaanPersetujuan'])
             ->where('instansi_id', $instansiId)
             ->orderByDesc('id');
 
         if ($request->filled('status')) {
-            $q->where('status', $request->string('status'));
+            $status = (string) $request->input('status');
+            $q->where('status', $status);
+            // $q->where('status', $request->string('status'));
         }
 
         if ($request->filled('keyword')) {
-            $kw = $request->string('keyword');
+            // $kw = $request->string('keyword');
+            $kw = trim((string) $request->input('keyword'));
             $q->where(function ($x) use ($kw) {
                 $x->where('nomor_po', 'like', "%{$kw}%")
                     ->orWhere('catatan', 'like', "%{$kw}%");
@@ -246,9 +253,21 @@ class PesananPembelianController extends Controller
             return back()->withErrors(['status' => 'Hanya PO draft yang bisa diajukan.']);
         }
 
-        $pesanan_pembelian->update(['status' => 'diajukan']);
+        // $pesanan_pembelian->update(['status' => 'diajukan']);
 
-        return back()->with('ok', 'PO diajukan.');
+        $permintaan = $this->approvalService->buatPermintaan(
+            berlakuUntuk: 'pesanan_pembelian',
+            tipeEntitas: 'pesanan_pembelian',
+            idEntitas: $pesanan_pembelian->id,
+            ringkasan: "Pesanan Pembelian #" . ($pesanan_pembelian->nomor_po ?? $pesanan_pembelian->id)
+        );
+
+        $pesanan_pembelian->update([
+            'status' => 'diajukan',
+            'permintaan_persetujuan_id' => $permintaan->id,
+        ]);
+
+        return back()->with('ok', 'PO diajukan dan menunggu persetujuan.');
     }
 
     public function setujui(PesananPembelian $pesanan_pembelian)

@@ -88,14 +88,15 @@
 
                 <div class="md:col-span-2">
                     <label class="text-sm text-gray-700 block mb-1">Tanggal PO</label>
-                    <input type="date" name="tanggal_po" value="{{ old('tanggal_po', $row->tanggal_po) }}"
+                    <input type="date" name="tanggal_po"
+                        value="{{ old('tanggal_po', $row->tanggal_po ? \Carbon\Carbon::parse($row->tanggal_po)->format('Y-m-d') : '') }}"
                         class="w-full border rounded-lg px-3 py-2" {{ $canManage ? '' : 'readonly' }}>
                 </div>
 
                 <div class="md:col-span-2">
                     <label class="text-sm text-gray-700 block mb-1">Estimasi</label>
                     <input type="date" name="tanggal_estimasi"
-                        value="{{ old('tanggal_estimasi', $row->tanggal_estimasi) }}"
+                        value="{{ old('tanggal_estimasi', $row->tanggal_estimasi ? \Carbon\Carbon::parse($row->tanggal_estimasi)->format('Y-m-d') : '') }}"
                         class="w-full border rounded-lg px-3 py-2" {{ $canManage ? '' : 'readonly' }}>
                 </div>
 
@@ -169,7 +170,7 @@
                             <th class="text-left px-3 py-3 w-[160px]">Harga</th>
                             <th class="text-left px-3 py-3 w-[140px]">Pajak (%)</th>
                             <th class="text-left px-3 py-3">Deskripsi</th>
-                            <th class="text-right px-3 py-3 w-[140px]">Total Baris</th>
+                            <th class="text-right px-3 py-3 w-[140px]">Total Harga</th>
                             <th class="text-right px-3 py-3 w-[90px]">Aksi</th>
                         </tr>
                     </thead>
@@ -190,16 +191,22 @@
                                     @endif
                                 </td>
                                 <td class="px-3 py-2">
-                                    <input name="qty[]" value="{{ $d['qty'] }}"
+                                    {{-- <input name="qty[]" value="{{ $d['qty'] }}" --}}
+                                    <input name="qty[]"
+                                        value="{{ old('qty.' . $loop->index, rtrim(rtrim(number_format((float) $d['qty'], 4, '.', ''), '0'), '.')) }}"
                                         class="w-full border rounded-lg px-2 py-2 qty" {{ $canManage ? '' : 'readonly' }}>
                                 </td>
                                 <td class="px-3 py-2">
-                                    <input name="harga_satuan[]" value="{{ $d['harga_satuan'] }}"
+                                    {{-- <input name="harga_satuan[]" value="{{ $d['harga_satuan'] }}" --}}
+                                    <input name="harga_satuan[]"
+                                        value="{{ old('harga_satuan.' . $loop->index, rtrim(rtrim(number_format((float) $d['harga_satuan'], 4, '.', ''), '0'), '.')) }}"
                                         class="w-full border rounded-lg px-2 py-2 harga"
                                         {{ $canManage ? '' : 'readonly' }}>
                                 </td>
                                 <td class="px-3 py-2">
-                                    <input name="tarif_pajak[]" value="{{ $d['tarif_pajak'] }}"
+                                    {{-- <input name="tarif_pajak[]" value="{{ $d['tarif_pajak'] }}" --}}
+                                    <input name="tarif_pajak[]"
+                                        value="{{ old('tarif_pajak.' . $loop->index, rtrim(rtrim(number_format((float) $d['tarif_pajak'], 4, '.', ''), '0'), '.')) }}"
                                         class="w-full border rounded-lg px-2 py-2 pajak"
                                         {{ $canManage ? '' : 'readonly' }}>
                                 </td>
@@ -247,36 +254,35 @@
                 </table>
             </div>
         </div>
-
-        <div class="mt-5 flex flex-wrap gap-2">
-            @if ($canManage)
-                <button class="px-5 py-2.5 rounded-lg bg-white border hover:bg-gray-50">Simpan</button>
-            @endif
-
-            @if ($isEdit && $canManage)
-                @if ($row->status === 'draft')
-                    <form method="post" action="{{ route('pesanan-pembelian.ajukan', $row) }}">
-                        @csrf
-                        <button class="px-5 py-2.5 rounded-lg bg-white border hover:bg-gray-50">Ajukan</button>
-                    </form>
-                @endif
-
-                @if ($row->status === 'diajukan')
-                    <form method="post" action="{{ route('pesanan-pembelian.setujui', $row) }}">
-                        @csrf
-                        <button class="px-5 py-2.5 rounded-lg bg-white border hover:bg-gray-50">Setujui</button>
-                    </form>
-                @endif
-
-                @if (!in_array($row->status, ['diterima', 'dibatalkan'], true))
-                    <form method="post" action="{{ route('pesanan-pembelian.batalkan', $row) }}">
-                        @csrf
-                        <button class="px-5 py-2.5 rounded-lg bg-white border hover:bg-gray-50">Batalkan</button>
-                    </form>
-                @endif
-            @endif
-        </div>
     </form>
+    <div class="mt-5 flex flex-wrap gap-2">
+        @if ($canManage)
+            <button form="poForm" class="px-5 py-2.5 rounded-lg bg-white border hover:bg-gray-50">Simpan</button>
+        @endif
+
+        @if ($isEdit && $canManage)
+            @if ($row->status === 'draft')
+                <form method="post" action="{{ route('pesanan-pembelian.ajukan', $row) }}">
+                    @csrf
+                    <button class="px-5 py-2.5 rounded-lg bg-white border hover:bg-gray-50">Ajukan</button>
+                </form>
+            @endif
+
+            @if ($row->status === 'diajukan')
+                <form method="post" action="{{ route('pesanan-pembelian.setujui', $row) }}">
+                    @csrf
+                    <button class="px-5 py-2.5 rounded-lg bg-white border hover:bg-gray-50">Setujui</button>
+                </form>
+            @endif
+
+            @if (!in_array($row->status, ['diterima', 'dibatalkan'], true))
+                <form method="post" action="{{ route('pesanan-pembelian.batalkan', $row) }}">
+                    @csrf
+                    <button class="px-5 py-2.5 rounded-lg bg-white border hover:bg-gray-50">Batalkan</button>
+                </form>
+            @endif
+        @endif
+    </div>
 
     <script>
         (function() {

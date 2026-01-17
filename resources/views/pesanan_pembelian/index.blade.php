@@ -75,22 +75,49 @@
                 <tbody>
                     @forelse($data as $r)
                         @php
-                            $badge = 'bg-gray-100 text-gray-700';
-                            if ($r->status === 'draft') {
-                                $badge = 'bg-gray-100 text-gray-700';
+                            $statusTampil = $r->status;
+                            $pp = $r->permintaanPersetujuan; // relasi hasOne
+                            $apprStatus = $pp?->status; // diajukan/disetujui/ditolak/null
+
+                            // kalau ada permintaan persetujuan yg masih menunggu → override status tampilan
+                            if ($apprStatus === 'menunggu') {
+                                $statusTampil = 'diajukan';
                             }
-                            if ($r->status === 'diajukan') {
-                                $badge = 'bg-yellow-100 text-yellow-700';
+                            // default
+                            $color = 'bg-gray-100 text-gray-700';
+
+                            if ($statusTampil === 'menunggu persetujuan') {
+                                $color = 'bg-yellow-100 text-yellow-800';
+                            } elseif ($statusTampil === 'diajukan') {
+                                $color = 'bg-yellow-100 text-yellow-700';
+                            } elseif ($statusTampil === 'disetujui') {
+                                $color = 'bg-green-100 text-green-700';
+                            } elseif ($statusTampil === 'diterima' || $statusTampil === 'diterima_sebagai') {
+                                $color = 'bg-blue-100 text-blue-700';
+                            } elseif ($statusTampil === 'dibatalkan') {
+                                $color = 'bg-red-200 text-red-600';
                             }
-                            if ($r->status === 'disetujui') {
-                                $badge = 'bg-green-100 text-green-700';
-                            }
-                            if ($r->status === 'diterima' || $r->status === 'diterima_sebagian') {
-                                $badge = 'bg-blue-100 text-blue-700';
-                            }
-                            if ($r->status === 'dibatalkan') {
-                                $badge = 'bg-red-100 text-red-700';
-                            }
+
+                            $showLink = $pp && in_array($apprStatus, ['diajukan', 'menunggu'], true); // ✅ link hanya kalau masih menunggu
+
+                            // $badge = 'bg-gray-100 text-gray-700';
+
+                            // if ($r->status === 'draft') {
+                            //     $badge = 'bg-gray-100 text-gray-700';
+                            // }
+                            // if ($r->status === 'diajukan') {
+                            //     $badge = 'bg-yellow-100 text-yellow-700';
+                            // }
+                            // if ($r->status === 'disetujui') {
+                            //     $badge = 'bg-green-100 text-green-700';
+                            // }
+                            // if ($r->status === 'diterima' || $r->status === 'diterima_sebagian') {
+                            //     $badge = 'bg-blue-100 text-blue-700';
+                            // }
+                            // if ($r->status === 'dibatalkan') {
+                            //     $badge = 'bg-red-100 text-red-700';
+                            // }
+
                         @endphp
                         <tr class="border-b border-gray-300 hover:bg-gray-50">
                             <td class="px-4 py-3 font-medium text-gray-900">
@@ -112,9 +139,16 @@
                             </td>
                             <td class="px-4 py-3">
                                 <span
-                                    class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium {{ $badge }}">
-                                    {{ $r->status }}
+                                    class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium {{ $color }}">
+                                    {{-- {{ $r->status }} --}}
+                                    {{ ucfirst($statusTampil) }}
                                 </span>
+                                @if ($showLink)
+                                    <a href="{{ route('permintaan-persetujuan.show', $pp->id) }}"
+                                        class="ml-2 text-xs text-blue-600 hover:underline">
+                                        Lihat
+                                    </a>
+                                @endif
                             </td>
                             <td class="px-4 py-3 text-right">
                                 @if (auth()->user()->punyaIzin('pesanan_pembelian.kelola'))
