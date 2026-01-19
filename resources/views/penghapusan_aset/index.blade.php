@@ -3,7 +3,7 @@
 @section('content')
     <div class="space-y-4">
 
-        <!-- Header -->
+         Header -->
         <div class="flex items-center justify-between">
             <h1 class="text-xl font-semibold">Penghapusan Aset</h1>
             <a href="{{ route('penghapusan-aset.create') }}"

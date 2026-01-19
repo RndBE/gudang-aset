@@ -11,6 +11,9 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Http;
 use GuzzleHttp\Promise\PromiseInterface;
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\RequestException;
+
 
 class BarangController extends Controller
 {
@@ -270,23 +273,77 @@ class BarangController extends Controller
 
         $file = $request->file('image');
 
-        $resp = Http::timeout(120)
-            ->acceptJson()
-            ->attach('image', file_get_contents($file->getRealPath()), $file->getClientOriginalName())
-            ->post($url);
+        $masterKategori = KategoriBarang::query()
+            ->select(['id', 'nama'])
+            ->orderBy('nama', 'asc')
+            ->get()
+            ->values()
+            ->toJson(JSON_UNESCAPED_UNICODE);
 
-        if ($resp instanceof PromiseInterface) {
-            $resp = $resp->wait();
-        }
+        $masterSatuan = SatuanBarang::query()
+            ->select(['id', 'nama'])
+            ->orderBy('nama', 'asc')
+            ->orderBy('id', 'asc')
+            ->get()
+            ->values()
+            ->toJson(JSON_UNESCAPED_UNICODE);
 
-        if ($resp->failed()) {
+        $client = new Client([
+            'timeout' => 180,
+            'connect_timeout' => 10,
+            'http_errors' => false,
+        ]);
+
+        try {
+            $resp = $client->post($url, [
+                'multipart' => [
+                    [
+                        'name' => 'file',
+                        'contents' => fopen($file->getRealPath(), 'r'),
+                        'filename' => $file->getClientOriginalName(),
+                        'headers' => [
+                            'Content-Type' => $file->getMimeType(),
+                        ],
+                    ],
+                    [
+                        'name' => 'master_kategori',
+                        'contents' => $masterKategori,
+                    ],
+                    [
+                        'name' => 'master_satuan',
+                        'contents' => $masterSatuan,
+                    ],
+                ],
+            ]);
+
+            $status = $resp->getStatusCode();
+            $bodyStr = (string) $resp->getBody();
+            $bodyJson = json_decode($bodyStr, true);
+
+            if ($status >= 400) {
+                return response()->json([
+                    'message' => 'OCR gagal.',
+                    'status' => $status,
+                    'body' => $bodyJson ?? $bodyStr,
+                ], 422);
+            }
+
+            return response()->json($bodyJson ?? []);
+        } catch (RequestException $e) {
+            $errBody = $e->hasResponse()
+                ? (string) $e->getResponse()->getBody()
+                : null;
+
             return response()->json([
-                'message' => 'OCR gagal.',
-                'status' => $resp->status(),
-                'body' => $resp->json() ?? $resp->body(),
+                'message' => 'Request ke OCR error.',
+                'error' => $e->getMessage(),
+                'body' => $errBody,
             ], 422);
+        } catch (\Throwable $e) {
+            return response()->json([
+                'message' => 'Terjadi error.',
+                'error' => $e->getMessage(),
+            ], 500);
         }
-
-        return response()->json($resp->json() ?? []);
     }
 }

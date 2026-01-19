@@ -1,4 +1,153 @@
 @extends('layouts.app')
+<style>
+    #scanOverlay .scanner-frame {
+        border: 2px solid rgba(255, 255, 255, .35);
+        box-shadow:
+            0 0 0 9999px rgba(0, 0, 0, .05) inset,
+            0 10px 40px rgba(0, 0, 0, .25);
+    }
+
+    #scanOverlay .scanner-corners {
+        --c: rgba(197, 141, 42, .95);
+        position: absolute;
+        inset: 1.5rem;
+        border-radius: .75rem;
+        pointer-events: none;
+        filter: drop-shadow(0 0 10px rgba(197, 141, 42, .35));
+    }
+
+    #scanOverlay .scanner-corners .corner {
+        position: absolute;
+        width: 34px;
+        height: 34px;
+        border: 10px solid var(--c);
+    }
+
+    #scanOverlay .scanner-corners .corner.tl {
+        left: 0;
+        top: 0;
+        border-right: 0;
+        border-bottom: 0;
+        border-top-left-radius: 14px;
+    }
+
+    #scanOverlay .scanner-corners .corner.tr {
+        right: 0;
+        top: 0;
+        border-left: 0;
+        border-bottom: 0;
+        border-top-right-radius: 14px;
+    }
+
+    #scanOverlay .scanner-corners .corner.bl {
+        left: 0;
+        bottom: 0;
+        border-right: 0;
+        border-top: 0;
+        border-bottom-left-radius: 14px;
+    }
+
+    #scanOverlay .scanner-corners .corner.br {
+        right: 0;
+        bottom: 0;
+        border-left: 0;
+        border-top: 0;
+        border-bottom-right-radius: 14px;
+    }
+
+    @keyframes beamMove {
+        0% {
+            top: 1.5rem;
+            opacity: .95;
+        }
+
+        70% {
+            opacity: 1;
+        }
+
+        100% {
+            top: calc(100% - 1.5rem - 64px);
+            opacity: .95;
+        }
+    }
+
+    #scanOverlay .scanner-beam {
+        will-change: top;
+    }
+
+
+    #scanOverlay .scanner-beam {
+        --g: rgba(197, 141, 42, .85);
+        background: linear-gradient(to bottom,
+                transparent,
+                rgba(255, 255, 255, .08),
+                var(--g),
+                rgba(255, 255, 255, .10),
+                transparent);
+        box-shadow: 0 12px 30px rgba(197, 141, 42, .22);
+        animation: beamMove 1.55s ease-in-out infinite alternate;
+        mix-blend-mode: screen;
+    }
+
+    @keyframes shimmerMove {
+        0% {
+            transform: translateX(-60%) skewX(-12deg);
+            opacity: 0;
+        }
+
+        25% {
+            opacity: .22;
+        }
+
+        60% {
+            opacity: .18;
+        }
+
+        100% {
+            transform: translateX(60%) skewX(-12deg);
+            opacity: 0;
+        }
+    }
+
+    #scanOverlay .scanner-shimmer {
+        position: absolute;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .22), transparent);
+        animation: shimmerMove 1.9s ease-in-out infinite;
+        pointer-events: none;
+    }
+
+    @keyframes dotPulse {
+
+        0%,
+        80%,
+        100% {
+            transform: translateY(0);
+            opacity: .35;
+        }
+
+        40% {
+            transform: translateY(-2px);
+            opacity: 1;
+        }
+    }
+
+    #scanOverlay .scanner-dots span {
+        width: 6px;
+        height: 6px;
+        border-radius: 999px;
+        background: rgba(17, 24, 39, .9);
+        display: inline-block;
+        animation: dotPulse 1s infinite;
+    }
+
+    #scanOverlay .scanner-dots span:nth-child(2) {
+        animation-delay: .15s;
+    }
+
+    #scanOverlay .scanner-dots span:nth-child(3) {
+        animation-delay: .3s;
+    }
+</style>
 
 @section('content')
     <div class="flex items-center justify-between gap-4 mb-3">
@@ -51,11 +200,38 @@
 
             <div class="rounded-lg border-gray-300 border bg-gray-50 p-3">
                 <div class="text-xs text-gray-600 mb-2">Preview</div>
-                <img id="imgPreview" class="w-full max-h-[360px] object-contain rounded-lg bg-white" alt="">
+
+                <div class="relative rounded-lg overflow-hidden bg-white">
+                    <img id="imgPreview" class="w-full max-h-90 object-contain" alt="">
+
+                    <div id="scanOverlay"
+                        class="absolute inset-0 hidden items-center justify-center overflow-hidden rounded-xl">
+                        <div class="absolute inset-0 bg-black/35"></div>
+
+                        <div class="scanner-frame absolute inset-6 rounded-xl"></div>
+                        <div class="scanner-corners absolute inset-6 rounded-xl pointer-events-none">
+                            <span class="corner tl"></span>
+                            <span class="corner tr"></span>
+                            <span class="corner bl"></span>
+                            <span class="corner br"></span>
+                        </div>
+
+                        <div class="scanner-beam absolute inset-x-6 top-6 h-16 rounded-xl"></div>
+                        <div class="scanner-shimmer absolute inset-6 rounded-xl"></div>
+
+                        <div class="relative z-10 flex items-center gap-3 rounded-xl bg-white/85 px-4 py-2 backdrop-blur">
+                            <div class="scanner-dots flex items-center gap-1">
+                                <span></span><span></span><span></span>
+                            </div>
+                            <div class="text-sm font-medium text-gray-900">Memindai…</div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
+
             <div class="flex items-center gap-3">
-                <button type="button" id="btnScan" hidden
+                <button type="button" id="btnScan"
                     class="px-3 py-2 rounded-lg btn-outline-active cursor-pointer text-sm">
                     Scan Gambar
                 </button>
@@ -115,7 +291,7 @@
         const imgPreview = document.getElementById('imgPreview');
         const btnScan = document.getElementById('btnScan');
         const scanStatus = document.getElementById('scanStatus');
-
+        const scanOverlay = document.getElementById('scanOverlay');
         const rowsBody = document.getElementById('rowsBody');
         const rowCount = document.getElementById('rowCount');
         const btnAddRow = document.getElementById('btnAddRow');
@@ -224,6 +400,11 @@
             btnScan.disabled = isBusy;
             btnAddRow.disabled = isBusy;
             imgInput.disabled = isBusy;
+
+            if (scanOverlay) {
+                scanOverlay.classList.toggle('hidden', !isBusy);
+                scanOverlay.classList.toggle('flex', isBusy);
+            }
         }
 
         function resetResult() {
@@ -273,7 +454,7 @@
                 });
 
                 const data = await res.json().catch(() => null);
-
+                console.log(data);
                 if (!res.ok) {
                     scanStatus.textContent = data?.message ?? 'OCR gagal.';
                     return;

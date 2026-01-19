@@ -38,6 +38,8 @@ Route::get('/login', [AuthController::class, 'formLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.post');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
+Route::get('/api/kategori-barang', [KategoriBarangController::class, 'api']);
+Route::get('/api/satuan-barang', [SatuanBarangController::class, 'api']);
 Route::middleware('auth')->group(function () {
     Route::get('/', fn() => redirect()->route('dashboard'));
     Route::get('/dashboard', fn() => view('dashboard'))->name('dashboard');
@@ -331,7 +333,4 @@ Route::middleware('auth')->group(function () {
     Route::post('pengeluaran/{pengeluaran}/batalkan', [\App\Http\Controllers\PengeluaranController::class, 'batalkan'])
         ->name('pengeluaran.batalkan')
         ->middleware('izin:pengeluaran.kelola');
-
-    Route::get('/api/kategori-barang', [KategoriBarangController::class, 'api']);
-    Route::get('/api/satuan-barang', [SatuanBarangController::class, 'api']);
 });
