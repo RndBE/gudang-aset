@@ -12,7 +12,7 @@
 
         @if ($canManage)
             <a href="{{ route('penerimaan.index') }}"
-                class="inline-flex items-center px-6 py-3 rounded-lg btn-active text-sm border hover:bg-gray-50">
+                class="btn-active px-4 py-2 lg:px-6 lg:py-3 rounded-lg text-sm  text-center">
                 Pilih dari Penerimaan
             </a>
         @endif
@@ -65,20 +65,20 @@
                             }
                         @endphp
                         <tr class="border-b border-gray-300 hover:bg-gray-50">
-                            <td class="px-4 py-3 font-medium text-gray-900">{{ $r->nomor_qc }}</td>
-                            <td class="px-4 py-3">{{ optional($r->tanggal_qc)->format('Y-m-d') }}</td>
-                            <td class="px-4 py-3">
+                            <td class="px-4 py-3 whitespace-nowrap font-medium text-gray-900">{{ $r->nomor_qc }}</td>
+                            <td class="px-4 py-3 whitespace-nowrap">{{ optional($r->tanggal_qc)->format('Y-m-d') }}</td>
+                            <td class="px-4 py-3 whitespace-nowrap">
                                 <div class="text-gray-900">{{ $r->penerimaan?->nomor_penerimaan ?? '-' }}</div>
                                 <div class="text-xs text-gray-500">
                                     {{ optional($r->penerimaan?->tanggal_penerimaan)->format('Y-m-d') }}</div>
                             </td>
-                            <td class="px-4 py-3">
+                            <td class="px-4 py-3 whitespace-nowrap">
                                 <span
                                     class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium {{ $badge }}">
                                     {{ $r->status }}
                                 </span>
                             </td>
-                            <td class="px-4 py-3 text-right">
+                            <td class="px-4 py-3 whitespace-nowrap text-right">
                                 @if ($canManage)
                                     <a href="{{ route('inspeksi-qc.edit', $r) }}"
                                         class="inline-flex items-center px-3 py-1.5 rounded-lg border btn-outline-active bg-white hover:bg-gray-50">Buka</a>

@@ -7,12 +7,12 @@
         <div class="flex items-center justify-between">
             <h1 class="text-xl font-semibold">Detail Alur Persetujuan</h1>
             <div class="flex gap-2">
-                <a href="{{ route('alur-persetujuan.index') }}" class="px-3 py-2 rounded border text-sm hover:bg-gray-100">
+                <a href="{{ route('alur-persetujuan.index') }}" class="px-3 py-2 rounded-lg border text-sm hover:bg-gray-100">
                     Kembali
                 </a>
 
                 <a href="{{ route('alur-persetujuan.edit', $data->id) }}"
-                    class="px-3 py-2 rounded border text-sm text-blue-600 hover:bg-blue-50">
+                    class="px-3 py-2 rounded-lg border text-sm text-blue-600 hover:bg-blue-50">
                     Edit
                 </a>
 
@@ -20,7 +20,7 @@
                     @csrf
                     @method('DELETE')
                     <button onclick="return confirm('Hapus alur persetujuan ini?')"
-                        class="px-3 py-2 rounded border text-sm text-red-600 hover:bg-red-50">
+                        class="px-3 py-2 rounded-lg border text-sm text-red-600 hover:bg-red-50">
                         Hapus
                     </button>
                 </form>
@@ -28,13 +28,13 @@
         </div>
 
         @if (session('success'))
-            <div class="bg-green-100 border border-green-300 text-green-800 px-4 py-2 rounded">
+            <div class="bg-green-100 border border-green-300 text-green-800 px-4 py-2 rounded-lg">
                 {{ session('success') }}
             </div>
         @endif
 
         @if (session('error'))
-            <div class="bg-red-100 border border-red-300 text-red-800 px-4 py-2 rounded">
+            <div class="bg-red-100 border border-red-300 text-red-800 px-4 py-2 rounded-lg">
                 {{ session('error') }}
             </div>
         @endif
@@ -42,7 +42,7 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
 
             <!-- Info Alur -->
-            <div class="bg-white border rounded p-5 space-y-3">
+            <div class="bg-white border rounded-lg p-4 border-gray-300 space-y-3">
                 <div>
                     <div class="text-xs text-gray-500">Nama Alur</div>
                     <div class="font-medium">{{ $data->nama }}</div>
@@ -61,9 +61,9 @@
                 <div>
                     <div class="text-xs text-gray-500">Status</div>
                     @if ($data->status)
-                        <span class="px-2 py-1 text-xs rounded bg-green-100 text-green-700">Aktif</span>
+                        <span class="px-2 py-1 text-xs rounded-lg bg-green-100 text-green-700">Aktif</span>
                     @else
-                        <span class="px-2 py-1 text-xs rounded bg-gray-200 text-gray-600">Nonaktif</span>
+                        <span class="px-2 py-1 text-xs rounded-lg bg-gray-200 text-gray-600">Nonaktif</span>
                     @endif
                 </div>
 
@@ -72,7 +72,7 @@
                     <div class="whitespace-pre-line">{{ $data->keterangan ?? '-' }}</div>
                 </div> --}}
 
-                <hr>
+                <hr class="border-gray-300">
 
                 <div>
                     <div class="text-xs text-gray-500">Dibuat Pada</div>
@@ -90,10 +90,10 @@
             </div>
 
             <!-- Langkah Persetujuan -->
-            <div class="md:col-span-2 bg-white border rounded overflow-hidden">
-                <div class="px-5 py-3 border-b flex items-center justify-between">
+            <div class="md:col-span-2 bg-white border rounded-lg overflow-hidden border-gray-300">
+                <div class="px-5 py-3 border-b  border-gray-300 flex items-center justify-between">
                     <div class="font-semibold">Langkah Persetujuan</div>
-                    <span class="px-2 py-1 text-xs rounded bg-blue-100 text-blue-700">
+                    <span class="px-2 py-1 text-xs rounded-lg bg-blue-100 text-blue-700">
                         {{ $data->langkah->count() }} Langkah
                     </span>
                 </div>
@@ -111,7 +111,7 @@
                         </thead>
                         <tbody>
                             @forelse($data->langkah as $l)
-                                <tr class="border-t">
+                                <tr class="border-t  border-gray-300">
                                     <td class="px-4 py-2 font-medium">{{ $l->no_langkah }}</td>
                                     <td class="px-4 py-2">
                                         <div class="font-medium">{{ $l->nama_langkah }}</div>
@@ -130,7 +130,7 @@
 
                                         @if ($izinObj)
                                             <span
-                                                class="px-2 py-0.5 rounded text-xs bg-blue-50 text-blue-700 border border-blue-100">
+                                                class="px-2 py-0.5 rounded-lg text-xs bg-blue-50 text-blue-700 border border-blue-100">
                                                 {{ $izinObj->nama }}
                                             </span>
                                         @else
@@ -159,7 +159,7 @@
                 </div>
 
                 @if ($data->langkah->count() > 0)
-                    <div class="px-5 py-2 text-xs text-gray-500 border-t bg-gray-50">
+                    <div class="px-5 py-2 text-xs text-gray-500 border-t  border-gray-300 bg-gray-50">
                         Catatan: urutan langkah harus 1,2,3… agar proses approval berjalan normal.
                     </div>
                 @endif

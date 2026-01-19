@@ -3,12 +3,12 @@
 @section('content')
     <div class="flex items-center justify-between gap-4 mb-4">
         <div>
-            <h1 class="text-xl font-semibold">Pesanan Pembelian (PO)</h1>
+            <h1 class="text-xl font-semibold">Pesanan Pembelian</h1>
         </div>
 
         @if (auth()->user()->punyaIzin('pesanan_pembelian.kelola'))
             <a href="{{ route('pesanan-pembelian.create') }}"
-                class="inline-flex items-center px-6 text-sm py-3 rounded-lg btn-active hover:bg-gray-50">
+                class="btn-active px-4 py-2 lg:px-6 lg:py-3 rounded-lg text-sm  text-center">
                 Buat PO
             </a>
         @endif
@@ -120,24 +120,24 @@
 
                         @endphp
                         <tr class="border-b border-gray-300 hover:bg-gray-50">
-                            <td class="px-4 py-3 font-medium text-gray-900">
+                            <td class="px-4 py-3 whitespace-nowrap font-medium text-gray-900">
                                 {{ $r->nomor_po }}
                             </td>
-                            <td class="px-4 py-3">
+                            <td class="px-4 py-3 whitespace-nowrap">
                                 {{ optional($r->tanggal_po)->format('Y-m-d') }}
                             </td>
-                            <td class="px-4 py-3">
+                            <td class="px-4 py-3 whitespace-nowrap">
                                 <div class="text-gray-900">{{ $r->pemasok?->nama ?? '-' }}</div>
                                 <div class="text-xs text-gray-500">{{ $r->pemasok?->kode ?? '' }}</div>
                             </td>
-                            <td class="px-4 py-3">
+                            <td class="px-4 py-3 whitespace-nowrap">
                                 <div class="font-medium text-gray-900">{{ number_format((float) $r->total, 2, ',', '.') }}
                                 </div>
                                 <div class="text-xs text-gray-500">Subtotal
                                     {{ number_format((float) $r->subtotal, 2, ',', '.') }} · Pajak
                                     {{ number_format((float) $r->pajak, 2, ',', '.') }}</div>
                             </td>
-                            <td class="px-4 py-3">
+                            <td class="px-4 py-3 whitespace-nowrap">
                                 <span
                                     class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium {{ $color }}">
                                     {{ ucfirst($statusTampil) }}

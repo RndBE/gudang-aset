@@ -8,7 +8,7 @@
 
         @if (auth()->user() && auth()->user()->punyaIzin('permintaan.kelola'))
             <a href="{{ route('permintaan.create') }}"
-                class="px-6 py-3 rounded-lg text-sm  btn-active text-white hover:bg-black">Buat
+                class="btn-active px-4 py-2 lg:px-6 lg:py-3 rounded-lg text-sm  text-center">Buat
                 Permintaan</a>
         @endif
     </div>
@@ -58,13 +58,14 @@
             <tbody>
                 @forelse($items as $it)
                     <tr class="border-t  border-gray-300">
-                        <td class="px-4 py-3 font-medium">{{ $it->nomor_permintaan }}</td>
-                        <td class="px-4 py-3">{{ optional($it->tanggal_permintaan)->format('Y-m-d H:i') }}</td>
-                        <td class="px-4 py-3">{{ $it->pemohon?->nama_lengkap }}</td>
-                        <td class="px-4 py-3">{{ $it->unitOrganisasi?->nama }}</td>
-                        <td class="px-4 py-3">{{ $it->tipe_permintaan }}</td>
-                        <td class="px-4 py-3">{{ $it->prioritas }}</td>
-                        <td class="px-4 py-3">
+                        <td class="px-4 py-3 whitespace-nowrap font-medium">{{ $it->nomor_permintaan }}</td>
+                        <td class="px-4 py-3 whitespace-nowrap">{{ optional($it->tanggal_permintaan)->format('Y-m-d H:i') }}
+                        </td>
+                        <td class="px-4 py-3 whitespace-nowrap">{{ $it->pemohon?->nama_lengkap }}</td>
+                        <td class="px-4 py-3 whitespace-nowrap">{{ $it->unitOrganisasi?->nama }}</td>
+                        <td class="px-4 py-3 whitespace-nowrap">{{ $it->tipe_permintaan }}</td>
+                        <td class="px-4 py-3 whitespace-nowrap">{{ $it->prioritas }}</td>
+                        <td class="px-4 py-3 whitespace-nowrap">
                             <span
                                 class="px-2 py-1 rounded-lg border-gray-300 border text-sm">{{ $statusList[$it->status] ?? $it->status }}</span>
                         </td>

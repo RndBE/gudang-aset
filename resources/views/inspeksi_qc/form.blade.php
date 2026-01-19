@@ -76,18 +76,20 @@
                 <div class="md:col-span-4">
                     <label class="text-sm text-gray-700 block mb-1">Nomor QC</label>
                     <input name="nomor_qc" value="{{ old('nomor_qc', $row->nomor_qc) }}"
-                        class="w-full border border-gray-300 rounded-lg px-3 py-2" {{ $canManage ? '' : 'readonly' }}>
+                        class="w-full border border-gray-300 text-sm rounded-lg px-3 py-2"
+                        {{ $canManage ? '' : 'readonly' }}>
                 </div>
 
                 <div class="md:col-span-4">
                     <label class="text-sm text-gray-700 block mb-1">Tanggal QC</label>
                     <input type="date" name="tanggal_qc" value="{{ old('tanggal_qc', $row->tanggal_qc) }}"
-                        class="w-full border border-gray-300 rounded-lg px-3 py-2" {{ $canManage ? '' : 'readonly' }}>
+                        class="w-full border border-gray-300 text-sm rounded-lg px-3 py-2"
+                        {{ $canManage ? '' : 'readonly' }}>
                 </div>
 
                 <div class="md:col-span-4">
                     <label class="text-sm text-gray-700 block mb-1">Status QC</label>
-                    <select name="status" class="w-full border border-gray-300 rounded-lg px-3 py-2"
+                    <select name="status" class="w-full border border-gray-300 text-sm rounded-lg px-3 py-2"
                         {{ $canManage ? '' : 'disabled' }}>
                         @foreach (['menunggu', 'lulus', 'gagal', 'sebagian'] as $st)
                             <option value="{{ $st }}" @selected(old('status', $row->status) === $st)>{{ $st }}</option>
@@ -100,7 +102,7 @@
 
                 <div class="md:col-span-12">
                     <label class="text-sm text-gray-700 block mb-1">Ringkasan</label>
-                    <textarea name="ringkasan" rows="2" class="w-full border border-gray-300 rounded-lg px-3 py-2"
+                    <textarea name="ringkasan" rows="2" class="w-full border border-gray-300 text-sm rounded-lg px-3 py-2"
                         {{ $canManage ? '' : 'readonly' }}>{{ old('ringkasan', $row->ringkasan) }}</textarea>
                 </div>
             </div>
@@ -191,7 +193,7 @@
     <div class="mt-5 flex flex-wrap items-center gap-2">
         @if ($canManage)
             <button type="submit" form="qcMulai"
-                class="px-5 py-2.5  btn-outline-active rounded-lg bg-white border hover:bg-gray-50 text-sm">
+                class="px-5 py-2.5  btn-outline-active rounded-lg bg-white border hover:bg-gray-50 text-sm cursor-pointer">
                 {{ $isEdit ? 'Simpan Perubahan' : 'Simpan QC' }}
             </button>
         @endif
@@ -199,7 +201,8 @@
         @if (auth()->user()->punyaIzin('penerimaan.kelola'))
             <form method="post" action="{{ route('penerimaan.postingStokMasuk', $penerimaan) }}">
                 @csrf
-                <button class="px-5 py-2.5 rounded-lg bg-white border  btn-active text-sm hover:bg-gray-50">Posting
+                <button
+                    class="px-5 py-2.5 rounded-lg bg-white border  btn-active text-sm hover:bg-gray-50 cursor-pointer">Posting
                     Stok
                     Masuk</button>
             </form>

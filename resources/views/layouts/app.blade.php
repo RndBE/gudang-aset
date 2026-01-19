@@ -308,11 +308,14 @@
             </div>
         </aside>
 
-        <main class="flex-1 min-h-[calc(100vh-5rem)]">
-            <div class="p-4 sm:p-6 bg-white min-h-[calc(100vh-5rem)]">
-                @yield('content')
+        <main class="flex-1 min-h-[calc(100vh-5rem)] min-w-0">
+            <div class="p-4 sm:p-6 bg-white min-h-[calc(100vh-5rem)] min-w-0 overflow-x-hidden">
+                <div class="w-full max-w-full">
+                    @yield('content')
+                </div>
             </div>
         </main>
+
     </div>
 </body>
 
@@ -437,6 +440,81 @@
             if (e.key === 'Escape' && !overlay.classList.contains('hidden')) close()
         })
     })()
+</script>
+<script>
+    const chatBox = document.querySelector('#chatOverlay .h-\\[calc\\(85vh-140px\\)\\]')
+    const chatInput = document.getElementById('chatInput')
+    const chatSend = document.getElementById('chatSend')
+
+    const API_URL = 'http://127.0.0.1:8001/chat'
+    const history = []
+
+    function appendBubble(role, text) {
+        const wrap = document.createElement('div')
+        if (role === 'user') {
+            wrap.className = 'flex items-start gap-4 justify-end'
+            wrap.innerHTML = `
+        <div class="max-w-[70%] rounded-xl bg-[#F3E8D4] px-5 py-4 text-base text-gray-900"></div>
+        <div class="h-11 w-11 rounded-full bg-gray-100 text-gray-600 flex items-center justify-center shrink-0">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="h-6 w-6">
+            <path fill-rule="evenodd" d="M7.5 7.5a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z" clip-rule="evenodd" />
+          </svg>
+        </div>
+      `
+            wrap.querySelector('div').textContent = text
+        } else {
+            wrap.className = 'flex items-start gap-4'
+            wrap.innerHTML = `
+        <div class="h-11 w-11 rounded-full bg-[#F3E8D4] flex items-center justify-center shrink-0">
+          {!! str_replace(["\n", "\r"], '', file_get_contents(resource_path('icon/robot.svg'))) !!}
+        </div>
+        <div class="max-w-[70%] rounded-3xl border border-gray-200 bg-gray-50 px-5 py-4 text-base text-gray-800"></div>
+      `
+            wrap.querySelector('div:last-child').textContent = text
+        }
+        chatBox.appendChild(wrap)
+        chatBox.scrollTop = chatBox.scrollHeight
+    }
+
+    async function sendMessage() {
+        const text = (chatInput.value || '').trim()
+        if (!text) return
+
+        chatInput.value = ''
+        appendBubble('user', text)
+        history.push({
+            role: 'user',
+            content: text
+        })
+
+        const resp = await fetch(API_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                message: text,
+                history
+            })
+        })
+
+        const data = await resp.json()
+        if (!resp.ok) {
+            appendBubble('assistant', 'Error: ' + (data.detail || 'Gagal memproses permintaan'))
+            return
+        }
+
+        appendBubble('assistant', data.reply)
+        history.push({
+            role: 'assistant',
+            content: data.reply
+        })
+    }
+
+    chatSend.addEventListener('click', sendMessage)
+    chatInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') sendMessage()
+    })
 </script>
 
 </html>

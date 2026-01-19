@@ -158,7 +158,8 @@
             <button type="button" id="btnAddRow"
                 class="px-5 cursor-pointer py-2 rounded-lg border text-sm btn-outline-active me-2">Tambah
                 Baris</button>
-            <a href="{{ route('barang.index') }}" class="px-6 py-3  btn-active rounded-lg border text-sm">Kembali</a>
+            <a href="{{ route('barang.index') }}"
+                class="btn-active px-4 py-2 lg:px-6 lg:py-3 rounded-lg text-sm  text-center">Kembali</a>
         </div>
 
     </div>

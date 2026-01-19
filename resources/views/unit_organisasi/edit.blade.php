@@ -84,9 +84,10 @@
             </div>
 
             <div class="md:col-span-2 flex gap-2">
-                <button class="bg-black text-white px-3 py-2 rounded">Simpan</button>
-                <a class="px-3 py-2 border border-gray-300 rounded-lg text-sm"
+                <a class="px-3 py-2 border border-gray-300 rounded-lg text-sm btn-outline-active"
                     href="{{ route('unit-organisasi.index') }}">Batal</a>
+
+                <button class="btn-active text-white px-3 py-2 rounded-lg text-sm">Simpan</button>
             </div>
         </form>
     </div>

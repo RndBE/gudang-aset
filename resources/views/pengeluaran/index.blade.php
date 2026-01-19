@@ -8,7 +8,7 @@
 
         @if (auth()->user() && auth()->user()->punyaIzin('pengeluaran.kelola'))
             <a href="{{ route('pengeluaran.create') }}"
-                class="inline-flex items-center rounded-lg btn-active px-6 py-3 text-sm font-semibold text-white ">
+                class="btn-active px-4 py-2 lg:px-6 lg:py-3 rounded-lg text-sm  text-center ">
                 Buat Pengeluaran
             </a>
         @endif
@@ -45,10 +45,11 @@
             <tbody class="divide-y">
                 @forelse($items as $it)
                     <tr>
-                        <td class="px-4 py-3 font-medium text-gray-900">{{ $it->nomor_pengeluaran }}</td>
-                        <td class="px-4 py-3">{{ optional($it->tanggal_pengeluaran)->format('Y-m-d H:i') }}</td>
-                        <td class="px-4 py-3">{{ $it->gudang?->nama }}</td>
-                        <td class="px-4 py-3">
+                        <td class="px-4 py-3 whitespace-nowrap font-medium text-gray-900">{{ $it->nomor_pengeluaran }}</td>
+                        <td class="px-4 py-3 whitespace-nowrap">
+                            {{ optional($it->tanggal_pengeluaran)->format('Y-m-d H:i') }}</td>
+                        <td class="px-4 py-3 whitespace-nowrap">{{ $it->gudang?->nama }}</td>
+                        <td class="px-4 py-3 whitespace-nowrap">
                             <span
                                 class="inline-flex rounded-full px-2 py-0.5 text-xs font-semibold
                                 @if ($it->status === 'dikeluarkan') bg-green-100 text-green-700
@@ -58,7 +59,7 @@
                                 {{ $it->status }}
                             </span>
                         </td>
-                        <td class="px-4 py-3 text-right">
+                        <td class="px-4 py-3 whitespace-nowrap text-right">
                             <a href="{{ route('pengeluaran.edit', $it->id) }}"
                                 class="inline-flex items-center rounded-lg border px-3 py-1.5 text-sm btn-outline-active hover:bg-gray-50">
                                 Detail

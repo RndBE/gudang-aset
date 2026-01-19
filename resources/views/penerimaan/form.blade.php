@@ -81,7 +81,7 @@
             </div>
 
             @if ($po)
-                <div class="mb-4 p-4 rounded-lg border bg-gray-50">
+                <div class="mb-4 p-4 rounded-lg border border-gray-300 bg-gray-50">
                     <div class="grid grid-cols-1 md:grid-cols-12 gap-3">
                         <div class="md:col-span-4">
                             <div class="text-xs text-gray-500">PO</div>

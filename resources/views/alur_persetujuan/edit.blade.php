@@ -4,19 +4,20 @@
     <div class="mb-4 flex justify-between items-center">
         <h1 class="text-xl font-semibold">Edit Alur Persetujuan</h1>
 
-        <a href="{{ route('alur-persetujuan.index') }}" class="px-3 py-2 rounded border text-sm hover:bg-gray-50">
+        <a href="{{ route('alur-persetujuan.index') }}"
+            class="px-3 py-2 rounded-lg btn-active   border text-sm hover:bg-gray-50">
             Kembali
         </a>
     </div>
 
     @if (session('error'))
-        <div class="mb-4 p-3 rounded bg-red-50 text-red-700 text-sm">
+        <div class="mb-4 p-3 rounded-lg border-gray-300 bg-red-50 text-red-700 text-sm">
             {{ session('error') }}
         </div>
     @endif
 
     @if ($errors->any())
-        <div class="mb-4 p-3 rounded bg-red-50 text-red-700 text-sm">
+        <div class="mb-4 p-3 rounded-lg border-gray-300 bg-red-50 text-red-700 text-sm">
             <ul class="list-disc pl-5">
                 @foreach ($errors->all() as $e)
                     <li>{{ $e }}</li>
@@ -26,7 +27,7 @@
     @endif
 
     <form method="POST" action="{{ route('alur-persetujuan.update', $data->id) }}"
-        class="bg-white border rounded p-4 space-y-4">
+        class="bg-white border rounded-lg border-gray-300 p-4 space-y-4">
         @csrf
         @method('PUT')
 
@@ -34,7 +35,7 @@
             <div>
                 <label class="text-sm font-medium">Kode</label>
                 <input name="kode" value="{{ old('kode', $data->kode) }}"
-                    class="mt-1 w-full border rounded px-3 py-2 text-sm" required>
+                    class="mt-1 w-full border rounded-lg border-gray-300 px-3 py-2 text-sm" required>
                 @error('kode')
                     <div class="text-xs text-red-600 mt-1">{{ $message }}</div>
                 @enderror
@@ -42,7 +43,7 @@
 
             <div>
                 <label class="text-sm font-medium">Status</label>
-                <select name="status" class="mt-1 w-full border rounded px-3 py-2 text-sm" required>
+                <select name="status" class="mt-1 w-full border rounded-lg border-gray-300 px-3 py-2 text-sm" required>
                     <option value="aktif" @selected(old('status', $data->status) === 'aktif')>Aktif</option>
                     <option value="nonaktif" @selected(old('status', $data->status) === 'nonaktif')>Nonaktif</option>
                 </select>
@@ -55,7 +56,7 @@
         <div>
             <label class="text-sm font-medium">Nama</label>
             <input name="nama" value="{{ old('nama', $data->nama) }}"
-                class="mt-1 w-full border rounded px-3 py-2 text-sm" required>
+                class="mt-1 w-full border rounded-lg border-gray-300 px-3 py-2 text-sm" required>
             @error('nama')
                 <div class="text-xs text-red-600 mt-1">{{ $message }}</div>
             @enderror
@@ -64,13 +65,14 @@
         <div>
             <label class="text-sm font-medium">Berlaku Untuk</label>
             <input name="berlaku_untuk" value="{{ old('berlaku_untuk', $data->berlaku_untuk) }}"
-                class="mt-1 w-full border rounded px-3 py-2 text-sm" placeholder="contoh: penugasan_aset" required>
+                class="mt-1 w-full border rounded-lg border-gray-300 px-3 py-2 text-sm" placeholder="contoh: penugasan_aset"
+                required>
             @error('berlaku_untuk')
                 <div class="text-xs text-red-600 mt-1">{{ $message }}</div>
             @enderror
         </div>
 
-        <hr class="my-2">
+        <hr class="my-2 border-gray-300">
 
         <div class="flex items-center justify-between mb-2">
             <div>
@@ -79,7 +81,7 @@
             </div>
 
             <button type="button" id="btnAddStep"
-                class="px-3 py-2 rounded bg-gray-900 text-white text-sm hover:bg-gray-800">
+                class="px-3 py-2 rounded-lg btn-outline-active text-white text-sm cursor-pointer">
                 + Tambah Langkah
             </button>
         </div>
@@ -118,14 +120,14 @@
                     // $batasWaktuHari = $stepData['batas_waktu_hari'] ?? ($stepData->batas_waktu_hari ?? null);
                 @endphp
 
-                <div class="step-item border rounded p-4 bg-gray-50" data-step="{{ $i }}">
+                <div class="step-item border rounded-lg border-gray-300 p-3  bg-gray-50" data-step="{{ $i }}">
                     <div class="flex items-center justify-between mb-3">
                         <div class="text-sm font-semibold">
                             Langkah <span class="step-number">{{ $i }}</span>
                         </div>
 
                         <button type="button"
-                            class="btnRemoveStep px-3 py-1 border rounded text-xs text-red-700 hover:bg-red-50">
+                            class="btnRemoveStep px-3 py-1 border rounded-lg border-gray-300 text-xs text-red-700 hover:bg-red-50">
                             Hapus
                         </button>
                     </div>
@@ -134,7 +136,7 @@
                         <div>
                             <label class="text-xs text-gray-500">No Langkah</label>
                             <input name="langkah[{{ $i }}][no_langkah]" value="{{ $noLangkah }}"
-                                class="w-full border rounded px-2 py-1 text-sm" readonly>
+                                class="w-full border rounded-lg border-gray-300 px-2 py-1 text-sm" readonly>
                             @error("langkah.$i.no_langkah")
                                 <div class="text-xs text-red-600 mt-1">{{ $message }}</div>
                             @enderror
@@ -143,7 +145,7 @@
                         <div>
                             <label class="text-xs text-gray-500">Nama Langkah</label>
                             <input name="langkah[{{ $i }}][nama_langkah]" value="{{ $namaLangkah }}"
-                                class="w-full border rounded px-2 py-1 text-sm" required>
+                                class="w-full border rounded-lg border-gray-300 px-2 py-1 text-sm" required>
                             @error("langkah.$i.nama_langkah")
                                 <div class="text-xs text-red-600 mt-1">{{ $message }}</div>
                             @enderror
@@ -152,7 +154,7 @@
                         <div>
                             <label class="text-xs text-gray-500">Peran</label>
                             <select name="langkah[{{ $i }}][peran_id]"
-                                class="w-full border rounded px-2 py-1 text-sm">
+                                class="w-full border rounded-lg border-gray-300 px-2 py-1 text-sm">
                                 <option value="">Pilih Peran</option>
                                 @foreach ($peran as $p)
                                     <option value="{{ $p->id }}" @selected((string) $peranId === (string) $p->id)>
@@ -168,7 +170,7 @@
                         <div>
                             <label class="text-xs text-gray-500">Izin Khusus</label>
                             <select name="langkah[{{ $i }}][izin_id]"
-                                class="w-full border rounded px-2 py-1 text-sm">
+                                class="w-full border rounded-lg border-gray-300 px-2 py-1 text-sm">
                                 <option value="">Pilih izin</option>
                                 @foreach ($izin as $iz)
                                     <option value="{{ $iz->id }}" @selected((string) $izinId === (string) $iz->id)>
@@ -192,7 +194,7 @@
                         {{-- <div class="md:col-span-2">
                             <label class="text-xs text-gray-500">Batas waktu (hari)</label>
                             <input type="number" min="0" name="langkah[{{ $i }}][batas_waktu_hari]"
-                                value="{{ $batasWaktuHari }}" class="w-full border rounded px-2 py-1 text-sm"
+                                value="{{ $batasWaktuHari }}" class="w-full border rounded-lg border-gray-300 px-2 py-1 text-sm"
                                 placeholder="opsional">
                         </div> --}}
                     </div>
@@ -201,11 +203,12 @@
         </div>
 
         <div class="flex gap-2 pt-2">
-            <a href="{{ route('alur-persetujuan.index') }}" class="px-3 py-2 rounded border text-sm hover:bg-gray-50">
+            <a href="{{ route('alur-persetujuan.index') }}"
+                class="px-3 py-2 rounded-lg border border-[#C70000] text-sm text-[#C70000] hover:bg-gray-50">
                 Batal
             </a>
 
-            <button class="px-3 py-2 rounded bg-gray-900 text-white text-sm">
+            <button class="px-3 py-2 rounded-lg border-gray-300 bg-gray-900 text-white text-sm btn-active cursor-pointer">
                 Simpan Perubahan
             </button>
         </div>
@@ -228,7 +231,7 @@
 
         function renderStep(stepNumber) {
             const el = document.createElement('div');
-            el.className = 'step-item border rounded p-4 bg-gray-50';
+            el.className = 'step-item border rounded-lg border-gray-300 p-4 bg-gray-50';
             el.dataset.step = stepNumber;
 
             el.innerHTML = `
@@ -238,7 +241,7 @@
                     </div>
 
                     <button type="button"
-                        class="btnRemoveStep px-3 py-1 border rounded text-xs text-red-700 hover:bg-red-50">
+                        class="btnRemoveStep px-3 py-1 border rounded-lg border-gray-300 text-xs text-red-700 hover:bg-red-50">
                         Hapus
                     </button>
                 </div>
@@ -247,19 +250,19 @@
                     <div>
                         <label class="text-xs text-gray-500">No Langkah</label>
                         <input name="langkah[${stepNumber}][no_langkah]" value="${stepNumber}"
-                            class="w-full border rounded px-2 py-1 text-sm" readonly>
+                            class="w-full border rounded-lg border-gray-300 px-2 py-1 text-sm" readonly>
                     </div>
 
                     <div>
                         <label class="text-xs text-gray-500">Nama Langkah</label>
                         <input name="langkah[${stepNumber}][nama_langkah]" value="Persetujuan ${stepNumber}"
-                            class="w-full border rounded px-2 py-1 text-sm" required>
+                            class="w-full border rounded-lg border-gray-300 px-2 py-1 text-sm" required>
                     </div>
 
                     <div>
                         <label class="text-xs text-gray-500">Peran</label>
                         <select name="langkah[${stepNumber}][peran_id]"
-                            class="w-full border rounded px-2 py-1 text-sm">
+                            class="w-full border rounded-lg border-gray-300 px-2 py-1 text-sm">
                             ${optionsHtml(PERAN_OPTIONS, 'Pilih Peran')}
                         </select>
                     </div>
@@ -267,7 +270,7 @@
                     <div>
                         <label class="text-xs text-gray-500">Izin Khusus</label>
                         <select name="langkah[${stepNumber}][izin_id]"
-                            class="w-full border rounded px-2 py-1 text-sm">
+                            class="w-full border rounded-lg border-gray-300 px-2 py-1 text-sm">
                             ${optionsHtml(IZIN_OPTIONS, 'Pilih izin')}
                         </select>
                     </div>
@@ -282,7 +285,7 @@
                     <div class="md:col-span-2">
                         <label class="text-xs text-gray-500">Batas waktu (hari)</label>
                         <input type="number" min="0" name="langkah[${stepNumber}][batas_waktu_hari]"
-                            class="w-full border rounded px-2 py-1 text-sm" placeholder="opsional">
+                            class="w-full border rounded-lg border-gray-300 px-2 py-1 text-sm" placeholder="opsional">
                     </div>
                 </div>
             `;

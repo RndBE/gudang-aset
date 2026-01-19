@@ -12,7 +12,7 @@
 
         @if ($canManage)
             <a href="{{ route('penerimaan.create') }}"
-                class="inline-flex items-center px-6 py-3 rounded-lg bg-white border btn-active hover:bg-gray-50 text-sm">
+                class="btn-active px-4 py-2 lg:px-6 lg:py-3 rounded-lg text-sm  text-center">
                 Buat Penerimaan
             </a>
         @endif
@@ -98,10 +98,12 @@
                             }
                         @endphp
                         <tr class="border-b border-gray-300 hover:bg-gray-50">
-                            <td class="px-4 py-3 font-medium text-gray-900">{{ $r->nomor_penerimaan }}</td>
-                            <td class="px-4 py-3">{{ optional($r->tanggal_penerimaan)->format('Y-m-d') }}</td>
-                            <td class="px-4 py-3">{{ $r->gudang?->nama ?? '-' }}</td>
-                            <td class="px-4 py-3">
+                            <td class="px-4 py-3 whitespace-nowrap font-medium text-gray-900">{{ $r->nomor_penerimaan }}
+                            </td>
+                            <td class="px-4 py-3 whitespace-nowrap">{{ optional($r->tanggal_penerimaan)->format('Y-m-d') }}
+                            </td>
+                            <td class="px-4 py-3 whitespace-nowrap">{{ $r->gudang?->nama ?? '-' }}</td>
+                            <td class="px-4 py-3 whitespace-nowrap">
                                 @if ($r->pesananPembelian)
                                     <div class="text-gray-900">{{ $r->pesananPembelian->nomor_po }}</div>
                                     <div class="text-xs text-gray-500">{{ $r->pesananPembelian->status }}</div>
@@ -109,13 +111,13 @@
                                     <span class="text-xs text-gray-500">Tanpa PO</span>
                                 @endif
                             </td>
-                            <td class="px-4 py-3">
+                            <td class="px-4 py-3 whitespace-nowrap">
                                 <span
                                     class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium {{ $badge }}">
                                     {{ $r->status }}
                                 </span>
                             </td>
-                            <td class="px-4 py-3 text-right">
+                            <td class="px-4 py-3 whitespace-nowrap text-right">
                                 @if ($canManage)
                                     <a href="{{ route('penerimaan.edit', $r) }}"
                                         class="inline-flex items-center px-3 py-1.5 rounded-lg border bg-white hover:bg-gray-50 btn-outline-active">Buka</a>
