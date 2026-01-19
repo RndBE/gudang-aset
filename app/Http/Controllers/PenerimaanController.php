@@ -40,6 +40,10 @@ class PenerimaanController extends Controller
 
         $gudang = Gudang::where('instansi_id', $instansiId)->where('status', 'aktif')->orderBy('nama')->get();
 
+        $listPO = PesananPembelian::where('instansi_id', $instansiId)
+        ->where('status', 'disetujui')
+        ->orderByDesc('id')
+        ->get();
         $po = null;
         $poDetail = collect();
 
@@ -61,6 +65,7 @@ class PenerimaanController extends Controller
             ]),
             'gudang' => $gudang,
             'po' => $po,
+            'listPO' => $listPO,
             'poDetail' => $poDetail,
             'detail' => collect(),
         ]);
