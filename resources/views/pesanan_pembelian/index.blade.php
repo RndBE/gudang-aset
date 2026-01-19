@@ -140,7 +140,6 @@
                             <td class="px-4 py-3">
                                 <span
                                     class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium {{ $color }}">
-                                    {{-- {{ $r->status }} --}}
                                     {{ ucfirst($statusTampil) }}
                                 </span>
                                 @if ($showLink)
@@ -153,7 +152,7 @@
                             <td class="px-4 py-3 text-right">
                                 @if (auth()->user()->punyaIzin('pesanan_pembelian.kelola'))
                                     <a href="{{ route('pesanan-pembelian.edit', $r) }}"
-                                        class="inline-flex items-center px-3 py-1.5 rounded-lg border bg-white hover:bg-gray-50">
+                                        class="inline-flex items-center px-3 py-1.5 rounded-lg border border-gray-300 bg-white hover:bg-gray-50">
                                         Buka
                                     </a>
                                 @else

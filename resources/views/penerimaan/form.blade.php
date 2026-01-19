@@ -18,25 +18,24 @@
             ->get();
     @endphp
 
-    <div class="flex items-start justify-between gap-4 mb-6">
+    <div class="flex items-center justify-between gap-4 mb-4">
         <div>
-            <h1 class="text-2xl font-semibold">{{ $isEdit ? 'Ubah Penerimaan' : 'Buat Penerimaan' }}</h1>
-            <p class="text-sm text-gray-600 mt-1">Catat barang diterima. Setelah QC selesai, lakukan posting stok masuk.</p>
+            <h1 class="text-xl font-semibold">{{ $isEdit ? 'Ubah Penerimaan' : 'Buat Penerimaan' }}</h1>
         </div>
         <div class="flex items-center gap-2">
             <a href="{{ route('penerimaan.index') }}"
-                class="px-4 py-2 rounded-lg bg-white border hover:bg-gray-50">Kembali</a>
+                class="px-4 py-2 rounded-lg bg-white border btn-active text-sm hover:bg-gray-50">Kembali</a>
         </div>
     </div>
 
     @if (session('ok'))
-        <div class="mb-4 p-4 rounded-lg border bg-white">
+        <div class="mb-4 p-4 rounded-lg border border-gray-300 bg-white">
             <div class="font-medium text-gray-900">{{ session('ok') }}</div>
         </div>
     @endif
 
     @if ($errors->any())
-        <div class="mb-4 p-4 rounded-lg border bg-white">
+        <div class="mb-4 p-4 rounded-lg border border-gray-300 bg-white">
             <div class="font-medium text-red-700">Terjadi kesalahan</div>
             <ul class="list-disc ml-5 mt-2 text-sm text-gray-700">
                 @foreach ($errors->all() as $e)
@@ -53,9 +52,9 @@
             @method('PUT')
         @endif
 
-        <div class="bg-white border rounded-xl p-5">
+        <div class="bg-white border rounded-lg border-gray-300 p-4">
             <div class="flex items-center justify-between mb-4">
-                <div class="font-semibold text-gray-900">Header Penerimaan</div>
+                <div class="font-semibold text-gray-900">Detail Penerimaan</div>
                 @if ($isEdit)
                     @php
                         $badge = 'bg-gray-100 text-gray-700';
@@ -82,7 +81,7 @@
             </div>
 
             @if ($po)
-                <div class="mb-4 p-4 rounded-xl border bg-gray-50">
+                <div class="mb-4 p-4 rounded-lg border bg-gray-50">
                     <div class="grid grid-cols-1 md:grid-cols-12 gap-3">
                         <div class="md:col-span-4">
                             <div class="text-xs text-gray-500">PO</div>
@@ -109,7 +108,8 @@
             <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
                 <div class="md:col-span-4">
                     <label class="text-sm text-gray-700 block mb-1">Gudang</label>
-                    <select name="gudang_id" class="w-full border rounded-lg px-3 py-2" {{ $canManage ? '' : 'disabled' }}>
+                    <select name="gudang_id" class="w-full border border-gray-300 text-sm rounded-lg px-3 py-2"
+                        {{ $canManage ? '' : 'disabled' }}>
                         @foreach ($gudang as $g)
                             <option value="{{ $g->id }}" @selected(old('gudang_id', $row->gudang_id) == $g->id)>{{ $g->kode }} -
                                 {{ $g->nama }}</option>
@@ -123,13 +123,14 @@
                 <div class="md:col-span-4">
                     <label class="text-sm text-gray-700 block mb-1">Nomor PO</label>
                     @if ($isEdit)
-                        <input type="text" class="w-full border rounded-lg px-3 py-2 bg-gray-50"
+                        <input type="text" class="w-full border border-gray-300 text-sm rounded-lg px-3 py-2 bg-gray-50"
                             value="{{ old('nomor_po', $row->pesananPembelian->nomor_po ?? '-') }}" readonly>
 
                         <input type="hidden" name="pesanan_pembelian_id"
                             value="{{ old('pesanan_pembelian_id', $row->pesanan_pembelian_id ?? '') }}">
                     @else
-                        <select name="pesanan_pembelian_id" class="w-full border rounded-lg px-3 py-2" required>
+                        <select name="pesanan_pembelian_id"
+                            class="w-full border border-gray-300 text-sm rounded-lg px-3 py-2" required>
                             <option value="">- Pilih Nomor PO -</option>
                             @foreach ($listPO as $p)
                                 <option value="{{ $p->id }}" @selected(old('pesanan_pembelian_id') == $p->id)>
@@ -143,19 +144,22 @@
                 <div class="md:col-span-4">
                     <label class="text-sm text-gray-700 block mb-1">Nomor Penerimaan</label>
                     <input name="nomor_penerimaan" value="{{ old('nomor_penerimaan', $row->nomor_penerimaan) }}"
-                        class="w-full border rounded-lg px-3 py-2" {{ $canManage ? '' : 'readonly' }}>
+                        class="w-full border border-gray-300 text-sm rounded-lg px-3 py-2"
+                        {{ $canManage ? '' : 'readonly' }}>
                 </div>
 
                 <div class="md:col-span-4">
                     <label class="text-sm text-gray-700 block mb-1">Tanggal Penerimaan</label>
                     <input type="date" name="tanggal_penerimaan"
                         value="{{ old('tanggal_penerimaan', $row->tanggal_penerimaan) }}"
-                        class="w-full border rounded-lg px-3 py-2" {{ $canManage ? '' : 'readonly' }}>
+                        class="w-full border border-gray-300 text-sm rounded-lg px-3 py-2"
+                        {{ $canManage ? '' : 'readonly' }}>
                 </div>
 
                 <div class="md:col-span-12">
                     <label class="text-sm text-gray-700 block mb-1">Catatan</label>
-                    <textarea name="catatan" rows="2" class="w-full border rounded-lg px-3 py-2" {{ $canManage ? '' : 'readonly' }}>{{ old('catatan', $row->catatan) }}</textarea>
+                    <textarea name="catatan" rows="2" class="w-full border border-gray-300 text-sm rounded-lg px-3 py-2"
+                        {{ $canManage ? '' : 'readonly' }}>{{ old('catatan', $row->catatan) }}</textarea>
                 </div>
             </div>
         </div>
@@ -220,13 +224,14 @@
             }
         @endphp
 
-        <div class="bg-white border rounded-xl p-5 mt-5">
+        <div class="bg-white border rounded-lg border-gray-300 p-4 mt-5">
             <div class="flex items-center justify-between mb-4">
-                <div class="font-semibold text-gray-900">Detail Penerimaan</div>
+                <div class="font-semibold text-gray-900">Detail Barang</div>
                 <div class="flex items-center gap-2">
                     @if ($canManage && $row->status !== 'diposting')
                         <button type="button" id="btnAddRow"
-                            class="px-4 py-2 rounded-lg bg-white border hover:bg-gray-50">Tambah Baris</button>
+                            class="px-4 py-2 rounded-lg bg-white border hover:bg-gray-50 text-sm btn-outline-active">Tambah
+                            Baris</button>
                     @endif
                 </div>
             </div>
@@ -234,7 +239,7 @@
             <div class="overflow-x-auto">
                 <table class="min-w-full text-sm" id="penerimaanTable">
                     <thead class="bg-gray-50">
-                        <tr class="border-b">
+                        <tr class="border-b border-gray-300">
                             <th class="text-left px-3 py-3 w-[320px]">Barang</th>
                             <th class="text-left px-3 py-3 w-[160px]">Qty Diterima</th>
                             <th class="text-left px-3 py-3 w-[160px]">Biaya Satuan</th>
@@ -247,9 +252,9 @@
                     </thead>
                     <tbody id="penerimaanTbody">
                         @foreach ($rows as $d)
-                            <tr class="border-b penerimaan-row">
+                            <tr class="border-b border-gray-300 penerimaan-row">
                                 <td class="px-3 py-2">
-                                    <select name="barang_id[]" class="w-full border rounded-lg px-2 py-2"
+                                    <select name="barang_id[]" class="w-full border border-gray-300 rounded-lg px-2 py-2"
                                         {{ $canManage ? '' : 'disabled' }}>
                                         @foreach ($barangList as $b)
                                             <option value="{{ $b->id }}" @selected((int) $d['barang_id'] === (int) $b->id)>
@@ -260,23 +265,27 @@
                                 </td>
                                 <td class="px-3 py-2">
                                     <input name="qty_diterima[]" value="{{ $d['qty_diterima'] }}"
-                                        class="w-full border rounded-lg px-2 py-2" {{ $canManage ? '' : 'readonly' }}>
+                                        class="w-full border border-gray-300 rounded-lg px-2 py-2"
+                                        {{ $canManage ? '' : 'readonly' }}>
                                 </td>
                                 <td class="px-3 py-2">
                                     <input name="biaya_satuan[]" value="{{ $d['biaya_satuan'] }}"
-                                        class="w-full border rounded-lg px-2 py-2" {{ $canManage ? '' : 'readonly' }}>
+                                        class="w-full border border-gray-300 rounded-lg px-2 py-2"
+                                        {{ $canManage ? '' : 'readonly' }}>
                                 </td>
                                 <td class="px-3 py-2">
                                     <input name="no_lot[]" value="{{ $d['no_lot'] }}"
-                                        class="w-full border rounded-lg px-2 py-2" {{ $canManage ? '' : 'readonly' }}>
+                                        class="w-full border border-gray-300 rounded-lg px-2 py-2"
+                                        {{ $canManage ? '' : 'readonly' }}>
                                 </td>
                                 <td class="px-3 py-2">
                                     <input type="date" name="tanggal_kedaluwarsa[]"
                                         value="{{ $d['tanggal_kedaluwarsa'] }}"
-                                        class="w-full border rounded-lg px-2 py-2" {{ $canManage ? '' : 'readonly' }}>
+                                        class="w-full border border-gray-300 rounded-lg px-2 py-2"
+                                        {{ $canManage ? '' : 'readonly' }}>
                                 </td>
                                 <td class="px-3 py-2">
-                                    <select name="lokasi_id[]" class="w-full border rounded-lg px-2 py-2"
+                                    <select name="lokasi_id[]" class="w-full border border-gray-300 rounded-lg px-2 py-2"
                                         {{ $canManage ? '' : 'disabled' }}>
                                         <option value="">-</option>
                                         @foreach ($lokasiList as $l)
@@ -290,12 +299,13 @@
                                 </td>
                                 <td class="px-3 py-2">
                                     <input name="catatan_detail[]" value="{{ $d['catatan_detail'] }}"
-                                        class="w-full border rounded-lg px-2 py-2" {{ $canManage ? '' : 'readonly' }}>
+                                        class="w-full border border-gray-300 rounded-lg px-2 py-2"
+                                        {{ $canManage ? '' : 'readonly' }}>
                                 </td>
                                 <td class="px-3 py-2 text-right">
                                     @if ($canManage && $row->status !== 'diposting')
                                         <button type="button"
-                                            class="btnRemove px-3 py-2 rounded-lg bg-white border hover:bg-gray-50">Hapus</button>
+                                            class="btnRemove px-3 py-2 rounded-lg bg-white border border-gray-300 hover:bg-gray-50">Hapus</button>
                                     @else
                                         <span class="text-xs text-gray-500">-</span>
                                     @endif
@@ -309,20 +319,23 @@
     </form>
     <div class="mt-5 flex flex-wrap gap-2">
         @if ($canManage && $row->status !== 'diposting')
-            <button form="penerimaanForm" class="px-5 py-2.5 rounded-lg bg-white border hover:bg-gray-50">Simpan</button>
+            <button form="penerimaanForm"
+                class="px-5 py-2.5 rounded-lg  border-[#74AE50] text-sm  bg-[#8FD066] hover:bg-[#74AE50] text-white cursor-pointer">Simpan</button>
         @endif
 
         @if ($isEdit && $canManage)
             @if (!in_array($row->status, ['diposting', 'dibatalkan'], true))
                 <form method="post" action="{{ route('penerimaan.qcMulai', $row) }}">
                     @csrf
-                    <button class="px-5 py-2.5 rounded-lg bg-white border hover:bg-gray-50">Mulai QC</button>
+                    <button
+                        class="px-5 py-2.5 rounded-lg bg-[#6193B7] border-[#6193B7] text-white border text-sm hover:bg-[#5381A2] cursor-pointer">Mulai
+                        QC</button>
                 </form>
             @endif
 
             @if (!in_array($row->status, ['diposting', 'dibatalkan'], true))
                 <a href="{{ route('inspeksi-qc.create', ['penerimaan_id' => $row->id]) }}"
-                    class="px-5 py-2.5 rounded-lg bg-white border hover:bg-gray-50">
+                    class="px-5 py-2.5 rounded-lg border text-sm text-[#C58D2A]   border-[#C58D2A] hover:bg-[#ffe7bc] bg-white cursor-pointer">
                     Buat / Ubah QC
                 </a>
             @endif
@@ -330,7 +343,10 @@
             @if (auth()->user()->punyaIzin('stok.posting') || auth()->user()->punyaIzin('pergerakan_stok.kelola'))
                 <form method="post" action="{{ route('penerimaan.postingStokMasuk', $row) }}">
                     @csrf
-                    <button class="px-5 py-2.5 rounded-lg bg-white border hover:bg-gray-50">Posting Stok Masuk</button>
+                    <button
+                        class="px-5 py-2.5 rounded-lg text-white  border border-[#C58D2A] text-sm hover:bg-[#ac6f04] bg-[#C58D2A] cursor-pointer">Posting
+                        Stok
+                        Masuk</button>
                 </form>
             @endif
         @endif

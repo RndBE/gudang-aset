@@ -19,6 +19,7 @@
         background-color: #C58D2A
     }
 
+
     .btn-outline-active {
         color: #C58D2A;
         border: 1.5px solid #C58D2A;
