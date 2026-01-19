@@ -232,13 +232,13 @@ class GudangAsetSeeder extends Seeder
 
             $grant = [
                 'superadmin' => array_keys($izinMap),
-                'kepala_unit' => ['master.lihat', 'stok.lihat', 'permintaan.setujui', 'approval.proses', 'notif.lihat', 'aset.lihat','permintaan_persetujuan.kelola'],
+                'kepala_unit' => ['master.lihat', 'stok.lihat', 'permintaan.setujui', 'approval.proses', 'notif.lihat', 'aset.lihat', 'permintaan_persetujuan.kelola'],
                 'kepala_gudang' => ['master.lihat', 'stok.lihat', 'pesanan_pembelian.kelola', 'permintaan.setujui', 'stok.posting', 'qc.proses', 'opname.kelola', 'audit.lihat', 'notif.lihat', 'aset.lihat', 'aset.kelola', 'aset.hapus', 'perawatan.kelola', 'approval.proses', 'permintaan_persetujuan.kelola'],
                 'petugas_gudang' => ['master.lihat', 'stok.lihat', 'pesanan_pembelian.lihat', 'pesanan_pembelian.kelola', 'penerimaan.buat', 'pengeluaran.buat', 'qc.proses', 'stok.posting', 'opname.kelola', 'notif.lihat', 'aset.lihat', 'aset.kelola', 'approval.proses', 'permintaan_persetujuan.kelola'],
                 'pemohon' => ['permintaan.buat', 'permintaan.ajukan', 'stok.lihat', 'aset.lihat', 'notif.lihat'],
                 'pejabat_pengadaan' => ['pesanan_pembelian.kelola', 'approval.proses', 'audit.lihat', 'notif.lihat', 'permintaan_persetujuan.kelola'],
                 'keuangan' => ['pesanan_pembelian.kelola', 'aset.hapus', 'approval.proses', 'audit.lihat', 'notif.lihat', 'permintaan_persetujuan.kelola'],
-                'auditor_aset' => ['audit.lihat', 'aset.lihat', 'aset.hapus', 'approval.proses', 'notif.lihat','permintaan_persetujuan.kelola'],
+                'auditor_aset' => ['audit.lihat', 'aset.lihat', 'aset.hapus', 'approval.proses', 'notif.lihat', 'permintaan_persetujuan.kelola'],
                 'teknisi' => ['perawatan.kelola', 'aset.lihat', 'notif.lihat'],
             ];
 
@@ -438,6 +438,19 @@ class GudangAsetSeeder extends Seeder
                 'diubah_pada' => $now,
             ]);
 
+            for ($i = 2; $i <= 20; $i++) {
+                DB::table('gudang')->insert([
+                    'instansi_id' => $instansiId,
+                    'unit_organisasi_id' => $cabangId,
+                    'kode' => 'GDG-' . str_pad((string)$i, 2, '0', STR_PAD_LEFT),
+                    'nama' => 'Gudang Cabang ' . $i,
+                    'alamat' => 'Jawa Barat',
+                    'status' => 'aktif',
+                    'dibuat_pada' => $now,
+                    'diubah_pada' => $now,
+                ]);
+            }
+
             $zonaId = DB::table('lokasi_gudang')->insertGetId([
                 'gudang_id' => $gudangId,
                 'induk_id' => null,
@@ -476,6 +489,47 @@ class GudangAsetSeeder extends Seeder
                 'dibuat_pada' => $now,
                 'diubah_pada' => $now,
             ]);
+
+            for ($i = 2; $i <= 20; $i++) {
+                $z = DB::table('lokasi_gudang')->insertGetId([
+                    'gudang_id' => $gudangId,
+                    'induk_id' => null,
+                    'tipe_lokasi' => 'zona',
+                    'kode' => 'ZONA-' . chr(64 + $i),
+                    'nama' => 'Zona ' . chr(64 + $i),
+                    'jalur' => 'ZONA-' . chr(64 + $i),
+                    'bisa_picking' => true,
+                    'status' => 'aktif',
+                    'dibuat_pada' => $now,
+                    'diubah_pada' => $now,
+                ]);
+
+                $r = DB::table('lokasi_gudang')->insertGetId([
+                    'gudang_id' => $gudangId,
+                    'induk_id' => $z,
+                    'tipe_lokasi' => 'rak',
+                    'kode' => 'RAK-' . chr(64 + $i) . '1',
+                    'nama' => 'Rak ' . chr(64 + $i) . '1',
+                    'jalur' => 'ZONA-' . chr(64 + $i) . '/RAK-' . chr(64 + $i) . '1',
+                    'bisa_picking' => true,
+                    'status' => 'aktif',
+                    'dibuat_pada' => $now,
+                    'diubah_pada' => $now,
+                ]);
+
+                DB::table('lokasi_gudang')->insert([
+                    'gudang_id' => $gudangId,
+                    'induk_id' => $r,
+                    'tipe_lokasi' => 'bin',
+                    'kode' => 'BIN-' . chr(64 + $i) . '1-01',
+                    'nama' => 'Bin ' . chr(64 + $i) . '1-01',
+                    'jalur' => 'ZONA-' . chr(64 + $i) . '/RAK-' . chr(64 + $i) . '1/BIN-' . chr(64 + $i) . '1-01',
+                    'bisa_picking' => true,
+                    'status' => 'aktif',
+                    'dibuat_pada' => $now,
+                    'diubah_pada' => $now,
+                ]);
+            }
 
             $satuanPcsId = DB::table('satuan_barang')->insertGetId([
                 'kode' => 'PCS',
@@ -561,6 +615,86 @@ class GudangAsetSeeder extends Seeder
                 'diubah_pada' => $now,
             ]);
 
+            $barangTemplates = [
+                // ===== ASET (akan masuk tabel aset) =====
+                ['nama' => 'Laptop Dell Latitude 5420', 'tipe' => 'aset', 'kategori' => 'Elektronik', 'satuan' => '', 'harga' => 12000000],
+                ['nama' => 'Laptop Lenovo ThinkPad T14', 'tipe' => 'aset', 'kategori' => 'Elektronik', 'satuan' => '', 'harga' => 14500000],
+                ['nama' => 'PC Rakitan Office i5', 'tipe' => 'aset', 'kategori' => 'Elektronik', 'satuan' => '', 'harga' => 9000000],
+                ['nama' => 'Monitor LG 24 Inch', 'tipe' => 'aset', 'kategori' => 'Elektronik', 'satuan' => '', 'harga' => 2100000],
+                ['nama' => 'Printer Epson L3210', 'tipe' => 'aset', 'kategori' => 'Elektronik', 'satuan' => '', 'harga' => 2600000],
+                ['nama' => 'Scanner Canon LiDE 300', 'tipe' => 'aset', 'kategori' => 'Elektronik', 'satuan' => '', 'harga' => 1600000],
+                ['nama' => 'Router MikroTik hEX', 'tipe' => 'aset', 'kategori' => 'Elektronik', 'satuan' => '', 'harga' => 750000],
+                ['nama' => 'Switch TP-Link 16 Port', 'tipe' => 'aset', 'kategori' => 'Elektronik', 'satuan' => '', 'harga' => 950000],
+                ['nama' => 'HT Baofeng UV-5R', 'tipe' => 'aset', 'kategori' => 'Elektronik', 'satuan' => '', 'harga' => 450000],
+                ['nama' => 'Bor Baterai Bosch', 'tipe' => 'aset', 'kategori' => '', 'satuan' => '', 'harga' => 1200000],
+                ['nama' => 'Laser Distance Meter', 'tipe' => 'aset', 'kategori' => '', 'satuan' => '', 'harga' => 1350000],
+                ['nama' => 'UPS 1200VA', 'tipe' => 'aset', 'kategori' => 'Elektronik', 'satuan' => '', 'harga' => 1800000],
+                ['nama' => 'Kamera CCTV Indoor', 'tipe' => 'aset', 'kategori' => 'Elektronik', 'satuan' => '', 'harga' => 650000],
+                ['nama' => 'Access Point Ubiquiti', 'tipe' => 'aset', 'kategori' => 'Elektronik', 'satuan' => '', 'harga' => 1750000],
+                ['nama' => 'Tablet Samsung A8', 'tipe' => 'aset', 'kategori' => 'Elektronik', 'satuan' => '', 'harga' => 3300000],
+
+                // ===== HABIS PAKAI (tidak masuk aset) =====
+                ['nama' => 'Kertas A4 80gsm', 'tipe' => 'habis', 'kategori' => 'ATK', 'satuan' => 'Box', 'harga' => 65000],
+                ['nama' => 'Pulpen Standard AE7', 'tipe' => 'habis', 'kategori' => 'Pulpen', 'satuan' => '', 'harga' => 25000],
+                ['nama' => 'Spidol Whiteboard', 'tipe' => 'habis', 'kategori' => 'ATK', 'satuan' => '', 'harga' => 40000],
+                ['nama' => 'Tinta Printer Hitam', 'tipe' => 'habis', 'kategori' => 'ATK', 'satuan' => 'Pcs', 'harga' => 35000],
+                ['nama' => 'Map Plastik Folio', 'tipe' => 'habis', 'kategori' => 'ATK', 'satuan' => '', 'harga' => 18000],
+                ['nama' => 'Lakban Isolasi Listrik', 'tipe' => 'habis', 'kategori' => 'Material', 'satuan' => 'Roll', 'harga' => 12000],
+                ['nama' => 'Cable Tie 20cm', 'tipe' => 'habis', 'kategori' => 'Material', 'satuan' => '', 'harga' => 15000],
+                ['nama' => 'Baterai AA', 'tipe' => 'habis', 'kategori' => 'Elektronik', 'satuan' => '', 'harga' => 18000],
+                ['nama' => 'Masker Medis', 'tipe' => 'habis', 'kategori' => 'K3', 'satuan' => 'Box', 'harga' => 25000],
+                ['nama' => 'Sarung Tangan Safety', 'tipe' => 'habis', 'kategori' => 'K3', 'satuan' => '', 'harga' => 30000],
+                ['nama' => 'Helm Proyek', 'tipe' => 'habis', 'kategori' => 'K3', 'satuan' => 'Pcs', 'harga' => 65000],
+                ['nama' => 'Tissue Gulung', 'tipe' => 'habis', 'kategori' => 'Kebersihan', 'satuan' => 'Pcs', 'harga' => 12000],
+                ['nama' => 'Sabun Cuci Tangan', 'tipe' => 'habis', 'kategori' => 'Kebersihan', 'satuan' => '', 'harga' => 18000],
+                ['nama' => 'Disinfektan', 'tipe' => 'habis', 'kategori' => 'Kebersihan', 'satuan' => '', 'harga' => 25000],
+            ];
+
+            // Perlu jadi 50 -> gandakan variasi (sku berbeda)
+            while (count($barangTemplates) < 50) {
+                $base = $barangTemplates[count($barangTemplates) % 30];
+                $barangTemplates[] = [
+                    'nama' => $base['nama'] . ' Var-' . str_pad((string)(count($barangTemplates) + 1), 2, '0', STR_PAD_LEFT),
+                    'tipe' => $base['tipe'],
+                    'kategori' => $base['kategori'],
+                    'satuan' => $base['satuan'],
+                    'harga' => $base['harga'],
+                ];
+            }
+
+            // ====== MAP kategori & satuan ke ID yang sudah kamu seed ======
+            $kategoriMap = DB::table('kategori_barang')->where('instansi_id', $instansiId)->pluck('id', 'nama')->toArray();
+            $satuanMap   = DB::table('satuan_barang')->where('instansi_id', $instansiId)->pluck('id', 'nama')->toArray();
+
+            // ====== INSERT 50 BARANG ======
+            $barangIdsAset = [];
+            $barangIdsHabis = [];
+
+            foreach ($barangTemplates as $idx => $t) {
+                $kode = 'BRG-' . str_pad((string)($idx + 1), 4, '0', STR_PAD_LEFT);
+                $sku  = 'SKU-' . str_pad((string)($idx + 1), 5, '0', STR_PAD_LEFT);
+
+                $barangId = DB::table('barang')->insertGetId([
+                    'instansi_id' => $instansiId,
+                    'kategori_barang_id' => $kategoriMap[$t['kategori']] ?? array_values($kategoriMap)[0],
+                    'satuan_barang_id' => $satuanMap[$t['satuan']] ?? array_values($satuanMap)[0],
+                    'kode' => $kode,
+                    'sku' => $sku,
+                    'nama' => $t['nama'],
+                    'deskripsi' => $t['tipe'] === 'aset'
+                        ? 'Barang beraset, punya tracking tag aset & serial number'
+                        : 'Barang habis pakai (stok)',
+                    'harga_beli_terakhir' => $t['harga'],
+                    'aktif' => true,
+                    'dibuat_oleh' => $pengguna['superadmin'],
+                    'dibuat_pada' => $now,
+                    'diubah_pada' => $now,
+                ]);
+
+                if ($t['tipe'] === 'aset') $barangIdsAset[] = $barangId;
+                else $barangIdsHabis[] = $barangId;
+            }
+
             $kontrakId = DB::table('kontrak')->insertGetId([
                 'instansi_id' => $instansiId,
                 'unit_organisasi_id' => $cabangId,
@@ -577,6 +711,25 @@ class GudangAsetSeeder extends Seeder
                 'dibuat_pada' => $now,
                 'diubah_pada' => $now,
             ]);
+
+            for ($i = 2; $i <= 20; $i++) {
+                DB::table('kontrak')->insert([
+                    'instansi_id' => $instansiId,
+                    'unit_organisasi_id' => $cabangId,
+                    'pemasok_id' => $pemasokId,
+                    'nomor_kontrak' => 'KONTRAK-2026-' . str_pad((string)$i, 3, '0', STR_PAD_LEFT),
+                    'tanggal_kontrak' => $now->copy()->subDays($i)->toDateString(),
+                    'mulai_tanggal' => $now->copy()->subDays($i)->toDateString(),
+                    'selesai_tanggal' => $now->copy()->addMonths(3)->toDateString(),
+                    'nilai_total' => 10000000 + ($i * 100000),
+                    'mata_uang' => 'IDR',
+                    'status' => 'aktif',
+                    'catatan' => null,
+                    'dibuat_oleh' => $pengguna['petugas_gudang'],
+                    'dibuat_pada' => $now,
+                    'diubah_pada' => $now,
+                ]);
+            }
 
             $poId = DB::table('pesanan_pembelian')->insertGetId([
                 'instansi_id' => $instansiId,
@@ -723,6 +876,42 @@ class GudangAsetSeeder extends Seeder
                 'diubah_pada' => $now,
             ]);
 
+            // ====== STOK AWAL (SALDO_STOK) UNTUK 50 BARANG ======
+            $saldoMap = [];
+
+            $gudangAwalId = $gudangId[0];
+            $lokasiAwalId = $binId[0];
+
+            $barangAll = array_merge($barangIdsAset, $barangIdsHabis);
+
+            foreach ($barangAll as $barangId) {
+                $barangRow = DB::table('barang')->where('id', $barangId)->first();
+
+                $isAset = in_array($barangId, $barangIdsAset, true);
+
+                $qtyAwal = $isAset ? rand(1, 3) : rand(30, 150);
+
+                $saldoId = DB::table('saldo_stok')->insertGetId([
+                    'instansi_id' => $instansiId,
+                    'gudang_id' => $gudangAwalId,
+                    'lokasi_id' => $lokasiAwalId,
+                    'barang_id' => $barangId,
+                    'no_lot' => null,
+                    'tanggal_kedaluwarsa' => null,
+                    'qty_tersedia' => $qtyAwal,
+                    'qty_dipesan' => 0,
+                    'qty_bisa_dipakai' => $qtyAwal,
+                    'pergerakan_terakhir_pada' => $now,
+                    'dibuat_pada' => $now,
+                    'diubah_pada' => $now,
+                ]);
+
+                $saldoMap[$barangId] = [
+                    'id' => $saldoId,
+                    'qty' => $qtyAwal,
+                ];
+            }
+
             $pergerakanTerimaId = DB::table('pergerakan_stok')->insertGetId([
                 'instansi_id' => $instansiId,
                 'nomor_pergerakan' => 'MOVE-2026-0001',
@@ -755,6 +944,25 @@ class GudangAsetSeeder extends Seeder
                     'diubah_pada' => $now,
                 ],
             ]);
+            foreach ($barangAll as $barangId) {
+                $qtyAwal = $saldoMap[$barangId]['qty'];
+                $barangRow = DB::table('barang')->where('id', $barangId)->first();
+
+                DB::table('detail_pergerakan_stok')->insert([
+                    'pergerakan_stok_id' => $pergerakanTerimaId,
+                    'barang_id' => $barangId,
+                    'dari_gudang_id' => null,
+                    'dari_lokasi_id' => null,
+                    'ke_gudang_id' => $gudangAwalId,
+                    'ke_lokasi_id' => $lokasiAwalId,
+                    'no_lot' => null,
+                    'tanggal_kedaluwarsa' => null,
+                    'qty' => $qtyAwal,
+                    'biaya_satuan' => (int)($barangRow->harga_beli_terakhir ?? 0),
+                    'dibuat_pada' => $now,
+                    'diubah_pada' => $now,
+                ]);
+            }
 
             $aset1Id = DB::table('aset')->insertGetId([
                 'instansi_id' => $instansiId,
@@ -779,6 +987,131 @@ class GudangAsetSeeder extends Seeder
                 'dibuat_pada' => $now,
                 'diubah_pada' => $now,
             ]);
+            // ====== BUAT 50 ASET (1 aset untuk tiap barang aset, sisanya random ulang) ======
+            $asetIds = [];
+            for ($i = 1; $i <= 50; $i++) {
+                $barangId = $barangIdsAset[($i - 1) % count($barangIdsAset)];
+                $tag = 'AST-' . str_pad((string)$i, 5, '0', STR_PAD_LEFT);
+                $sn  = 'SN-' . str_pad((string)$i, 6, '0', STR_PAD_LEFT);
+
+                $asetId = DB::table('aset')->insertGetId([
+                    'instansi_id' => $instansiId,
+                    'barang_id' => $barangId,
+                    'tag_aset' => $tag,
+                    'no_serial' => $sn,
+                    'imei' => null,
+                    'no_mesin' => null,
+                    'no_rangka' => null,
+                    'no_polisi' => null,
+                    'tanggal_beli' => $now->copy()->subDays(rand(0, 365))->toDateString(),
+                    'penerimaan_id' => null,
+                    'unit_organisasi_saat_ini_id' => $cabangId,
+                    'gudang_saat_ini_id' => $gudangId[0],
+                    'lokasi_saat_ini_id' => $binId[0],
+                    'pemegang_pengguna_id' => null,
+                    'status_kondisi' => 'baik',
+                    'status_siklus' => 'tersedia',
+                    'biaya_perolehan' => rand(500000, 15000000),
+                    'mata_uang' => 'IDR',
+                    'extra' => null,
+                    'dibuat_pada' => $now,
+                    'diubah_pada' => $now,
+                ]);
+
+                $asetIds[] = $asetId;
+            }
+
+            // ====== ATUR STATUS_SIKLUS SESUAI PENUGASAN/PEMINJAMAN/PENGHAPUSAN ======
+            // 1) 15 aset ditugaskan
+            $asetDitugaskan = array_slice($asetIds, 0, 15);
+            foreach ($asetDitugaskan as $k => $asetId) {
+                DB::table('penugasan_aset')->insert([
+                    'instansi_id' => $instansiId,
+                    'aset_id' => $asetId,
+                    'ditugaskan_ke_pengguna_id' => $pengguna['pemohon'],
+                    'ditugaskan_ke_unit_id' => $cabangId,
+                    'tanggal_tugas' => $now->copy()->subDays(rand(1, 10)),
+                    'tanggal_kembali' => null,
+                    'status' => 'sedang ditugaskan',
+                    'nomor_dok_serah_terima' => 'TUGAS-2026-' . str_pad((string)($k + 1), 4, '0', STR_PAD_LEFT),
+                    'catatan' => 'Penugasan aset operasional',
+                    'dibuat_oleh' => $pengguna['kepala_gudang'],
+                    'dibuat_pada' => $now,
+                    'diubah_pada' => $now,
+                ]);
+
+                DB::table('aset')->where('id', $asetId)->update([
+                    'status_siklus' => 'ditugaskan',
+                    'pemegang_pengguna_id' => $pengguna['pemohon'],
+                    'unit_organisasi_saat_ini_id' => $cabangId,
+                    'diubah_pada' => $now,
+                ]);
+            }
+
+            // 2) 15 aset dipinjam
+            $asetDipinjam = array_slice($asetIds, 15, 15);
+            foreach ($asetDipinjam as $k => $asetId) {
+                DB::table('peminjaman_aset')->insert([
+                    'instansi_id' => $instansiId,
+                    'aset_id' => $asetId,
+                    'peminjam_pengguna_id' => $pengguna['pemohon'],
+                    'peminjam_unit_id' => $cabangId,
+                    'tanggal_mulai' => $now->copy()->subDays(rand(1, 5)),
+                    'jatuh_tempo' => $now->copy()->addDays(rand(3, 20)),
+                    'tanggal_kembali' => null,
+                    'status' => 'aktif',
+                    'tujuan' => 'Dipinjam untuk kebutuhan unit',
+                    'kondisi_keluar' => 'baik',
+                    'kondisi_masuk' => null,
+                    'nomor_dok_serah_terima' => 'PINJAM-2026-' . str_pad((string)($k + 1), 4, '0', STR_PAD_LEFT),
+                    'catatan' => 'Peminjaman aset operasional',
+                    'dibuat_oleh' => $pengguna['pemohon'],
+                    'dibuat_pada' => $now,
+                    'diubah_pada' => $now,
+                ]);
+
+                DB::table('aset')->where('id', $asetId)->update([
+                    'status_siklus' => 'dipinjam',
+                    'pemegang_pengguna_id' => $pengguna['pemohon'],
+                    'unit_organisasi_saat_ini_id' => $cabangId,
+                    'diubah_pada' => $now,
+                ]);
+            }
+
+            // 3) 10 aset dihapus (penghapusan_aset) -> status_siklus jadi dihapus
+            $asetDihapus = array_slice($asetIds, 30, 10);
+            foreach ($asetDihapus as $k => $asetId) {
+                DB::table('penghapusan_aset')->insert([
+                    'instansi_id' => $instansiId,
+                    'aset_id' => $asetId,
+                    'nomor_penghapusan' => 'DEL-2026-' . str_pad((string)($k + 1), 4, '0', STR_PAD_LEFT),
+                    'tanggal_penghapusan' => $now->toDateString(),
+                    'metode' => 'hapus',
+                    'alasan' => 'Aset rusak total / tidak layak pakai',
+                    'disetujui_oleh' => $pengguna['keuangan'],
+                    'status' => 'disetujui',
+                    'dibuat_oleh' => $pengguna['kepala_gudang'],
+                    'dibuat_pada' => $now,
+                    'diubah_pada' => $now,
+                ]);
+
+                DB::table('aset')->where('id', $asetId)->update([
+                    'status_siklus' => 'dihapus',
+                    'status_kondisi' => 'dihapus',
+                    'pemegang_pengguna_id' => null,
+                    'diubah_pada' => $now,
+                ]);
+            }
+
+            // Sisa 10 aset -> disimpan/tersedia
+            $asetSisa = array_slice($asetIds, 40, 10);
+            foreach ($asetSisa as $asetId) {
+                DB::table('aset')->where('id', $asetId)->update([
+                    'status_siklus' => (rand(0, 1) ? 'disimpan' : 'tersedia'),
+                    'pemegang_pengguna_id' => null,
+                    'diubah_pada' => $now,
+                ]);
+            }
 
             $permintaanId = DB::table('permintaan')->insertGetId([
                 'instansi_id' => $instansiId,
@@ -807,6 +1140,7 @@ class GudangAsetSeeder extends Seeder
                 'dibuat_pada' => $now,
                 'diubah_pada' => $now,
             ]);
+            
 
             $pengeluaranId = DB::table('pengeluaran')->insertGetId([
                 'instansi_id' => $instansiId,
