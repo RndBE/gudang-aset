@@ -34,9 +34,9 @@
                             </span>
                         </td>
                         <td class="p-3 text-right">
-                            <a class="px-3 py-1 rounded border text-sm hover:bg-gray-50"
+                            <a class="px-3 py-1 rounded-lg btn-outline-active text-sm hover:bg-gray-50"
                                 href="{{ route('gudang.edit', $row->id) }}">Edit</a>
-                            <a class="ml-2 px-3 py-1 rounded border text-sm hover:bg-gray-50"
+                            <a class="ml-2 px-3 py-1 rounded-lg btn-outline-active text-sm hover:bg-gray-50"
                                 href="{{ route('lokasi-gudang.index', ['gudang_id' => $row->id]) }}">Lokasi</a>
                         </td>
                     </tr>

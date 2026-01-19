@@ -6,7 +6,8 @@
             <div class="text-xl font-semibold">Buat Permintaan</div>
             <div class="text-sm text-gray-500">Nomor: {{ $nomorPreview }}</div>
         </div>
-        <a href="{{ route('permintaan.index') }}" class="px-3 py-2 rounded border hover:bg-gray-50">Kembali</a>
+        <a href="{{ route('permintaan.index') }}"
+            class="px-3 py-2 rounded-lg btn-active border hover:bg-gray-50 text-sm">Kembali</a>
     </div>
 
     @if ($errors->any())
@@ -23,17 +24,17 @@
     <form method="post" action="{{ route('permintaan.store') }}" class="space-y-4">
         @csrf
 
-        <div class="bg-white border rounded p-4 grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div class="bg-white border rounded-lg border-gray-300 p-4 grid grid-cols-1 md:grid-cols-4 gap-4">
             <div>
                 <label class="text-sm text-gray-600">Tanggal Permintaan</label>
                 <input type="datetime-local" name="tanggal_permintaan"
                     value="{{ old('tanggal_permintaan', now()->format('Y-m-d\TH:i')) }}"
-                    class="w-full border rounded px-3 py-2">
+                    class="w-full border rounded-lg border-gray-300 px-3 py-2 text-sm">
             </div>
 
             <div>
                 <label class="text-sm text-gray-600">Tipe Permintaan</label>
-                <select name="tipe_permintaan" class="w-full border rounded px-3 py-2">
+                <select name="tipe_permintaan" class="w-full border rounded-lg border-gray-300 px-3 py-2 text-sm">
                     @foreach ($tipeList as $k => $v)
                         <option value="{{ $k }}" @selected(old('tipe_permintaan', 'habis_pakai') === $k)>{{ $v }}</option>
                     @endforeach
@@ -42,7 +43,7 @@
 
             <div>
                 <label class="text-sm text-gray-600">Prioritas</label>
-                <select name="prioritas" class="w-full border rounded px-3 py-2">
+                <select name="prioritas" class="w-full border rounded-lg border-gray-300 px-3 py-2 text-sm">
                     @foreach ($prioritasList as $k => $v)
                         <option value="{{ $k }}" @selected(old('prioritas', 'normal') === $k)>{{ $v }}</option>
                     @endforeach
@@ -52,25 +53,26 @@
             <div>
                 <label class="text-sm text-gray-600">Dibutuhkan Pada</label>
                 <input type="date" name="dibutuhkan_pada" value="{{ old('dibutuhkan_pada') }}"
-                    class="w-full border rounded px-3 py-2">
+                    class="w-full border rounded-lg border-gray-300 px-3 py-2 text-sm">
             </div>
 
             <div class="md:col-span-4">
                 <label class="text-sm text-gray-600">Tujuan</label>
-                <textarea name="tujuan" rows="2" class="w-full border rounded px-3 py-2">{{ old('tujuan') }}</textarea>
+                <textarea name="tujuan" rows="2" class="w-full border rounded-lg border-gray-300 px-3 py-2">{{ old('tujuan') }}</textarea>
             </div>
         </div>
 
-        <div class="bg-white border rounded">
-            <div class="p-4 flex items-center justify-between border-b">
+        <div class="bg-white border rounded-lg border-gray-300">
+            <div class="p-4 flex items-center justify-between border-b border-gray-300">
                 <div class="font-semibold">Detail Barang</div>
-                <button type="button" id="btnTambah" class="px-3 py-2 rounded bg-gray-900 text-white hover:bg-black"
+                <button type="button" id="btnTambah"
+                    class="px-3 py-2 rounded-lg border-gray-300 btn-outline-active text-white cursor-pointer text-sm"
                     @disabled($barang->isEmpty())>Tambah Baris</button>
             </div>
 
             @if ($barang->isEmpty())
                 <div class="p-4">
-                    <div class="p-3 rounded bg-yellow-50 text-yellow-800 border border-yellow-200">
+                    <div class="p-3 rounded-lg bg-yellow-50 text-yellow-800 border border-yellow-200">
                         Master barang masih kosong/atau tidak ada yang aktif untuk instansi kamu. Buat data di menu
                         <b>Barang</b> dulu.
                     </div>
@@ -78,51 +80,57 @@
             @endif
 
             <div class="p-4 overflow-x-auto">
-                <table class="w-full text-sm" id="tblDetail">
-                    <thead class="bg-gray-50 text-left">
-                        <tr>
-                            <th class="px-3 py-2 w-2/5">Barang</th>
-                            <th class="px-3 py-2 w-1/6">Qty Diminta</th>
-                            <th class="px-3 py-2">Catatan</th>
-                            <th class="px-3 py-2 w-16"></th>
-                        </tr>
-                    </thead>
-                    <tbody id="detailBody">
-                        @php
-                            $oldBarang = old('barang_id', [null]);
-                            $oldQty = old('qty_diminta', [1]);
-                            $oldCat = old('catatan_item', ['']);
-                        @endphp
-
-                        @foreach ($oldBarang as $i => $bid)
-                            <tr class="border-t">
-                                <td class="px-3 py-2">
-                                    <select name="barang_id[]" class="w-full border rounded px-3 py-2"
-                                        @disabled($barang->isEmpty())>
-                                        <option value="">Pilih barang...</option>
-                                        @foreach ($barang as $b)
-                                            <option value="{{ $b->id }}" @selected((string) $bid === (string) $b->id)>
-                                                {{ $b->sku }} — {{ $b->nama }}</option>
-                                        @endforeach
-                                    </select>
-                                </td>
-                                <td class="px-3 py-2">
-                                    <input type="number" step="0.0001" min="0.0001" name="qty_diminta[]"
-                                        value="{{ $oldQty[$i] ?? 1 }}" class="w-full border rounded px-3 py-2"
-                                        @disabled($barang->isEmpty())>
-                                </td>
-                                <td class="px-3 py-2">
-                                    <input type="text" name="catatan_item[]" value="{{ $oldCat[$i] ?? '' }}"
-                                        class="w-full border rounded px-3 py-2" @disabled($barang->isEmpty())>
-                                </td>
-                                <td class="px-3 py-2 text-right">
-                                    <button type="button" class="btnHapus px-3 py-2 rounded border hover:bg-gray-50"
-                                        @disabled($barang->isEmpty())>Hapus</button>
-                                </td>
+                <div class="border border-gray-300 rounded-lg">
+                    <table class="w-full text-sm" id="tblDetail">
+                        <thead class="bg-gray-50 text-left">
+                            <tr>
+                                <th class="px-3 py-2 w-2/5">Barang</th>
+                                <th class="px-3 py-2 w-1/6">Qty Diminta</th>
+                                <th class="px-3 py-2">Catatan</th>
+                                <th class="px-3 py-2 w-16"></th>
                             </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody id="detailBody">
+                            @php
+                                $oldBarang = old('barang_id', [null]);
+                                $oldQty = old('qty_diminta', [1]);
+                                $oldCat = old('catatan_item', ['']);
+                            @endphp
+
+                            @foreach ($oldBarang as $i => $bid)
+                                <tr class="border-t border-gray-300">
+                                    <td class="px-3 py-2">
+                                        <select name="barang_id[]"
+                                            class="w-full border rounded-lg border-gray-300 px-3 py-2"
+                                            @disabled($barang->isEmpty())>
+                                            <option value="">Pilih barang...</option>
+                                            @foreach ($barang as $b)
+                                                <option value="{{ $b->id }}" @selected((string) $bid === (string) $b->id)>
+                                                    {{ $b->sku }} — {{ $b->nama }}</option>
+                                            @endforeach
+                                        </select>
+                                    </td>
+                                    <td class="px-3 py-2">
+                                        <input type="number" step="0.0001" min="0.0001" name="qty_diminta[]"
+                                            value="{{ $oldQty[$i] ?? 1 }}"
+                                            class="w-full border px-3 py-2 rounded-lg border-gray-300"
+                                            @disabled($barang->isEmpty())>
+                                    </td>
+                                    <td class="px-3 py-2">
+                                        <input type="text" name="catatan_item[]" value="{{ $oldCat[$i] ?? '' }}"
+                                            class="w-full border rounded-lg border-gray-300 px-3 py-2"
+                                            @disabled($barang->isEmpty())>
+                                    </td>
+                                    <td class="px-3 py-2 text-right">
+                                        <button type="button"
+                                            class="btnHapus px-3 py-2 rounded-lg border-gray-300 border hover:bg-gray-50 cursor-pointer"
+                                            @disabled($barang->isEmpty())>Hapus</button>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
 

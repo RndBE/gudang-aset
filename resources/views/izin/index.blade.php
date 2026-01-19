@@ -3,10 +3,10 @@
 @section('content')
     <div class="flex items-center justify-between mb-4">
         <div class="text-lg font-semibold">Izin</div>
-        <a class="bg-black text-white px-3 py-2 rounded" href="{{ route('izin.create') }}">Tambah</a>
+        <a class="btn-active text-white px-6 py-3    rounded-lg text-sm" href="{{ route('izin.create') }}">Tambah</a>
     </div>
 
-    <div class="bg-white border rounded overflow-hidden">
+    <div class="bg-white border border-gray-300 rounded-lg overflow-hidden">
         <table class="w-full text-sm">
             <thead class="bg-gray-50">
                 <tr>
@@ -17,11 +17,12 @@
             </thead>
             <tbody>
                 @foreach ($data as $row)
-                    <tr class="border-t">
+                    <tr class="border-t border-gray-300">
                         <td class="p-3">{{ $row->kode }}</td>
                         <td class="p-3">{{ $row->nama }}</td>
                         <td class="p-3">
-                            <a class="underline" href="{{ route('izin.edit', $row) }}">Edit</a>
+                            <a class="border border-gray-300 py-1 px-3 rounded-lg"
+                                href="{{ route('izin.edit', $row) }}">Edit</a>
                         </td>
                     </tr>
                 @endforeach

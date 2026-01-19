@@ -29,7 +29,8 @@
                         <td class="p-3">{{ $row->induk?->nama }}</td>
                         <td class="p-3">{{ $row->status }}</td>
                         <td class="p-3">
-                            <a class="underline" href="{{ route('unit-organisasi.edit', $row) }}">Edit</a>
+                            <a class="px-3 py-1 rounded-lg btn-outline-active"
+                                href="{{ route('unit-organisasi.edit', $row) }}">Edit</a>
                         </td>
                     </tr>
                 @endforeach

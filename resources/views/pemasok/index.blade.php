@@ -3,10 +3,10 @@
 @section('content')
     <div class="flex items-center justify-between mb-4">
         <h1 class="text-xl font-semibold">Pemasok</h1>
-        <a href="{{ route('pemasok.create') }}" class="px-3 py-2 rounded bg-gray-900 text-white text-sm">Tambah</a>
+        <a href="{{ route('pemasok.create') }}" class="px-6 py-3 rounded-lg btn-active text-white text-sm">Tambah</a>
     </div>
 
-    <div class="bg-white border rounded overflow-hidden">
+    <div class="bg-white border border-gray-300 rounded-lg overflow-hidden">
         <table class="w-full text-sm">
             <thead class="bg-gray-50">
                 <tr>
@@ -21,7 +21,7 @@
             </thead>
             <tbody>
                 @forelse($data as $row)
-                    <tr class="border-t">
+                    <tr class="border-t border-gray-300">
                         <td class="p-3">{{ $row->kode }}</td>
                         <td class="p-3">{{ $row->nama }}</td>
                         <td class="p-3">{{ $row->nama_kontak ?? '-' }}</td>
@@ -34,7 +34,7 @@
                             </span>
                         </td>
                         <td class="p-3 text-right">
-                            <a class="px-3 py-1 rounded border text-sm hover:bg-gray-50"
+                            <a class="px-3 py-1 rounded border text-sm hover:bg-gray-50 btn-outline-active"
                                 href="{{ route('pemasok.edit', $row->id) }}">Edit</a>
                         </td>
                     </tr>

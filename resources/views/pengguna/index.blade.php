@@ -3,10 +3,10 @@
 @section('content')
     <div class="flex items-center justify-between mb-4">
         <div class="text-lg font-semibold">Pengguna</div>
-        <a class="bg-black text-white px-3 py-2 rounded" href="{{ route('pengguna.create') }}">Tambah</a>
+        <a class=" text-white px-6 py-3 rounded-lg btn-active" href="{{ route('pengguna.create') }}">Tambah</a>
     </div>
 
-    <div class="bg-white border rounded overflow-hidden">
+    <div class="bg-white border rounded-lg border-gray-300 overflow-hidden">
         <table class="w-full text-sm">
             <thead class="bg-gray-50">
                 <tr>
@@ -20,14 +20,15 @@
             </thead>
             <tbody>
                 @foreach ($data as $row)
-                    <tr class="border-t">
+                    <tr class="border-t border-gray-300">
                         <td class="p-3">{{ $row->nama_lengkap }}</td>
                         <td class="p-3">{{ $row->username }}</td>
                         <td class="p-3">{{ $row->instansi?->nama }}</td>
                         <td class="p-3">{{ $row->unitOrganisasi?->nama }}</td>
                         <td class="p-3">{{ $row->status }}</td>
                         <td class="p-3">
-                            <a class="underline" href="{{ route('pengguna.edit', $row) }}">Edit</a>
+                            <a class="border px-3 py-1 rounded-lg border-gray-300 cursor-pointer"
+                                href="{{ route('pengguna.edit', $row) }}">Edit</a>
                         </td>
                     </tr>
                 @endforeach
@@ -35,4 +36,3 @@
         </table>
     </div>
 @endsection
-    

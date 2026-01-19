@@ -4,11 +4,11 @@
     <div class="flex items-center justify-between">
         <div>
             <div class="text-xl font-semibold">Permintaan</div>
-            <div class="text-sm text-gray-500">Permintaan</div>
         </div>
 
         @if (auth()->user() && auth()->user()->punyaIzin('permintaan.kelola'))
-            <a href="{{ route('permintaan.create') }}" class="px-3 py-2 rounded bg-gray-900 text-white hover:bg-black">Buat
+            <a href="{{ route('permintaan.create') }}"
+                class="px-6 py-3 rounded-lg text-sm  btn-active text-white hover:bg-black">Buat
                 Permintaan</a>
         @endif
     </div>
@@ -17,11 +17,11 @@
         <div class="p-3 rounded bg-green-50 text-green-800 border border-green-200">{{ session('ok') }}</div>
     @endif
 
-    <div class="bg-white border rounded p-4 my-3">
+    <div class="bg-white border border-gray-300 rounded-lg p-4 my-3">
         <form class="grid grid-cols-1 md:grid-cols-4 gap-3">
             <div>
                 <label class="text-sm text-gray-600">Status</label>
-                <select name="status" class="w-full border rounded px-3 py-2">
+                <select name="status" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm">
                     <option value="">Semua</option>
                     @foreach ($statusList as $k => $v)
                         <option value="{{ $k }}" @selected(request('status') === $k)>{{ $v }}</option>
@@ -30,17 +30,18 @@
             </div>
             <div class="md:col-span-2">
                 <label class="text-sm text-gray-600">Cari</label>
-                <input name="keyword" value="{{ request('keyword') }}" class="w-full border rounded px-3 py-2"
-                    placeholder="Nomor / tujuan">
+                <input name="keyword" value="{{ request('keyword') }}"
+                    class="w-full border  border-gray-300 rounded-lg px-3 py-2 text-sm" placeholder="Nomor / tujuan">
             </div>
             <div class="flex items-end gap-2">
-                <button class="px-3 py-2 rounded border hover:bg-gray-50">Filter</button>
-                <a href="{{ route('permintaan.index') }}" class="px-3 py-2 rounded border hover:bg-gray-50">Reset</a>
+                <button class="px-3 py-2 rounded-lg border border-gray-300 hover:bg-gray-50 text-sm">Filter</button>
+                <a href="{{ route('permintaan.index') }}"
+                    class="px-3 py-2 rounded-lg text-sm border border-gray-300 hover:bg-gray-50">Reset</a>
             </div>
         </form>
     </div>
 
-    <div class="bg-white border rounded overflow-x-auto">
+    <div class="bg-white border border-gray-300 rounded-lg overflow-x-auto">
         <table class="w-full text-sm">
             <thead class="bg-gray-50 text-left">
                 <tr>
@@ -56,7 +57,7 @@
             </thead>
             <tbody>
                 @forelse($items as $it)
-                    <tr class="border-t">
+                    <tr class="border-t  border-gray-300">
                         <td class="px-4 py-3 font-medium">{{ $it->nomor_permintaan }}</td>
                         <td class="px-4 py-3">{{ optional($it->tanggal_permintaan)->format('Y-m-d H:i') }}</td>
                         <td class="px-4 py-3">{{ $it->pemohon?->nama_lengkap }}</td>
@@ -64,11 +65,12 @@
                         <td class="px-4 py-3">{{ $it->tipe_permintaan }}</td>
                         <td class="px-4 py-3">{{ $it->prioritas }}</td>
                         <td class="px-4 py-3">
-                            <span class="px-2 py-1 rounded border">{{ $statusList[$it->status] ?? $it->status }}</span>
+                            <span
+                                class="px-2 py-1 rounded-lg border-gray-300 border text-sm">{{ $statusList[$it->status] ?? $it->status }}</span>
                         </td>
                         <td class="px-4 py-3 text-right">
                             @if (auth()->user() && auth()->user()->punyaIzin('permintaan.kelola'))
-                                <a class="px-3 py-2 rounded border hover:bg-gray-50"
+                                <a class="px-3 py-2 rounded-lg border border-gray-300 text-sm hover:bg-gray-50"
                                     href="{{ route('permintaan.edit', $it->id) }}">Edit</a>
                             @else
                                 <span class="text-gray-400">-</span>

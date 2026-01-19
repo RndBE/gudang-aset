@@ -3,13 +3,13 @@
 @section('content')
     <div class="flex items-center justify-between mb-4">
         <h1 class="text-xl font-semibold">Aset</h1>
-        <a href="{{ route('aset.create') }}" class="px-3 py-2 rounded bg-gray-900 text-white text-sm">
+        <a href="{{ route('aset.create') }}" class="px-6 py-3 rounded-lg btn-active text-sm">
             Tambah Aset
         </a>
     </div>
 
     @if (session('success'))
-        <div class="mb-3 p-3 rounded bg-green-50 text-green-700 text-sm">
+        <div class="mb-3 p-3 rounded-lg bg-green-50 text-green-700 text-sm">
             {{ session('success') }}
         </div>
 
@@ -22,10 +22,10 @@
     @endif
 
     <form class="flex gap-2 mb-4">
-        <input name="q" value="{{ $q }}" class="border rounded px-3 py-2 text-sm w-64"
+        <input name="q" value="{{ $q }}" class="border border-gray-300 rounded-lg px-3 py-2 text-sm w-64"
             placeholder="Cari tag / serial / imei / no polisi">
 
-        <select name="status" class="border rounded px-3 py-2 text-sm">
+        <select name="status" class="border rounded-lg px-3 py-2 text-sm border-gray-300">
             <option value="">Semua Status</option>
             @foreach (['tersedia', 'dipinjam', 'ditugaskan', 'disimpan', 'perawatan', 'dihapus'] as $s)
                 <option value="{{ $s }}" {{ $status == $s ? 'selected' : '' }}>
@@ -34,12 +34,12 @@
             @endforeach
         </select>
 
-        <button class="px-4 py-2 rounded bg-gray-200 text-sm">
+        <button class="px-4 py-2 rounded-lg bg-gray-200 cursor-pointer text-sm">
             Filter
         </button>
     </form>
 
-    <div class="bg-white border rounded overflow-hidden">
+    <div class="bg-white border rounded-lg border-gray-300 overflow-hidden">
         <table class="w-full text-sm">
             <thead class="bg-gray-50">
                 <tr>
@@ -55,7 +55,7 @@
             </thead>
             <tbody>
                 @forelse($data as $row)
-                    <tr class="border-t">
+                    <tr class="border-t border-gray-300">
                         <td class="p-3 font-medium">{{ $row->barang?->nama ?? '-' }}</td>
                         <td class="p-3 font-medium">{{ $row->dibuat_pada?->translatedFormat('d F Y, H:i') ?? '-' }}</td>
                         <td class="p-3 font-medium">{{ $row->tag_aset }}</td>
@@ -75,18 +75,18 @@
                                 };
                             @endphp
 
-                            <span class="px-2 py-1 rounded text-xs {{ $warna }}">
+                            <span class="px-2 py-1 rounded-lg border-gray-300 text-xs {{ $warna }}">
                                 {{ $row->status_siklus }}
                             </span>
                         </td>
                         <td class="p-3 text-right space-x-2">
-                            <a class="px-3 py-1 rounded border text-sm hover:bg-gray-50"
+                            <a class="px-3 py-1 rounded-lg border-gray-300 border text-sm hover:bg-gray-50"
                                 href="{{ route('aset.show', $row->id) }}">Detail</a>
 
-                            <a class="px-3 py-1 rounded border text-sm hover:bg-gray-50"
+                            <a class="px-3 py-1 rounded-lg border-gray-300 border text-sm hover:bg-gray-50"
                                 href="{{ route('aset.edit', $row->id) }}">Edit</a>
 
-                            <a class="px-3 py-1 rounded border text-sm text-red-600 hover:bg-red-50"
+                            <a class="px-3 py-1 rounded-lg border-gray-300 border text-sm text-red-600 hover:bg-red-50"
                                 href="*">Hapus</a>
                         </td>
                     </tr>

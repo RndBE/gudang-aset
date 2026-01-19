@@ -46,4 +46,14 @@ class SatuanBarangController extends Controller
 
         return redirect()->route('satuan-barang.index');
     }
+
+    public function api()
+    {
+        $q = SatuanBarang::query()
+            ->select(['id',  'nama'])
+            ->orderBy('nama', 'asc');
+
+
+        return response()->json($q->get());
+    }
 }

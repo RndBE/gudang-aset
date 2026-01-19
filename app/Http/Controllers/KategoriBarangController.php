@@ -97,4 +97,14 @@ class KategoriBarangController extends Controller
 
         return redirect()->route('kategori-barang.index');
     }
+
+    public function api()
+    {
+        $q = KategoriBarang::query()
+            ->select(['id',  'nama'])
+            ->orderBy('nama', 'asc');
+
+
+        return response()->json($q->get());
+    }
 }

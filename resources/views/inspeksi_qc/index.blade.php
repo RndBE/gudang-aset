@@ -5,15 +5,14 @@
         $canManage = auth()->user()->punyaIzin('qc.kelola');
     @endphp
 
-    <div class="flex items-start justify-between gap-4 mb-6">
+    <div class="flex items-center justify-between gap-4 mb-4">
         <div>
-            <h1 class="text-2xl font-semibold">Inspeksi QC</h1>
-            <p class="text-sm text-gray-600 mt-1">Tentukan lulus/gagal per item penerimaan.</p>
+            <h1 class="text-xl font-semibold">Inspeksi QC</h1>
         </div>
 
         @if ($canManage)
             <a href="{{ route('penerimaan.index') }}"
-                class="inline-flex items-center px-4 py-2 rounded-lg bg-white border hover:bg-gray-50">
+                class="inline-flex items-center px-6 py-3 rounded-lg btn-active text-sm border hover:bg-gray-50">
                 Pilih dari Penerimaan
             </a>
         @endif
@@ -36,11 +35,11 @@
         </div>
     @endif
 
-    <div class="bg-white border rounded-xl overflow-hidden">
+    <div class="bg-white border border-gray-300 rounded-lg overflow-hidden">
         <div class="overflow-x-auto">
             <table class="min-w-full text-sm">
                 <thead class="bg-gray-50">
-                    <tr class="border-b">
+                    <tr class="border-b border-gray-300">
                         <th class="text-left px-4 py-3">Nomor QC</th>
                         <th class="text-left px-4 py-3">Tanggal</th>
                         <th class="text-left px-4 py-3">Penerimaan</th>
@@ -65,7 +64,7 @@
                                 $badge = 'bg-red-100 text-red-700';
                             }
                         @endphp
-                        <tr class="border-b hover:bg-gray-50">
+                        <tr class="border-b border-gray-300 hover:bg-gray-50">
                             <td class="px-4 py-3 font-medium text-gray-900">{{ $r->nomor_qc }}</td>
                             <td class="px-4 py-3">{{ optional($r->tanggal_qc)->format('Y-m-d') }}</td>
                             <td class="px-4 py-3">
@@ -82,7 +81,7 @@
                             <td class="px-4 py-3 text-right">
                                 @if ($canManage)
                                     <a href="{{ route('inspeksi-qc.edit', $r) }}"
-                                        class="inline-flex items-center px-3 py-1.5 rounded-lg border bg-white hover:bg-gray-50">Buka</a>
+                                        class="inline-flex items-center px-3 py-1.5 rounded-lg border btn-outline-active bg-white hover:bg-gray-50">Buka</a>
                                 @else
                                     <span class="text-xs text-gray-500">Tidak ada akses</span>
                                 @endif

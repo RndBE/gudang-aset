@@ -5,15 +5,14 @@
         $canManage = auth()->user()->punyaIzin('penerimaan.kelola');
     @endphp
 
-    <div class="flex items-start justify-between gap-4 mb-6">
+    <div class="flex items-center justify-between gap-4 mb-3">
         <div>
-            <h1 class="text-2xl font-semibold">Penerimaan</h1>
-            <p class="text-sm text-gray-600 mt-1">Catat barang masuk, lakukan QC, lalu posting ke stok.</p>
+            <h1 class="text-xl font-semibold">Penerimaan</h1>
         </div>
 
         @if ($canManage)
             <a href="{{ route('penerimaan.create') }}"
-                class="inline-flex items-center px-4 py-2 rounded-lg bg-white border hover:bg-gray-50">
+                class="inline-flex items-center px-6 py-3 rounded-lg bg-white border btn-active hover:bg-gray-50 text-sm">
                 Buat Penerimaan
             </a>
         @endif
@@ -36,11 +35,12 @@
         </div>
     @endif
 
-    <form class="bg-white border rounded-xl p-4 mb-4" method="get" action="{{ route('penerimaan.index') }}">
+    <form class="bg-white border rounded-lg border-gray-300 p-4 mb-4" method="get"
+        action="{{ route('penerimaan.index') }}">
         <div class="grid grid-cols-1 md:grid-cols-12 gap-3">
             <div class="md:col-span-3">
                 <label class="text-sm text-gray-700 block mb-1">Status</label>
-                <select name="status" class="w-full border rounded-lg px-3 py-2">
+                <select name="status" class="w-full border rounded-lg border-gray-300 px-3 py-2 text-sm">
                     <option value="">Semua</option>
                     @foreach (['draft', 'diterima', 'qc_menunggu', 'qc_selesai', 'diposting', 'dibatalkan'] as $st)
                         <option value="{{ $st }}" @selected(request('status') === $st)>{{ $st }}</option>
@@ -50,23 +50,25 @@
 
             <div class="md:col-span-7">
                 <label class="text-sm text-gray-700 block mb-1">Kata kunci</label>
-                <input name="keyword" value="{{ request('keyword') }}" class="w-full border rounded-lg px-3 py-2"
+                <input name="keyword" value="{{ request('keyword') }}"
+                    class="w-full border border-gray-300  rounded-lg px-3 py-2 text-sm"
                     placeholder="Nomor penerimaan / catatan">
             </div>
 
             <div class="md:col-span-2 flex items-end gap-2">
-                <button class="w-full px-4 py-2 rounded-lg bg-white border hover:bg-gray-50">Filter</button>
+                <button
+                    class="w-full px-4 py-2 rounded-lg bg-white border border-gray-300 hover:bg-gray-50  text-sm">Filter</button>
                 <a href="{{ route('penerimaan.index') }}"
-                    class="w-full px-4 py-2 rounded-lg bg-white border hover:bg-gray-50 text-center">Reset</a>
+                    class="w-full px-4 py-2 rounded-lg bg-white border  border-gray-300 hover:bg-gray-50 text-center  text-sm">Reset</a>
             </div>
         </div>
     </form>
 
-    <div class="bg-white border rounded-xl overflow-hidden">
+    <div class="bg-white border border-gray-300 rounded-lg overflow-hidden">
         <div class="overflow-x-auto">
             <table class="min-w-full text-sm">
                 <thead class="bg-gray-50">
-                    <tr class="border-b">
+                    <tr class="border-b border-gray-300">
                         <th class="text-left px-4 py-3">Nomor</th>
                         <th class="text-left px-4 py-3">Tanggal</th>
                         <th class="text-left px-4 py-3">Gudang</th>
@@ -95,7 +97,7 @@
                                 $badge = 'bg-red-100 text-red-700';
                             }
                         @endphp
-                        <tr class="border-b hover:bg-gray-50">
+                        <tr class="border-b border-gray-300 hover:bg-gray-50">
                             <td class="px-4 py-3 font-medium text-gray-900">{{ $r->nomor_penerimaan }}</td>
                             <td class="px-4 py-3">{{ optional($r->tanggal_penerimaan)->format('Y-m-d') }}</td>
                             <td class="px-4 py-3">{{ $r->gudang?->nama ?? '-' }}</td>
@@ -116,7 +118,7 @@
                             <td class="px-4 py-3 text-right">
                                 @if ($canManage)
                                     <a href="{{ route('penerimaan.edit', $r) }}"
-                                        class="inline-flex items-center px-3 py-1.5 rounded-lg border bg-white hover:bg-gray-50">Buka</a>
+                                        class="inline-flex items-center px-3 py-1.5 rounded-lg border bg-white hover:bg-gray-50 btn-outline-active">Buka</a>
                                 @else
                                     <span class="text-xs text-gray-500">Tidak ada akses</span>
                                 @endif

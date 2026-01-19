@@ -1,15 +1,14 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="flex items-start justify-between gap-4 mb-4">
+    <div class="flex items-center justify-between gap-4 mb-4">
         <div>
             <h1 class="text-xl font-semibold">Pengeluaran</h1>
-            <div class="text-sm text-gray-500">Tahap 3 — stok keluar</div>
         </div>
 
         @if (auth()->user() && auth()->user()->punyaIzin('pengeluaran.kelola'))
             <a href="{{ route('pengeluaran.create') }}"
-                class="inline-flex items-center rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700">
+                class="inline-flex items-center rounded-lg btn-active px-6 py-3 text-sm font-semibold text-white ">
                 Buat Pengeluaran
             </a>
         @endif
@@ -32,7 +31,7 @@
         </div>
     @endif
 
-    <div class="rounded border bg-white overflow-x-auto">
+    <div class="rounded-lg border-gray-300 border bg-white overflow-x-auto">
         <table class="min-w-full text-sm">
             <thead class="bg-gray-50 text-gray-600">
                 <tr>
@@ -61,7 +60,7 @@
                         </td>
                         <td class="px-4 py-3 text-right">
                             <a href="{{ route('pengeluaran.edit', $it->id) }}"
-                                class="inline-flex items-center rounded-lg border px-3 py-1.5 text-sm hover:bg-gray-50">
+                                class="inline-flex items-center rounded-lg border px-3 py-1.5 text-sm btn-outline-active hover:bg-gray-50">
                                 Detail
                             </a>
                         </td>

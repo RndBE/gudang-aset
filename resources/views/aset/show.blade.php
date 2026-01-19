@@ -3,12 +3,12 @@
 @section('content')
     <div class="mb-4 flex justify-between items-center">
         <h1 class="text-xl font-semibold">Detail Aset</h1>
-        <a href="{{ route('aset.index') }}" class="px-3 py-2 rounded border text-sm hover:bg-gray-50">
+        <a href="{{ route('aset.index') }}" class="px-3 py-2 rounded-lg btn-active border text-sm hover:bg-gray-50">
             Kembali
         </a>
     </div>
 
-    <div class="bg-white border rounded p-4 space-y-4">
+    <div class="bg-white border rounded-lg border-gray-300 p-4 space-y-4">
         <div class="grid grid-cols-3 md:grid-cols-2 gap-4">
             <div>
                 <div class="text-xs text-gray-500">Nama Barang</div>
@@ -39,8 +39,7 @@
                             default => 'bg-gray-100 text-gray-700',
                         };
                     @endphp
-                    <span
-                        class="px-2 py-1 rounded text-xs {{ $warna }}">
+                    <span class="px-2 py-1 rounded text-xs {{ $warna }}">
                         {{ $aset->status_siklus }}
                     </span>
                 </div>

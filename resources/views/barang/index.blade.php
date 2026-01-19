@@ -63,7 +63,7 @@
                             </span>
                         </td>
                         <td class="p-3 text-right">
-                            <a class="px-3 py-1 rounded border text-sm hover:bg-gray-50"
+                            <a class="px-3 py-1 rounded-lg border text-sm hover:bg-gray-50 btn-outline-active"
                                 href="{{ route('barang.edit', $row->id) }}">Edit</a>
                         </td>
                     </tr>

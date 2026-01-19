@@ -6,19 +6,19 @@
         <!-- Header -->
         <div class="flex items-center justify-between">
             <h1 class="text-xl font-semibold">Detail Penugasan Aset</h1>
-            <a href="{{ route('penugasan-aset.index') }}" class="px-3 py-2 rounded border text-sm hover:bg-gray-50">
+            <a href="{{ route('penugasan-aset.index') }}" class="px-3 py-2 rounded-lg btn-active text-sm hover:bg-gray-50">
                 Kembali
             </a>
         </div>
 
         @if (session('success'))
-            <div class="p-3 rounded bg-green-50 text-green-700 text-sm">
+            <div class="p-3 rounded-lg border-gray-300 bg-green-50 text-green-700 text-sm">
                 {{ session('success') }}
             </div>
         @endif
 
         @if (session('error'))
-            <div class="p-3 rounded bg-red-50 text-red-700 text-sm">
+            <div class="p-3 rounded-lg border-gray-300 bg-red-50 text-red-700 text-sm">
                 {{ session('error') }}
             </div>
         @endif
@@ -26,7 +26,7 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
 
             <!-- Panel Penugasan -->
-            <div class="md:col-span-1 bg-white border rounded p-4 space-y-3">
+            <div class="md:col-span-1 bg-white border rounded-lg border-gray-300 p-4 space-y-3">
 
                 <div>
                     <div class="text-xs text-gray-500">Status</div>
@@ -55,7 +55,7 @@
                         }
                     @endphp
 
-                    <span class="px-2 py-1 rounded text-xs font-semibold {{ $color }}">
+                    <span class="px-2 py-1 rounded-lg border-gray-300 text-xs font-semibold {{ $color }}">
                         {{ ucfirst($statusTampil) }}
                     </span>
                 </div>
@@ -89,7 +89,8 @@
                         <form method="POST" action="{{ route('penugasan-aset.kembalikan', $data->id) }}">
 
                             @csrf
-                            <button class="px-3 py-2 rounded bg-green-600 text-white text-sm hover:bg-green-700"
+                            <button
+                                class="px-3 py-2 rounded-lg border-gray-300 bg-green-600 text-white text-sm hover:bg-green-700"
                                 onclick="return confirm('Kembalikan aset ini?')">
                                 Kembalikan
                             </button>
@@ -98,13 +99,14 @@
                         <form method="POST" action="{{ route('penugasan-aset.batalkan', $data->id) }}">
 
                             @csrf
-                            <button class="px-3 py-2 rounded bg-yellow-500 text-white text-sm hover:bg-yellow-600"
+                            <button
+                                class="px-3 py-2 rounded-lg border-gray-300 bg-yellow-500 text-white text-sm hover:bg-yellow-600"
                                 onclick="return confirm('Batalkan penugasan ini?')">
                                 Batalkan
                             </button>
                         </form>
                     @else
-                        <span class="px-3 py-2 rounded bg-gray-100 text-gray-500 text-sm">
+                        <span class="px-3 py-2 rounded-lg border-gray-300 bg-gray-100 text-gray-500 text-sm">
                             Aksi tidak tersedia
                         </span>
                     @endif
@@ -114,7 +116,7 @@
                         <form method="POST" action="{{ route('penugasan-aset.kembalikan', $data->id) }}">
 
                             @csrf
-                            <button class="px-3 py-2 rounded bg-green-600 text-white text-sm hover:bg-green-700"
+                            <button class="px-3 py-2 rounded-lg border-gray-300 bg-green-600 text-white text-sm hover:bg-green-700"
                                 onclick="return confirm('Kembalikan aset ini?')">
                                 Kembalikan
                             </button>
@@ -123,13 +125,13 @@
                         <form method="POST" action="{{ route('penugasan-aset.batalkan', $data->id) }}">
 
                             @csrf
-                            <button class="px-3 py-2 rounded bg-yellow-500 text-white text-sm hover:bg-yellow-600"
+                            <button class="px-3 py-2 rounded-lg border-gray-300 bg-yellow-500 text-white text-sm hover:bg-yellow-600"
                                 onclick="return confirm('Batalkan penugasan ini?')">
                                 Batalkan
                             </button>
                         </form>
                     @else
-                        <span class="px-3 py-2 rounded bg-gray-100 text-gray-500 text-sm">
+                        <span class="px-3 py-2 rounded-lg border-gray-300 bg-gray-100 text-gray-500 text-sm">
                             Aksi tidak tersedia
                         </span>
                     @endif
@@ -138,7 +140,7 @@
             </div>
 
             <!-- Panel Aset -->
-            <div class="md:col-span-2 bg-white border rounded p-4">
+            <div class="md:col-span-2 bg-white border rounded-lg border-gray-300 p-4">
 
                 <h2 class="text-sm font-semibold mb-3">Informasi Aset</h2>
 
@@ -153,27 +155,22 @@
                         <div class="text-xs text-gray-500">No Serial</div>
                         <div>{{ $data->aset->no_serial ?? '-' }}</div>
                     </div>
-
+                    
                     <div>
                         <div class="text-xs text-gray-500">IMEI</div>
                         <div>{{ $data->aset->imei ?? '-' }}</div>
                     </div>
 
                     <div>
-                        <div class="text-xs text-gray-500">No Polisi</div>
-                        <div>{{ $data->aset->no_polisi ?? '-' }}</div>
-                    </div>
-
-                    <div>
                         <div class="text-xs text-gray-500">Status Siklus</div>
-                        <span class="px-2 py-1 rounded text-xs bg-blue-50 text-blue-700">
+                        <span class="px-2 py-1 rounded-lg border-gray-300 text-xs bg-blue-50 text-blue-700">
                             {{ $data->aset->status_siklus ?? '-' }}
                         </span>
                     </div>
 
                     <div>
                         <div class="text-xs text-gray-500">Status Kondisi</div>
-                        <span class="px-2 py-1 rounded text-xs bg-gray-100 text-gray-700">
+                        <span class="px-2 py-1 rounded-lg border-gray-300 text-xs bg-gray-100 text-gray-700">
                             {{ $data->aset->status_kondisi ?? '-' }}
                         </span>
                     </div>
@@ -182,13 +179,13 @@
 
                 <div class="pt-4 border-t mt-4 flex gap-2">
                     <a href="{{ route('aset.show', $data->aset_id) }}"
-                        class="px-3 py-2 rounded border text-sm hover:bg-gray-50">
+                        class="px-3 py-2 rounded-lg border-gray-300 border text-sm hover:bg-gray-50">
                         Lihat Detail Aset
                     </a>
 
                     {{-- @if ($data->status === 'aktif')
                         <a href="{{ route('penugasan-aset.edit', $data->id) }}"
-                            class="px-3 py-2 rounded border text-sm text-blue-700 hover:bg-blue-50">
+                            class="px-3 py-2 rounded-lg border-gray-300 border text-sm text-blue-700 hover:bg-blue-50">
                             Edit Penugasan
                         </a>
                     @endif --}}

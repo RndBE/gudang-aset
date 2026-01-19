@@ -5,7 +5,13 @@
         <div>
             <h1 class="text-xl font-semibold">Import Massal</h1>
         </div>
-        <a href="{{ route('barang.index') }}" class="px-6 py-3  btn-active rounded-lg border text-sm">Kembali</a>
+        <div class="flex">
+            <button type="button" id="btnAddRow"
+                class="px-5 cursor-pointer py-2 rounded-lg border text-sm btn-outline-active me-2">Tambah
+                Baris</button>
+            <a href="{{ route('barang.index') }}" class="px-6 py-3  btn-active rounded-lg border text-sm">Kembali</a>
+        </div>
+
     </div>
 
     @if ($errors->any())
@@ -89,12 +95,10 @@
                     </div>
                 </div>
 
-                <div class="flex items-center justify-between gap-3">
-                    <button type="button" id="btnAddRow"
-                        class="px-5 cursor-pointer py-2 rounded-lg border text-sm btn-outline-active ">Tambah
-                        Baris</button>
+                <div class="flex items-center justify-end mt-4 gap-3">
 
-                    <button type="submit" class="px-5 cursor-pointer py-2 rounded-lg btn-active text-sm">
+
+                    <button type="submit" class="px-5 cursor-pointer py-3 rounded-lg btn-active text-sm">
                         Simpan Massal
                     </button>
                 </div>

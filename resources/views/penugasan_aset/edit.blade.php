@@ -4,7 +4,7 @@
     <div class="space-y-6">
 
         <!-- Header -->
-        <div class="flex items-start justify-between">
+        <div class="flex items-center justify-between">
             <div>
                 <h1 class="text-xl font-semibold">Edit Penugasan Aset</h1>
                 <p class="text-sm text-gray-500">
@@ -13,19 +13,19 @@
             </div>
 
             <a href="{{ route('penugasan-aset.index', $data->id) }}"
-                class="px-3 py-2 border rounded text-sm hover:bg-gray-100">
+                class="px-3 py-2 border rounded-lg btn-active text-sm hover:bg-gray-100">
                 Kembali
             </a>
         </div>
 
         @if (session('success'))
-            <div class="bg-green-100 border border-green-300 text-green-800 px-4 py-2 rounded">
+            <div class="bg-green-100 border border-green-300 text-green-800 px-4 py-2 rounded-lg ">
                 {{ session('success') }}
             </div>
         @endif
 
         @if ($errors->any())
-            <div class="bg-red-100 border border-red-300 text-red-800 px-4 py-2 rounded">
+            <div class="bg-red-100 border border-red-300 text-red-800 px-4 py-2 rounded-lg ">
                 <div class="font-semibold mb-1">Validasi gagal:</div>
                 <ul class="list-disc pl-5 text-sm space-y-1">
                     @foreach ($errors->all() as $e)
@@ -39,8 +39,8 @@
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
             <!-- LEFT: Summary -->
-            <div class="bg-white border rounded">
-                <div class="border-b px-4 py-3 font-semibold">
+            <div class="bg-white border rounded-lg border-gray-300">
+                <div class="border-b px-4 py-3 font-semibold border-gray-300">
                     Ringkasan Penugasan
                 </div>
 
@@ -60,7 +60,7 @@
                                 $c = 'bg-red-100 text-red-700';
                             }
                         @endphp
-                        <span class="inline-flex px-2 py-1 text-xs rounded {{ $c }}">
+                        <span class="inline-flex px-2 py-1 text-xs rounded-lg border-gray-300 {{ $c }}">
                             {{ ucfirst($data->status) }}
                         </span>
                     </div>
@@ -94,15 +94,15 @@
             </div>
 
             <!-- RIGHT: Form -->
-            <div class="lg:col-span-2 bg-white border rounded">
-                <div class="border-b px-4 py-3 font-semibold">
+            <div class="lg:col-span-2 bg-white border rounded-lg border-gray-300">
+                <div class="border-b px-4 py-3 font-semibold border-gray-300">
                     Form Edit Penugasan
                 </div>
 
                 <div class="p-4 space-y-6">
 
                     <!-- Informasi Aset -->
-                    <div class="border rounded p-4">
+                    <div class="border rounded-lg border-gray-300 p-4">
                         <div class="font-semibold mb-3">Informasi Aset</div>
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
@@ -150,7 +150,7 @@
                                 <label class="text-sm font-medium">Tanggal Tugas</label>
                                 <input type="datetime-local" name="tanggal_tugas"
                                     value="{{ old('tanggal_tugas', optional($data->tanggal_tugas)->format('Y-m-d\TH:i')) }}"
-                                    class="w-full border rounded px-3 py-2 text-sm mt-1 @error('tanggal_tugas') border-red-400 @enderror">
+                                    class="w-full border rounded-lg border-gray-300 px-3 py-2 text-sm mt-1 @error('tanggal_tugas') border-red-400 @enderror">
                                 @error('tanggal_tugas')
                                     <div class="text-xs text-red-600 mt-1">{{ $message }}</div>
                                 @enderror
@@ -161,7 +161,7 @@
                                 <label class="text-sm font-medium">Tanggal Kembali</label>
                                 <input type="datetime-local" name="tanggal_kembali"
                                     value="{{ old('tanggal_kembali', optional($data->tanggal_kembali)->format('Y-m-d\TH:i')) }}"
-                                    class="w-full border rounded px-3 py-2 text-sm mt-1 @error('tanggal_kembali') border-red-400 @enderror">
+                                    class="w-full border rounded-lg border-gray-300 px-3 py-2 text-sm mt-1 @error('tanggal_kembali') border-red-400 @enderror">
                                 <div class="text-xs text-gray-500 mt-1">Kosongkan jika belum dikembalikan.</div>
                                 @error('tanggal_kembali')
                                     <div class="text-xs text-red-600 mt-1">{{ $message }}</div>
@@ -172,7 +172,7 @@
                             <div>
                                 <label class="text-sm font-medium">Ditugaskan ke Pengguna</label>
                                 <select name="ditugaskan_ke_pengguna_id"
-                                    class="w-full border rounded px-3 py-2 text-sm mt-1 @error('ditugaskan_ke_pengguna_id') border-red-400 @enderror">
+                                    class="w-full border rounded-lg border-gray-300 px-3 py-2 text-sm mt-1 @error('ditugaskan_ke_pengguna_id') border-red-400 @enderror">
                                     <option value="">-- pilih pengguna --</option>
                                     @foreach ($pengguna as $p)
                                         <option value="{{ $p->id }}" @selected(old('ditugaskan_ke_pengguna_id', $data->ditugaskan_ke_pengguna_id) == $p->id)>
@@ -190,7 +190,7 @@
                             <div>
                                 <label class="text-sm font-medium">Ditugaskan ke Unit</label>
                                 <select name="ditugaskan_ke_unit_id"
-                                    class="w-full border rounded px-3 py-2 text-sm mt-1 @error('ditugaskan_ke_unit_id') border-red-400 @enderror">
+                                    class="w-full border rounded-lg border-gray-300 px-3 py-2 text-sm mt-1 @error('ditugaskan_ke_unit_id') border-red-400 @enderror">
                                     <option value="">-- pilih unit --</option>
                                     @foreach ($unit as $u)
                                         <option value="{{ $u->id }}" @selected(old('ditugaskan_ke_unit_id', $data->ditugaskan_ke_unit_id) == $u->id)>
@@ -207,7 +207,7 @@
                             <div>
                                 <label class="text-sm font-medium">Status</label>
                                 <select name="status"
-                                    class="w-full border rounded px-3 py-2 text-sm mt-1 @error('status') border-red-400 @enderror">
+                                    class="w-full border rounded-lg border-gray-300 px-3 py-2 text-sm mt-1 @error('status') border-red-400 @enderror">
                                     @foreach (['sedang ditugaskan', 'selesai ditugaskan', 'dibatalkan'] as $s)
                                         <option value="{{ $s }}" @selected(old('status', $data->status) == $s)>
                                             {{ ucfirst($s) }}
@@ -224,7 +224,7 @@
                                 <label class="text-sm font-medium">Nomor Dokumen Serah Terima</label>
                                 <input name="nomor_dok_serah_terima"
                                     value="{{ old('nomor_dok_serah_terima', $data->nomor_dok_serah_terima) }}"
-                                    class="w-full border rounded px-3 py-2 text-sm mt-1 @error('nomor_dok_serah_terima') border-red-400 @enderror">
+                                    class="w-full border rounded-lg border-gray-300 px-3 py-2 text-sm mt-1 @error('nomor_dok_serah_terima') border-red-400 @enderror">
                                 @error('nomor_dok_serah_terima')
                                     <div class="text-xs text-red-600 mt-1">{{ $message }}</div>
                                 @enderror
@@ -236,7 +236,7 @@
                         <div>
                             <label class="text-sm font-medium">Catatan</label>
                             <textarea name="catatan" rows="3"
-                                class="w-full border rounded px-3 py-2 text-sm mt-1 @error('catatan') border-red-400 @enderror">{{ old('catatan', $data->catatan) }}</textarea>
+                                class="w-full border rounded-lg border-gray-300 px-3 py-2 text-sm mt-1 @error('catatan') border-red-400 @enderror">{{ old('catatan', $data->catatan) }}</textarea>
                             @error('catatan')
                                 <div class="text-xs text-red-600 mt-1">{{ $message }}</div>
                             @enderror
@@ -244,13 +244,15 @@
 
                         <!-- Buttons -->
                         <div class="flex gap-2">
-                            <button class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded text-sm">
-                                Simpan Perubahan
-                            </button>
+
                             <a href="{{ route('penugasan-aset.index', $data->id) }}"
-                                class="px-4 py-2 border rounded text-sm hover:bg-gray-100">
+                                class="px-4 py-2 border rounded-lg border-gray-300 btn-outline-active text-sm hover:bg-gray-100">
                                 Batal
                             </a>
+                            <button
+                                class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg btn-active text-sm">
+                                Simpan Perubahan
+                            </button>
                         </div>
 
                     </form>

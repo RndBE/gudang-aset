@@ -6,14 +6,13 @@
         <!-- Header -->
         <div class="flex items-center justify-between">
             <h1 class="text-xl font-semibold">Peminjaman Aset</h1>
-            <a href="{{ route('peminjaman-aset.create') }}"
-                class="px-3 py-2 rounded bg-blue-600 text-white text-sm hover:bg-blue-700">
+            <a href="{{ route('peminjaman-aset.create') }}" class="px-3 py-2 rounded-lg  text-white text-sm btn-active">
                 Buat Peminjaman
             </a>
         </div>
 
         @if (session('success'))
-            <div class="p-3 rounded bg-green-50 text-green-700 text-sm">
+            <div class="p-3 rounded-lg  bg-green-50 text-green-700 text-sm">
                 {{ session('success') }}
             </div>
 
@@ -26,17 +25,17 @@
         @endif
 
         @if (session('error'))
-            <div class="p-3 rounded bg-red-50 text-red-700 text-sm">
+            <div class="p-3 rounded-lg  bg-red-50 text-red-700 text-sm">
                 {{ session('error') }}
             </div>
         @endif
 
         <!-- Filter -->
         <form class="grid grid-cols-1 md:grid-cols-5 gap-2">
-            <input name="q" value="{{ $q }}" class="border rounded px-3 py-2 text-sm"
+            <input name="q" value="{{ $q }}" class="border rounded-lg border-gray-300 px-3 py-2 text-sm"
                 placeholder="Cari tag, serial, IMEI, dokumen...">
 
-            <select name="status" class="border rounded px-3 py-2 text-sm">
+            <select name="status" class="border rounded-lg border-gray-300 px-3 py-2 text-sm">
                 <option value="">Semua status</option>
                 @foreach (['aktif', 'terlambat', 'dikembalikan', 'dibatalkan'] as $s)
                     <option value="{{ $s }}" @selected($status == $s)>
@@ -45,20 +44,20 @@
                 @endforeach
             </select>
 
-            <button class="px-3 py-2 bg-gray-600 text-white rounded text-sm">
+            <button class="px-3 py-2 bg-gray-600 text-white rounded-lg border-gray-300 text-sm">
                 Filter
             </button>
 
             {{-- <a href="{{ route('peminjaman-aset.index') }}"
-                class="px-3 py-2 border rounded text-sm text-center hover:bg-gray-50">
+                class="px-3 py-2 border rounded-lg border-gray-300 text-sm text-center hover:bg-gray-50">
                 Reset
             </a> --}}
         </form>
 
         <!-- Table -->
-        <div class="bg-white border rounded overflow-hidden">
+        <div class="bg-white border rounded-lg border-gray-300 overflow-hidden">
             <table class="w-full text-sm">
-                <thead class="bg-gray-50 border-b">
+                <thead class="bg-gray-50 border-b border-gray-300">
                     <tr>
                         <th class="p-3 text-left">Tanggal Peminjaman</th>
                         <th class="p-3 text-left">Aset</th>
@@ -99,7 +98,7 @@
                                     </div>
 
                                     @if ($isOverdue)
-                                        <span class="text-xs px-2 py-1 rounded bg-red-100 text-red-700">
+                                        <span class="text-xs px-2 py-1 rounded-lg border-gray-300 bg-red-100 text-red-700">
                                             Terlambat
                                         </span>
                                     @endif
@@ -128,14 +127,15 @@
                                         $color = 'bg-red-100 text-red-700';
                                     } elseif ($statusTampil === 'dikembalikan') {
                                         $color = 'bg-green-100 text-green-700';
-                                    } else if ($statusTampil === 'dibatalkan') {
+                                    } elseif ($statusTampil === 'dibatalkan') {
                                         $color = 'bg-gray-200 text-gray-600';
                                     }
 
                                     $showLink = $pp && $apprStatus === 'menunggu'; // ✅ link hanya kalau masih menunggu
                                 @endphp
 
-                                <span class="px-2 py-1 rounded text-xs font-semibold {{ $color }}">
+                                <span
+                                    class="px-2 py-1 rounded-lg border-gray-300 text-xs font-semibold {{ $color }}">
                                     {{ ucfirst($statusTampil) }}
                                 </span>
                                 @if ($showLink)
@@ -158,7 +158,7 @@
                                 $color = 'bg-gray-200 text-gray-600';
                                 }
                                 @endphp
-                                <span class="px-2 py-1 text-xs rounded {{ $color }}">
+                                <span class="px-2 py-1 text-xs rounded-lg border-gray-300 {{ $color }}">
                                     {{ ucfirst($row->status) }}
                                 </span>  --}}
                             </td>
@@ -169,25 +169,26 @@
 
                             <td class="p-3 text-right space-x-1">
                                 <a href="{{ route('peminjaman-aset.show', $row->id) }}"
-                                    class="px-2 py-1 border rounded text-xs hover:bg-gray-50">
+                                    class="px-2 py-1 border rounded-lg border-gray-300 text-xs hover:bg-gray-50">
                                     Detail
                                 </a>
 
                                 @if ($row->status === 'aktif' || $row->status === 'terlambat')
                                     <a href="{{ route('peminjaman-aset.edit', $row->id) }}"
-                                        class="px-2 py-1 border rounded text-xs text-blue-700 hover:bg-blue-50">
+                                        class="px-2 py-1 border rounded-lg border-gray-300 text-xs text-blue-700 hover:bg-blue-50">
                                         Edit
                                     </a>
 
                                     <a href="{{ route('peminjaman-aset.show', $row->id) }}#pengembalian"
-                                        class="px-2 py-1 border rounded text-xs text-green-700 hover:bg-green-50">
+                                        class="px-2 py-1 border rounded-lg border-gray-300 text-xs text-green-700 hover:bg-green-50">
                                         Pengembalian
                                     </a>
 
                                     <form method="POST" action="{{ route('peminjaman-aset.batalkan', $row->id) }}"
                                         class="inline">
                                         @csrf
-                                        <button class="px-2 py-1 border rounded text-xs text-yellow-700 hover:bg-yellow-50"
+                                        <button
+                                            class="px-2 py-1 border rounded-lg border-gray-300 text-xs text-yellow-700 hover:bg-yellow-50"
                                             onclick="return confirm('Batalkan peminjaman ini?')">
                                             Batalkan
                                         </button>

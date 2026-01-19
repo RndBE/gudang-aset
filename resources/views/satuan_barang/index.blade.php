@@ -3,10 +3,10 @@
 @section('content')
     <div class="flex items-center justify-between mb-4">
         <h1 class="text-xl font-semibold">Satuan Barang</h1>
-        <a href="{{ route('satuan-barang.create') }}" class="px-3 py-2 rounded bg-gray-900 text-white text-sm">Tambah</a>
+        <a href="{{ route('satuan-barang.create') }}" class="px-6 py-3 rounded-lg btn-active text-white text-sm">Tambah</a>
     </div>
 
-    <div class="bg-white border rounded overflow-hidden">
+    <div class="bg-white border rounded-lg border-gray-300 overflow-hidden">
         <table class="w-full text-sm">
             <thead class="bg-gray-50">
                 <tr>
@@ -17,11 +17,11 @@
             </thead>
             <tbody>
                 @forelse($data as $row)
-                    <tr class="border-t">
+                    <tr class="border-t border-gray-300">
                         <td class="p-3">{{ $row->kode }}</td>
                         <td class="p-3">{{ $row->nama }}</td>
                         <td class="p-3 text-right">
-                            <a class="px-3 py-1 rounded border text-sm hover:bg-gray-50"
+                            <a class="px-3 py-1 rounded border text-sm hover:bg-gray-50 border-gray-300"
                                 href="{{ route('satuan-barang.edit', $row->id) }}">Edit</a>
                         </td>
                     </tr>

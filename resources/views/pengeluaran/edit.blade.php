@@ -1,165 +1,164 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="w-full p-6">
-        <div class="flex items-start justify-between gap-4 mb-4">
-            <div>
-                <h1 class="text-xl font-semibold">Pengeluaran</h1>
-                <div class="text-sm text-gray-500">{{ $pengeluaran->nomor_pengeluaran }} — status: {{ $pengeluaran->status }}
+
+    <div class="flex items-center justify-between gap-4 mb-4">
+        <div>
+            <h1 class="text-xl font-semibold">Pengeluaran</h1>
+            <div class="text-sm text-gray-500">{{ $pengeluaran->nomor_pengeluaran }} — status: {{ $pengeluaran->status }}
+            </div>
+        </div>
+        <div class="flex items-center gap-2">
+            <a href="{{ route('pengeluaran.index') }}"
+                class="inline-flex items-center rounded-lg border px-4 py-2 btn-active cursor-pointer text-sm hover:bg-gray-50">
+                Kembali
+            </a>
+
+            {{-- @if (auth()->user()->punyaIzin(['pengeluaran.kelola']) &&
+    !in_array($pengeluaran->status, ['dikeluarkan', 'dibatalkan'], true)) --}}
+            @if (auth()->user()->punyaIzin('pengeluaran.kelola') &&
+                    !in_array($pengeluaran->status, ['dikeluarkan', 'dibatalkan'], true))
+                <form method="post" action="{{ route('pengeluaran.posting', $pengeluaran->id) }}">
+                    @csrf
+                    <button
+                        class="inline-flex items-center rounded-lg bg-green-600 px-4 py-2 text-sm font-semibold text-white hover:bg-green-700">
+                        Posting
+                    </button>
+                </form>
+
+                <form method="post" action="{{ route('pengeluaran.batalkan', $pengeluaran->id) }}">
+                    @csrf
+                    <button
+                        class="inline-flex items-center rounded-lg bg-red-600 px-4 py-2 text-sm font-semibold text-white hover:bg-red-700">
+                        Batalkan
+                    </button>
+                </form>
+            @endif
+        </div>
+    </div>
+
+    @if (session('ok'))
+        <div class="mb-4 rounded-lg bg-green-50 px-4 py-3 text-green-700">
+            {{ session('ok') }}
+        </div>
+    @endif
+
+    @if ($errors->any())
+        <div class="mb-4 rounded-lg bg-red-50 px-4 py-3 text-red-700">
+            <div class="font-semibold mb-1">Terjadi error:</div>
+            <ul class="list-disc pl-5">
+                @foreach ($errors->all() as $e)
+                    <li>{{ $e }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
+    <form method="post" action="{{ route('pengeluaran.update', $pengeluaran->id) }}" class="space-y-4">
+        @csrf
+        @method('put')
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="rounded-lg border-gray-300 border bg-white p-4">
+                <div class="text-sm font-semibold mb-3">Detail Status</div>
+
+                <label class="block text-sm mb-1">Gudang</label>
+                <select name="gudang_id" id="gudang_id" class="w-full text-sm rounded-lg border py-2 px-3 border-gray-300"
+                    @disabled(in_array($pengeluaran->status, ['dikeluarkan', 'dibatalkan'], true))>
+                    <option value="">- pilih -</option>
+                    @foreach ($gudang as $g)
+                        <option value="{{ $g->id }}" @selected(old('gudang_id', $pengeluaran->gudang_id) == $g->id)>{{ $g->kode }} —
+                            {{ $g->nama }}</option>
+                    @endforeach
+                </select>
+
+                <div class="mt-3">
+                    <label class="block text-sm mb-1">Unit Organisasi</label>
+                    <select name="unit_organisasi_id" class="w-full text-sm rounded-lg  py-2 px-3 border border-gray-300"
+                        @disabled(in_array($pengeluaran->status, ['dikeluarkan', 'dibatalkan'], true))>
+                        <option value="">-</option>
+                        @foreach ($unit as $u)
+                            <option value="{{ $u->id }}" @selected(old('unit_organisasi_id', $pengeluaran->unit_organisasi_id) == $u->id)>{{ $u->kode }} —
+                                {{ $u->nama }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="mt-3">
+                    <label class="block text-sm mb-1">Tanggal Pengeluaran</label>
+                    <input type="datetime-local" name="tanggal_pengeluaran"
+                        value="{{ old('tanggal_pengeluaran', optional($pengeluaran->tanggal_pengeluaran)->format('Y-m-d\TH:i') ?? now()->format('Y-m-d\TH:i')) }}"
+                        class="w-full text-sm rounded-lg border py-2 px-3 border-gray-300" @disabled(in_array($pengeluaran->status, ['dikeluarkan', 'dibatalkan'], true))>
+                </div>
+
+                <div class="mt-3">
+                    <label class="block text-sm mb-1">Diserahkan ke Pengguna</label>
+                    <select name="diserahkan_ke_pengguna_id"
+                        class="w-full text-sm rounded-lg border py-2 px-3 border-gray-300" @disabled(in_array($pengeluaran->status, ['dikeluarkan', 'dibatalkan'], true))>
+                        <option value="">-</option>
+                        @foreach ($pengguna as $p)
+                            <option value="{{ $p->id }}" @selected(old('diserahkan_ke_pengguna_id', $pengeluaran->diserahkan_ke_pengguna_id) == $p->id)>{{ $p->nama_lengkap }}
+                                ({{ $p->username }})
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="mt-3">
+                    <label class="block text-sm mb-1">Diserahkan ke Unit</label>
+                    <select name="diserahkan_ke_unit_id" class="w-full text-sm rounded-lg border py-2 px-3 border-gray-300"
+                        @disabled(in_array($pengeluaran->status, ['dikeluarkan', 'dibatalkan'], true))>
+                        <option value="">-</option>
+                        @foreach ($unit as $u)
+                            <option value="{{ $u->id }}" @selected(old('diserahkan_ke_unit_id', $pengeluaran->diserahkan_ke_unit_id) == $u->id)>{{ $u->kode }} —
+                                {{ $u->nama }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="mt-3">
+                    <label class="block text-sm mb-1">Catatan</label>
+                    <textarea name="catatan" rows="3" class="w-full text-sm rounded-lg border py-2 px-3 border-gray-300"
+                        @disabled(in_array($pengeluaran->status, ['dikeluarkan', 'dibatalkan'], true))>{{ old('catatan', $pengeluaran->catatan) }}</textarea>
                 </div>
             </div>
-            <div class="flex items-center gap-2">
-                <a href="{{ route('pengeluaran.index') }}"
-                    class="inline-flex items-center rounded-lg border px-4 py-2 text-sm hover:bg-gray-50">
-                    Kembali
-                </a>
 
-                {{-- @if (auth()->user()->punyaIzin(['pengeluaran.kelola']) &&
-    !in_array($pengeluaran->status, ['dikeluarkan', 'dibatalkan'], true)) --}}
-                @if (auth()->user()->punyaIzin('pengeluaran.kelola') &&
-                        !in_array($pengeluaran->status, ['dikeluarkan', 'dibatalkan'], true))
-                    <form method="post" action="{{ route('pengeluaran.posting', $pengeluaran->id) }}">
-                        @csrf
-                        <button
-                            class="inline-flex items-center rounded-lg bg-green-600 px-4 py-2 text-sm font-semibold text-white hover:bg-green-700">
-                            Posting (Kurangi Stok)
+            <div class="md:col-span-2 rounded-lg border border-gray-300 bg-white p-4 overflow-x-auto">
+                <div class="flex items-center justify-between mb-3">
+                    <div class="text-sm font-semibold">Detail Barang</div>
+                    @if (!in_array($pengeluaran->status, ['dikeluarkan', 'dibatalkan'], true))
+                        <button type="button" id="btnAdd"
+                            class="inline-flex items-center rounded-lg bg-gray-900 px-3 py-2 text-sm font-semibold text-white hover:bg-black">
+                            Tambah Baris
                         </button>
-                    </form>
+                    @endif
+                </div>
+                <table class="min-w-full text-sm" id="detailTable">
+                    <thead class="bg-gray-50 text-gray-600">
+                        <tr>
+                            <th class="px-2 py-2 text-left">Barang</th>
+                            <th class="px-2 py-2 text-left">Lokasi</th>
+                            <th class="px-2 py-2 text-left">Lot</th>
+                            <th class="px-2 py-2 text-left">Exp</th>
+                            <th class="px-2 py-2 text-right">Qty</th>
+                            <th class="px-2 py-2 text-right">Biaya</th>
+                            <th class="px-2 py-2 text-right">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y" id="detailBody"></tbody>
+                </table>
 
-                    <form method="post" action="{{ route('pengeluaran.batalkan', $pengeluaran->id) }}">
-                        @csrf
+                @if (!in_array($pengeluaran->status, ['dikeluarkan', 'dibatalkan'], true))
+                    <div class="mt-4 flex justify-end">
                         <button
-                            class="inline-flex items-center rounded-lg bg-red-600 px-4 py-2 text-sm font-semibold text-white hover:bg-red-700">
-                            Batalkan
+                            class="inline-flex items-center rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700">
+                            Simpan Perubahan
                         </button>
-                    </form>
+                    </div>
                 @endif
             </div>
         </div>
-
-        @if (session('ok'))
-            <div class="mb-4 rounded-lg bg-green-50 px-4 py-3 text-green-700">
-                {{ session('ok') }}
-            </div>
-        @endif
-
-        @if ($errors->any())
-            <div class="mb-4 rounded-lg bg-red-50 px-4 py-3 text-red-700">
-                <div class="font-semibold mb-1">Terjadi error:</div>
-                <ul class="list-disc pl-5">
-                    @foreach ($errors->all() as $e)
-                        <li>{{ $e }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
-
-        <form method="post" action="{{ route('pengeluaran.update', $pengeluaran->id) }}" class="space-y-4">
-            @csrf
-            @method('put')
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div class="rounded-xl border bg-white p-4">
-                    <div class="text-sm font-semibold mb-3">Header</div>
-
-                    <label class="block text-sm mb-1">Gudang</label>
-                    <select name="gudang_id" id="gudang_id" class="w-full rounded-lg border-gray-300"
-                        @disabled(in_array($pengeluaran->status, ['dikeluarkan', 'dibatalkan'], true))>
-                        <option value="">- pilih -</option>
-                        @foreach ($gudang as $g)
-                            <option value="{{ $g->id }}" @selected(old('gudang_id', $pengeluaran->gudang_id) == $g->id)>{{ $g->kode }} —
-                                {{ $g->nama }}</option>
-                        @endforeach
-                    </select>
-
-                    <div class="mt-3">
-                        <label class="block text-sm mb-1">Unit Organisasi</label>
-                        <select name="unit_organisasi_id" class="w-full rounded-lg border-gray-300"
-                            @disabled(in_array($pengeluaran->status, ['dikeluarkan', 'dibatalkan'], true))>
-                            <option value="">-</option>
-                            @foreach ($unit as $u)
-                                <option value="{{ $u->id }}" @selected(old('unit_organisasi_id', $pengeluaran->unit_organisasi_id) == $u->id)>{{ $u->kode }} —
-                                    {{ $u->nama }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <div class="mt-3">
-                        <label class="block text-sm mb-1">Tanggal Pengeluaran</label>
-                        <input type="datetime-local" name="tanggal_pengeluaran"
-                            value="{{ old('tanggal_pengeluaran', optional($pengeluaran->tanggal_pengeluaran)->format('Y-m-d\TH:i') ?? now()->format('Y-m-d\TH:i')) }}"
-                            class="w-full rounded-lg border-gray-300" @disabled(in_array($pengeluaran->status, ['dikeluarkan', 'dibatalkan'], true))>
-                    </div>
-
-                    <div class="mt-3">
-                        <label class="block text-sm mb-1">Diserahkan ke Pengguna</label>
-                        <select name="diserahkan_ke_pengguna_id" class="w-full rounded-lg border-gray-300"
-                            @disabled(in_array($pengeluaran->status, ['dikeluarkan', 'dibatalkan'], true))>
-                            <option value="">-</option>
-                            @foreach ($pengguna as $p)
-                                <option value="{{ $p->id }}" @selected(old('diserahkan_ke_pengguna_id', $pengeluaran->diserahkan_ke_pengguna_id) == $p->id)>{{ $p->nama_lengkap }}
-                                    ({{ $p->username }})
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <div class="mt-3">
-                        <label class="block text-sm mb-1">Diserahkan ke Unit</label>
-                        <select name="diserahkan_ke_unit_id" class="w-full rounded-lg border-gray-300"
-                            @disabled(in_array($pengeluaran->status, ['dikeluarkan', 'dibatalkan'], true))>
-                            <option value="">-</option>
-                            @foreach ($unit as $u)
-                                <option value="{{ $u->id }}" @selected(old('diserahkan_ke_unit_id', $pengeluaran->diserahkan_ke_unit_id) == $u->id)>{{ $u->kode }} —
-                                    {{ $u->nama }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <div class="mt-3">
-                        <label class="block text-sm mb-1">Catatan</label>
-                        <textarea name="catatan" rows="3" class="w-full rounded-lg border-gray-300" @disabled(in_array($pengeluaran->status, ['dikeluarkan', 'dibatalkan'], true))>{{ old('catatan', $pengeluaran->catatan) }}</textarea>
-                    </div>
-                </div>
-
-                <div class="md:col-span-2 rounded-xl border bg-white p-4 overflow-x-auto">
-                    <div class="flex items-center justify-between mb-3">
-                        <div class="text-sm font-semibold">Detail Barang</div>
-                        @if (!in_array($pengeluaran->status, ['dikeluarkan', 'dibatalkan'], true))
-                            <button type="button" id="btnAdd"
-                                class="inline-flex items-center rounded-lg bg-gray-900 px-3 py-2 text-sm font-semibold text-white hover:bg-black">
-                                Tambah Baris
-                            </button>
-                        @endif
-                    </div>
-
-                    <table class="min-w-full text-sm" id="detailTable">
-                        <thead class="bg-gray-50 text-gray-600">
-                            <tr>
-                                <th class="px-2 py-2 text-left">Barang</th>
-                                <th class="px-2 py-2 text-left">Lokasi</th>
-                                <th class="px-2 py-2 text-left">Lot</th>
-                                <th class="px-2 py-2 text-left">Exp</th>
-                                <th class="px-2 py-2 text-right">Qty</th>
-                                <th class="px-2 py-2 text-right">Biaya</th>
-                                <th class="px-2 py-2 text-right">Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y" id="detailBody"></tbody>
-                    </table>
-
-                    @if (!in_array($pengeluaran->status, ['dikeluarkan', 'dibatalkan'], true))
-                        <div class="mt-4 flex justify-end">
-                            <button
-                                class="inline-flex items-center rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700">
-                                Simpan Perubahan
-                            </button>
-                        </div>
-                    @endif
-                </div>
-            </div>
-        </form>
-    </div>
+    </form>
     @php
         $readOnly = in_array($pengeluaran->status, ['dikeluarkan', 'dibatalkan'], true);
 

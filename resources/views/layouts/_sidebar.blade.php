@@ -17,10 +17,21 @@
         return false;
     };
 
-    $isActive = function (string $routeName) {
-        return request()->routeIs($routeName) || request()->routeIs($routeName . '.*');
-    };
+    $isActive = function (string $routeNameOrPath) {
+        if (str_contains($routeNameOrPath, '/')) {
+            $p = trim($routeNameOrPath, '/');
+            return request()->is($p) || request()->is($p . '/*');
+        }
 
+        if (request()->routeIs($routeNameOrPath) || request()->routeIs($routeNameOrPath . '.*')) {
+            return true;
+        }
+
+        $pos = strpos($routeNameOrPath, '.');
+        $prefix = $pos === false ? $routeNameOrPath : substr($routeNameOrPath, 0, $pos);
+
+        return $prefix ? request()->routeIs($prefix . '.*') : false;
+    };
     $visibleChildren = function (array $children) use ($canAny) {
         $out = [];
         foreach ($children as $ch) {

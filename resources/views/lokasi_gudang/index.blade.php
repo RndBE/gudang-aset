@@ -21,7 +21,7 @@
             </select>
         </div>
         <div class="flex gap-2 items-center">
-            <button class="btn-active px-6 py-2 rounded-lg text-sm">Terapkan</button>
+            <button class="btn-active px-6 py-2 rounded-lg text-sm cursor-pointer">Terapkan</button>
             <a href="{{ route('lokasi-gudang.index') }}"
                 class="btn-outline-active px-6 py-2 rounded-lg text-sm  hover:bg-gray-50">Reset</a>
         </div>
@@ -68,7 +68,7 @@
                             </span>
                         </td>
                         <td class="p-3 text-right">
-                            <a class="px-3 py-1 rounded border text-sm hover:bg-gray-50"
+                            <a class="px-3 py-1 rounded-lg border border-gray-300 text-sm btn-outline-active hover:bg-gray-50"
                                 href="{{ route('lokasi-gudang.edit', $row->id) }}">Edit</a>
                         </td>
                     </tr>

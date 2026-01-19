@@ -181,11 +181,12 @@
         </div>
 
         <div class="flex gap-2">
-            <a href="{{ route('barang.index') }}" class="px-3 py-2 rounded-lg btn-active border text-sm hover:bg-gray-50">
+            <a href="{{ route('barang.index') }}"
+                class="px-3 py-2 rounded-lg btn-outline-active border text-sm hover:bg-gray-50">
                 Batal
             </a>
 
-            <button class="px-3 py-2 rounded-lg  btn-outline-active text-white text-sm">
+            <button class="px-3 py-2 rounded-lg  btn-active text-white text-sm">
                 Simpan Perubahan
             </button>
         </div>

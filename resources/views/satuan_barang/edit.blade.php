@@ -16,7 +16,7 @@
     @endif
 
     <form method="post" action="{{ route('satuan-barang.update', $satuan_barang->id) }}"
-        class="bg-white border rounded p-4 space-y-4">
+        class="bg-white border border-gray-300 rounded-lg p-4 space-y-4">
         @csrf
         @method('put')
 
@@ -24,19 +24,19 @@
             <div>
                 <label class="text-sm font-medium">Kode</label>
                 <input name="kode" value="{{ old('kode', $satuan_barang->kode) }}"
-                    class="mt-1 w-full border rounded px-3 py-2" maxlength="30" required>
+                    class="mt-1 w-full border rounded-lg border-gray-300  px-3 py-2" maxlength="30" required>
             </div>
             <div>
                 <label class="text-sm font-medium">Nama</label>
                 <input name="nama" value="{{ old('nama', $satuan_barang->nama) }}"
-                    class="mt-1 w-full border rounded px-3 py-2" maxlength="60" required>
+                    class="mt-1 w-full border rounded-lg border-gray-300  px-3 py-2" maxlength="60" required>
             </div>
         </div>
 
         <div class="flex gap-2">
             <a href="{{ route('satuan-barang.index') }}"
-                class="px-3 py-2 rounded border text-sm hover:bg-gray-50">Kembali</a>
-            <button class="px-3 py-2 rounded bg-gray-900 text-white text-sm">Update</button>
+                class="px-3 py-2 rounded-lg border btn-outline-active text-sm hover:bg-gray-50">Kembali</a>
+            <button class="px-3 py-2 rounded-lg btn-active text-white text-sm">Update</button>
         </div>
     </form>
 @endsection

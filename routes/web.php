@@ -331,4 +331,7 @@ Route::middleware('auth')->group(function () {
     Route::post('pengeluaran/{pengeluaran}/batalkan', [\App\Http\Controllers\PengeluaranController::class, 'batalkan'])
         ->name('pengeluaran.batalkan')
         ->middleware('izin:pengeluaran.kelola');
+
+    Route::get('/api/kategori-barang', [KategoriBarangController::class, 'api']);
+    Route::get('/api/satuan-barang', [SatuanBarangController::class, 'api']);
 });

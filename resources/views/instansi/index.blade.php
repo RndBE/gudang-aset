@@ -23,7 +23,8 @@
                         <td class="p-3">{{ $row->nama }}</td>
                         <td class="p-3">{{ $row->status }}</td>
                         <td class="p-3">
-                            <a class="underline" href="{{ route('instansi.edit', $row) }}">Edit</a>
+                            <a class="border rounded-lg px-3 py-1 btn-outline-active"
+                                href="{{ route('instansi.edit', $row) }}">Edit</a>
                         </td>
                     </tr>
                 @endforeach

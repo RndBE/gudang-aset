@@ -2,11 +2,12 @@
 
 @section('content')
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <div class="bg-white border rounded p-4">
+        <div class="bg-white border rounded-lg border-gray-300 p-4">
             <div class="text-lg font-semibold mb-3">Izin untuk Peran</div>
 
             @foreach ($peran as $p)
-                <form method="post" action="{{ route('rbac.peran.izin', $p) }}" class="border rounded p-3 mb-3">
+                <form method="post" action="{{ route('rbac.peran.izin', $p) }}"
+                    class="border rounded-lg border-gray-300 p-3 mb-3">
                     @csrf
                     <div class="font-semibold">{{ $p->nama }} ({{ $p->kode }})</div>
                     <div class="mt-2 grid grid-cols-1 md:grid-cols-2 gap-2">
@@ -18,16 +19,17 @@
                             </label>
                         @endforeach
                     </div>
-                    <button class="mt-3 bg-black text-white px-3 py-2 rounded">Simpan</button>
+                    <button class="mt-3 btn-active text-sm text-white px-3 py-2 rounded-lg border-gray-300">Simpan</button>
                 </form>
             @endforeach
         </div>
 
-        <div class="bg-white border rounded p-4">
+        <div class="bg-white border rounded-lg border-gray-300 p-4">
             <div class="text-lg font-semibold mb-3">Peran untuk Pengguna</div>
 
             @foreach ($pengguna as $u)
-                <form method="post" action="{{ route('rbac.pengguna.peran', $u) }}" class="border rounded p-3 mb-3">
+                <form method="post" action="{{ route('rbac.pengguna.peran', $u) }}"
+                    class="border rounded-lg border-gray-300 p-3 mb-3">
                     @csrf
                     <div class="font-semibold">{{ $u->nama_lengkap }} ({{ $u->username }})</div>
                     <div class="mt-2 grid grid-cols-1 md:grid-cols-2 gap-2">
@@ -39,7 +41,7 @@
                             </label>
                         @endforeach
                     </div>
-                    <button class="mt-3 bg-black text-white px-3 py-2 rounded">Simpan</button>
+                    <button class="mt-3 btn-active text-sm text-white px-3 py-2 rounded-lg border-gray-300">Simpan</button>
                 </form>
             @endforeach
         </div>

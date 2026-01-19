@@ -7,7 +7,7 @@
             <div class="text-sm text-gray-500">Draft</div>
         </div>
         <a href="{{ route('pengeluaran.index') }}"
-            class="inline-flex items-center rounded-lg border px-4 py-2 text-sm hover:bg-gray-50">
+            class="inline-flex items-center rounded-lg border btn-active px-4 py-2 text-sm hover:bg-gray-50">
             Kembali
         </a>
     </div>
@@ -27,11 +27,11 @@
         @csrf
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div class="rounded border bg-white p-4">
-                <div class="text-sm font-semibold mb-3">Header</div>
+            <div class="rounded-lg border-gray-300 border bg-white p-4">
+                <div class="text-sm font-semibold mb-3">Detail Status</div>
 
                 <label class="block text-sm mb-1">Gudang</label>
-                <select name="gudang_id" id="gudang_id" class="w-full rounded-lg border-gray-300">
+                <select name="gudang_id" id="gudang_id" class="w-full rounded-lg border py-2 px-3 text-sm border-gray-300">
                     <option value="">- pilih -</option>
                     @foreach ($gudang as $g)
                         <option value="{{ $g->id }}" @selected(old('gudang_id') == $g->id)>{{ $g->kode }} —
@@ -41,7 +41,7 @@
 
                 <div class="mt-3">
                     <label class="block text-sm mb-1">Unit Organisasi</label>
-                    <select name="unit_organisasi_id" class="w-full rounded-lg border-gray-300">
+                    <select name="unit_organisasi_id" class="w-full rounded-lg border py-2 px-3 text-sm border-gray-300">
                         <option value="">- default dari user -</option>
                         @foreach ($unit as $u)
                             <option value="{{ $u->id }}" @selected(old('unit_organisasi_id') == $u->id)>{{ $u->kode }} —
@@ -54,12 +54,13 @@
                     <label class="block text-sm mb-1">Tanggal Pengeluaran</label>
                     <input type="datetime-local" name="tanggal_pengeluaran"
                         value="{{ old('tanggal_pengeluaran', now()->format('Y-m-d\TH:i')) }}"
-                        class="w-full rounded-lg border-gray-300">
+                        class="w-full rounded-lg border py-2 px-3 text-sm border-gray-300">
                 </div>
 
                 <div class="mt-3">
                     <label class="block text-sm mb-1">Diserahkan ke Pengguna</label>
-                    <select name="diserahkan_ke_pengguna_id" class="w-full rounded-lg border-gray-300">
+                    <select name="diserahkan_ke_pengguna_id"
+                        class="w-full rounded-lg border py-2 px-3 text-sm border-gray-300">
                         <option value="">-</option>
                         @foreach ($pengguna as $p)
                             <option value="{{ $p->id }}" @selected(old('diserahkan_ke_pengguna_id') == $p->id)>{{ $p->nama_lengkap }}
@@ -71,7 +72,7 @@
 
                 <div class="mt-3">
                     <label class="block text-sm mb-1">Diserahkan ke Unit</label>
-                    <select name="diserahkan_ke_unit_id" class="w-full rounded-lg border-gray-300">
+                    <select name="diserahkan_ke_unit_id" class="w-full rounded-lg border py-2 px-3 text-sm border-gray-300">
                         <option value="">-</option>
                         @foreach ($unit as $u)
                             <option value="{{ $u->id }}" @selected(old('diserahkan_ke_unit_id') == $u->id)>{{ $u->kode }} —
@@ -82,15 +83,15 @@
 
                 <div class="mt-3">
                     <label class="block text-sm mb-1">Catatan</label>
-                    <textarea name="catatan" rows="3" class="w-full rounded-lg border-gray-300">{{ old('catatan') }}</textarea>
+                    <textarea name="catatan" rows="3" class="w-full rounded-lg border py-2 px-3 text-sm border-gray-300">{{ old('catatan') }}</textarea>
                 </div>
             </div>
 
-            <div class="md:col-span-2 rounded border bg-white p-4 overflow-x-auto">
+            <div class="md:col-span-2 rounded-lg border-gray-300 border bg-white p-4 overflow-x-auto">
                 <div class="flex items-center justify-between mb-3 ">
                     <div class="text-sm font-semibold">Detail Barang</div>
                     <button type="button" id="btnAdd"
-                        class="inline-flex items-center rounded-lg bg-gray-900 px-3 py-2 text-sm font-semibold text-white hover:bg-black">
+                        class="inline-flex items-center rounded-lg px-3 py-2 text-sm font-semibold text-white btn-outline-active cursor-pointer">
                         Tambah Baris
                     </button>
                 </div>
@@ -112,7 +113,7 @@
 
                 <div class="mt-4 flex justify-end">
                     <button
-                        class="inline-flex items-center rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700">
+                        class="inline-flex items-center rounded-lg btn-active    px-4 py-2 text-sm font-semibold text-white cursor-pointer">
                         Simpan Draft
                     </button>
                 </div>
