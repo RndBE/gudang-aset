@@ -127,20 +127,22 @@
                                         Detail
                                     </a>
 
-                                    <a href="{{ route('penghapusan-aset.edit', $row->id) }}"
-                                        class="px-2 py-1 rounded-lg border-gray-300  border text-xs hover:bg-blue-50 text-blue-700">
-                                        Edit
-                                    </a>
+                                    @if (($row->status ?? null) !== 'disetujui')
+                                        <a href="{{ route('penghapusan-aset.edit', $row->id) }}"
+                                            class="px-2 py-1 rounded border text-xs hover:bg-blue-50 text-blue-700">
+                                            Edit
+                                        </a>
 
-                                    <form method="POST" action="{{ route('penghapusan-aset.destroy', $row->id) }}"
-                                        onsubmit="return confirm('Hapus data penghapusan ini?')">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button
-                                            class="px-2 py-1 rounded-lg border-gray-300  border text-xs hover:bg-red-50 text-red-700">
-                                            Hapus
-                                        </button>
-                                    </form>
+
+                                        <form method="POST" action="{{ route('penghapusan-aset.destroy', $row->id) }}"
+                                            onsubmit="return confirm('Hapus data penghapusan ini?')">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button class="px-2 py-1 rounded border text-xs hover:bg-red-50 text-red-700">
+                                                Hapus
+                                            </button>
+                                        </form>
+                                    @endif
                                 </div>
                             </td>
                         </tr>

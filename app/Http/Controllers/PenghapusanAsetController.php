@@ -135,7 +135,7 @@ class PenghapusanAsetController extends Controller
      */
     public function show(PenghapusanAset $penghapusan_aset)
     {
-        $penghapusan_aset->load('aset', 'disetujui', 'dibuat', 'instansi');
+        $penghapusan_aset->load('aset', 'disetujui', 'dibuat_oleh', 'instansi');
         return view('penghapusan_aset.show', ['data' => $penghapusan_aset]);
     }
 
