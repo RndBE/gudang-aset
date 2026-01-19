@@ -44,7 +44,6 @@ Route::get('/api/kategori-barang', [KategoriBarangController::class, 'api']);
 Route::get('/api/satuan-barang', [SatuanBarangController::class, 'api']);
 Route::middleware('auth')->group(function () {
     Route::get('/', fn() => redirect()->route('dashboard'));
-    // Route::get('/dashboard', fn() => view('dashboard'))->name('dashboard');
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::resource('pengguna', PenggunaController::class)

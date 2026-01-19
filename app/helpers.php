@@ -26,7 +26,6 @@ if (!function_exists('svg')) {
 
         $svg = preg_replace('/\sstroke="(?!none)[^"]*"/i', ' stroke="currentColor"', $svg);
         $svg = preg_replace('/\sfill="(?!none)[^"]*"/i', ' fill="currentColor"', $svg);
-
         return $svg;
     }
 }

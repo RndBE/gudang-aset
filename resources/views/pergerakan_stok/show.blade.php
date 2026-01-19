@@ -6,16 +6,16 @@
             <h1 class="text-xl font-semibold">Detail Pergerakan</h1>
             <div class="text-sm text-gray-600">{{ $pergerakan_stok->nomor_pergerakan }}</div>
         </div>
-        <a class="px-4 py-2 rounded border" href="{{ route('pergerakan-stok.index') }}">Kembali</a>
+        <a class="px-4 py-2 rounded-lg border btn-active" href="{{ route('pergerakan-stok.index') }}">Kembali</a>
     </div>
 
     @if (session('ok'))
-        <div class="mb-4 p-3 rounded bg-green-50 border border-green-200 text-green-800">
+        <div class="mb-4 p-3 rounded-lg bg-green-50 border border-green-200 text-green-800">
             {{ session('ok') }}
         </div>
     @endif
 
-    <div class="bg-white border rounded p-4 mb-4">
+    <div class="bg-white border rounded-lg border-gray-300 p-4 mb-4">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-sm">
             <div>
                 <div class="text-gray-500">Tanggal</div>
@@ -50,7 +50,7 @@
         </div>
     </div>
 
-    <div class="bg-white border rounded overflow-x-auto">
+    <div class="bg-white border rounded-lg border-gray-300   overflow-x-auto">
         <table class="min-w-full text-sm">
             <thead class="bg-gray-50">
                 <tr>
@@ -65,7 +65,7 @@
             </thead>
             <tbody>
                 @forelse($pergerakan_stok->detail as $d)
-                    <tr class="border-t">
+                    <tr class="border-t border-gray-300">
                         <td class="px-3 py-2">
                             {{ $d->barang->nama ?? '-' }}
                             <div class="text-xs text-gray-500">{{ $d->barang->sku ?? '' }}</div>

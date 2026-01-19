@@ -2,19 +2,17 @@
 
 @section('content')
     <div class="space-y-4">
-
-         Header -->
         <div class="flex items-center justify-between">
             <h1 class="text-xl font-semibold">Penghapusan Aset</h1>
             <a href="{{ route('penghapusan-aset.create') }}"
-                class="px-3 py-2 rounded bg-red-600 text-white text-sm hover:bg-red-700">
+                class="px-6 py-3 rounded-lg bg-[#C70000] text-white text-sm hover:bg-[#A40000]">
                 Buat Penghapusan
             </a>
         </div>
 
         <!-- Alert -->
         @if (session('success'))
-            <div class="p-3 rounded bg-green-50 text-green-700 text-sm">
+            <div class="p-3 rounded-lg border-gray-300 bg-green-50 text-green-700 text-sm">
                 {{ session('success') }}
             </div>
 
@@ -28,51 +26,53 @@
 
         <!-- Search -->
         <form class="flex gap-2">
-            <input name="q" value="{{ $q }}" class="w-full md:w-1/3 border rounded px-3 py-2"
+            <input name="q" value="{{ $q }}"
+                class="w-full md:w-1/3 border rounded-lg border-gray-300 px-3 py-2 text-sm"
                 placeholder="Cari tag / serial / alasan...">
 
-            <button class="px-4 py-2 rounded bg-gray-800 text-white text-sm hover:bg-gray-900">
+            <button
+                class="px-4 py-2 rounded-lg border-gray-300 btn-active bg-gray-800 text-white text-sm hover:bg-gray-900">
                 Cari
             </button>
         </form>
 
         <!-- Table -->
-        <div class="bg-white border rounded overflow-hidden">
+        <div class="bg-white border rounded-lg border-gray-300 overflow-hidden">
             <table class="w-full text-sm">
                 <thead class="bg-gray-50 text-left">
                     <tr>
-                        <th class="p-3 border-b">No Penghapusan</th>
-                        <th class="p-3 border-b">Tanggal</th>
-                        <th class="p-3 border-b">Tag Aset</th>
-                        <th class="p-3 border-b">Serial</th>
-                        <th class="p-3 border-b">Metode</th>
-                        <th class="p-3 border-b">Status</th>
-                        <th class="p-3 border-b .w-[220px]">Aksi</th>
+                        <th class="p-3 border-b border-gray-300 ">No Penghapusan</th>
+                        <th class="p-3 border-b border-gray-300 ">Tanggal</th>
+                        <th class="p-3 border-b border-gray-300 ">Tag Aset</th>
+                        <th class="p-3 border-b border-gray-300 ">Serial</th>
+                        <th class="p-3 border-b border-gray-300 ">Metode</th>
+                        <th class="p-3 border-b border-gray-300 ">Status</th>
+                        <th class="p-3 border-b border-gray-300  .w-[220px]">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
                     @forelse($data as $row)
                         <tr class="hover:bg-gray-50">
-                            <td class="p-3 border-b">
+                            <td class="p-3 border-b border-gray-300 ">
                                 {{ $row->nomor_penghapusan ?? '-' }}
                             </td>
-                            <td class="p-3 border-b">
+                            <td class="p-3 border-b border-gray-300 ">
                                 {{ optional($row->tanggal_penghapusan)->locale('id')->translatedFormat('j F Y') }}
                             </td>
 
-                            <td class="p-3 border-b">
+                            <td class="p-3 border-b border-gray-300 ">
                                 {{ $row->aset->tag_aset ?? '-' }}
                             </td>
 
-                            <td class="p-3 border-b">
+                            <td class="p-3 border-b border-gray-300 ">
                                 {{ $row->aset->no_serial ?? '-' }}
                             </td>
 
-                            <td class="p-3 border-b">
+                            <td class="p-3 border-b border-gray-300 ">
                                 {{ ucfirst($row->metode) }}
                             </td>
 
-                            <td class="p-3 border-b">
+                            <td class="p-3 border-b border-gray-300 ">
                                 @php
                                     $statusTampil = $row->status;
 
@@ -120,15 +120,15 @@
                                 </span> --}}
                             </td>
 
-                            <td class="p-3 border-b">
+                            <td class="p-3 border-b border-gray-300 ">
                                 <div class="flex gap-2">
                                     <a href="{{ route('penghapusan-aset.show', $row->id) }}"
-                                        class="px-2 py-1 rounded border text-xs hover:bg-gray-100">
+                                        class="px-2 py-1 rounded-lg border-gray-300  border text-xs hover:bg-gray-100">
                                         Detail
                                     </a>
 
                                     <a href="{{ route('penghapusan-aset.edit', $row->id) }}"
-                                        class="px-2 py-1 rounded border text-xs hover:bg-blue-50 text-blue-700">
+                                        class="px-2 py-1 rounded-lg border-gray-300  border text-xs hover:bg-blue-50 text-blue-700">
                                         Edit
                                     </a>
 
@@ -136,7 +136,8 @@
                                         onsubmit="return confirm('Hapus data penghapusan ini?')">
                                         @csrf
                                         @method('DELETE')
-                                        <button class="px-2 py-1 rounded border text-xs hover:bg-red-50 text-red-700">
+                                        <button
+                                            class="px-2 py-1 rounded-lg border-gray-300  border text-xs hover:bg-red-50 text-red-700">
                                             Hapus
                                         </button>
                                     </form>

@@ -4,19 +4,20 @@
     <div class="flex items-center justify-between mb-4">
         <div>
             <h1 class="text-xl font-semibold">Pergerakan Stok</h1>
-            <div class="text-sm text-gray-600">Log transaksi stok (posting)</div>
+            <div class="text-sm text-gray-600">Log transaksi stok</div>
         </div>
     </div>
 
-    <form method="get" class="bg-white border rounded p-4 mb-4">
+    <form method="get" class="bg-white border rounded-lg border-gray-300 p-4 mb-4">
         <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
             <div>
                 <label class="text-sm text-gray-700">Cari (nomor/referensi)</label>
-                <input name="q" value="{{ $q }}" class="mt-1 w-full border rounded px-3 py-2" />
+                <input name="q" value="{{ $q }}"
+                    class="mt-1 w-full border rounded-lg text-sm border-gray-300 px-3 py-2" />
             </div>
             <div>
                 <label class="text-sm text-gray-700">Jenis</label>
-                <select name="jenis_pergerakan" class="mt-1 w-full border rounded px-3 py-2">
+                <select name="jenis_pergerakan" class="mt-1 w-full border rounded-lg text-sm border-gray-300 px-3 py-2">
                     <option value="">Semua</option>
                     @foreach (['penerimaan', 'pengeluaran', 'transfer', 'penyesuaian', 'reservasi', 'batal_reservasi', 'penyesuaian_opname'] as $j)
                         <option value="{{ $j }}" @selected($jenis === $j)>{{ $j }}</option>
@@ -25,7 +26,7 @@
             </div>
             <div>
                 <label class="text-sm text-gray-700">Status</label>
-                <select name="status" class="mt-1 w-full border rounded px-3 py-2">
+                <select name="status" class="mt-1 w-full border rounded-lg text-sm border-gray-300 px-3 py-2">
                     <option value="">Semua</option>
                     @foreach (['draft', 'diposting', 'dibatalkan'] as $s)
                         <option value="{{ $s }}" @selected($status === $s)>{{ $s }}</option>
@@ -33,13 +34,14 @@
                 </select>
             </div>
             <div class="flex items-end gap-2">
-                <button class="px-4 py-2 rounded bg-black text-white">Filter</button>
-                <a href="{{ route('pergerakan-stok.index') }}" class="px-4 py-2 rounded border">Reset</a>
+                <button class="px-4 py-2 rounded-lg text-sm border-gray-300 btn-active text-white">Filter</button>
+                <a href="{{ route('pergerakan-stok.index') }}"
+                    class="px-4 py-2 rounded-lg text-sm border-gray-300 border btn-outline-active   ">Reset</a>
             </div>
         </div>
     </form>
 
-    <div class="bg-white border rounded overflow-x-auto">
+    <div class="bg-white border rounded-lg border-gray-300 overflow-x-auto">
         <table class="min-w-full text-sm">
             <thead class="bg-gray-50">
                 <tr>
@@ -54,7 +56,7 @@
             </thead>
             <tbody>
                 @forelse($items as $it)
-                    <tr class="border-t">
+                    <tr class="border-t border-gray-300">
                         <td class="px-3 py-2 font-medium">{{ $it->nomor_pergerakan }}</td>
                         <td class="px-3 py-2">{{ $it->tanggal_pergerakan?->format('Y-m-d H:i') }}</td>
                         <td class="px-3 py-2">{{ $it->jenis_pergerakan }}</td>
@@ -68,7 +70,7 @@
                         </td>
                         <td class="px-3 py-2">{{ $it->status }}</td>
                         <td class="px-3 py-2 text-right">
-                            <a class="px-3 py-1 rounded border"
+                            <a class="px-3 py-1 rounded-lg border-gray-300 border"
                                 href="{{ route('pergerakan-stok.show', $it->id) }}">Detail</a>
                         </td>
                     </tr>

@@ -63,10 +63,10 @@
         color: #B27F26;
     }
 </style>
-<aside class="w-64  z-10 h-full pt-3">
+<aside class="w-full md:w-64 h-full md:h-[calc(100vh-5rem)] pt-3 overflow-y-auto">
 
 
-    <nav class="px-3 py-3 space-y-2 h-full">
+    <nav class="px-3 py-3 space-y-2">
         @foreach ($menu as $item)
             @php
                 $hasChildren = isset($item['children']) && is_array($item['children']);
@@ -151,13 +151,11 @@
                 [&_path]:stroke-current">
 
                                             @if ($is_active)
-                                                {{-- ACTIVE = PNG --}}
                                                 @if ($logo && file_exists($pngPath))
                                                     <img src="{{ $pngUrl }}" class="w-5 h-5 object-contain"
                                                         alt="">
                                                 @endif
                                             @else
-                                                {{-- NOT ACTIVE = SVG --}}
                                                 @if ($logo && file_exists($svgPath))
                                                     {!! file_get_contents($svgPath) !!}
                                                 @endif
