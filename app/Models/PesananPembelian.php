@@ -59,4 +59,9 @@ class PesananPembelian extends BaseModel
     {
         return $this->hasMany(Penerimaan::class, 'pesanan_pembelian_id');
     }
+    public function permintaanPersetujuan()
+    {
+        return $this->hasOne(\App\Models\PermintaanPersetujuan::class, 'id_entitas', 'id')
+            ->where('tipe_entitas', 'pesanan_pembelian');
+    }
 }
