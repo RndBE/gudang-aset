@@ -35,6 +35,7 @@ use App\Http\Controllers\PermintaanPersetujuanController;
 use App\Http\Controllers\LogAuditController;
 
 use App\Http\Controllers\DashboardController;
+use App\Http\Middleware\AuditActivity;
 
 Route::get('/login', [AuthController::class, 'formLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.post');
@@ -42,7 +43,8 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::get('/api/kategori-barang', [KategoriBarangController::class, 'api']);
 Route::get('/api/satuan-barang', [SatuanBarangController::class, 'api']);
-Route::middleware('auth')->group(function () {
+// Route::middleware('auth')->group(function () {
+Route::middleware(['auth', AuditActivity::class])->group(function () {
     Route::get('/', fn() => redirect()->route('dashboard'));
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
