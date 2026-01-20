@@ -205,6 +205,170 @@
                 </div>
             @endif
 
+            {{-- pesanan pembelian yang diajukan --}}
+            @if ($data->tipe_entitas === 'pesanan_pembelian')
+                <div class="bg-white border rounded md:col-span-2">
+                    <div class="border-b px-4 py-3 font-semibold">Detail Pesanan Pembelian</div>
+
+                    <div class="p-4 text-sm">
+                        @if ($entitas)
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
+                                <div>
+                                    <div class="text-gray-500">Nomor PO</div>
+                                    <div class="font-medium">{{ $entitas->nomor_po ?? '-' }}</div>
+                                </div>
+                                <div>
+                                    <div class="text-gray-500">Tanggal</div>
+                                    <div class="font-medium">{{ optional($entitas->tanggal_po)->format('d/m/Y') ?? '-' }}
+                                    </div>
+                                </div>
+                                <div class="md:col-span-2">
+                                    <div class="text-gray-500">Catatan</div>
+                                    <div class="font-medium" style="white-space: pre-line">{{ $entitas->catatan ?? '-' }}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="border rounded-lg overflow-hidden">
+                                <table class="w-full text-sm">
+                                    <thead class="bg-gray-50">
+                                        <tr>
+                                            <th class="text-left px-3 py-2">Barang</th>
+                                            <th class="text-right px-3 py-2 w-28">Qty</th>
+                                            <th class="text-right px-3 py-2 w-40">Harga</th>
+                                            <th class="text-right px-3 py-2 w-44">Subtotal</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @php $grand = 0; @endphp
+                                        @forelse ($entitas->detail ?? [] as $d)
+                                            @php
+                                                $qty = (float) ($d->qty ?? 0);
+                                                $harga = (float) ($d->biaya_satuan ?? ($d->harga_satuan ?? 0));
+                                                $sub = $qty * $harga;
+                                                $grand += $sub;
+                                            @endphp
+                                            <tr class="border-t">
+                                                <td class="px-3 py-2">
+                                                    <div class="font-medium">{{ $d->barang?->sku ?? '-' }} —
+                                                        {{ $d->barang?->nama ?? '-' }}</div>
+                                                    @if (!empty($d->catatan))
+                                                        <div class="text-xs text-gray-500">{{ $d->catatan }}</div>
+                                                    @endif
+                                                </td>
+                                                <td class="px-3 py-2 text-right">
+                                                    {{ rtrim(rtrim(number_format($qty, 4, '.', ''), '0'), '.') }}</td>
+                                                <td class="px-3 py-2 text-right">{{ number_format($harga, 0, ',', '.') }}
+                                                </td>
+                                                <td class="px-3 py-2 text-right">{{ number_format($sub, 0, ',', '.') }}
+                                                </td>
+                                            </tr>
+                                        @empty
+                                            <tr class="border-t">
+                                                <td colspan="4" class="px-3 py-3 text-gray-500">Detail barang tidak
+                                                    ditemukan.</td>
+                                            </tr>
+                                        @endforelse
+                                    </tbody>
+                                    <tfoot class="bg-gray-50 border-t">
+                                        <tr>
+                                            <td colspan="3" class="px-3 py-2 text-right font-semibold">Total</td>
+                                            <td class="px-3 py-2 text-right font-semibold">
+                                                {{ number_format($grand, 0, ',', '.') }}</td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        @else
+                            <div class="text-gray-500">Data pesanan pembelian tidak ditemukan.</div>
+                        @endif
+                    </div>
+                </div>
+            @endif
+
+            {{-- permintaan yang diajukan --}}
+            @if ($data->tipe_entitas === 'permintaan')
+                <div class="bg-white border rounded md:col-span-2">
+                    <div class="border-b px-4 py-3 font-semibold">Detail Permintaan Barang</div>
+
+                    <div class="p-4 text-sm">
+                        @if ($entitas)
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
+                                <div>
+                                    <div class="text-gray-500">Nomor Permintaan</div>
+                                    <div class="font-medium">{{ $entitas->nomor_permintaan ?? '-' }}</div>
+                                </div>
+                                <div>
+                                    <div class="text-gray-500">Tanggal Permintaan</div>
+                                    <div class="font-medium">
+                                        {{ optional($entitas->tanggal_permintaan)->format('d/m/Y H:i') ?? '-' }}</div>
+                                </div>
+                                <div>
+                                    <div class="text-gray-500">Tipe</div>
+                                    <div class="font-medium">{{ $entitas->tipe_permintaan ?? '-' }}</div>
+                                </div>
+                                <div>
+                                    <div class="text-gray-500">Prioritas</div>
+                                    <div class="font-medium">{{ $entitas->prioritas ?? '-' }}</div>
+                                </div>
+                                <div class="md:col-span-2">
+                                    <div class="text-gray-500">Tujuan</div>
+                                    <div class="font-medium" style="white-space: pre-line">{{ $entitas->tujuan ?? '-' }}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="border rounded-lg overflow-hidden">
+                                <table class="w-full text-sm">
+                                    <thead class="bg-gray-50">
+                                        <tr>
+                                            <th class="text-left px-3 py-2">Barang</th>
+                                            <th class="text-center px-3 py-2 w-28">Diminta</th>
+                                            <th class="text-center px-3 py-2 w-28">Catatan</th>
+                                            {{-- <th class="text-right px-3 py-2 w-28">Disetujui</th>
+                                            <th class="text-right px-3 py-2 w-28">Dipenuhi</th> --}}
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @forelse ($entitas->detail ?? [] as $d)
+                                            <tr class="border-t">
+                                                <td class="px-3 py-2">
+                                                    <div class="font-medium">{{ $d->barang?->sku ?? '-' }} —
+                                                        {{ $d->barang?->nama ?? '-' }}</div>
+                                                    @if (!empty($d->catatan))
+                                                        <div class="text-xs text-gray-500">{{ $d->catatan }}</div>
+                                                    @endif
+                                                </td>
+                                                <td class="px-3 py-2 text-center">
+                                                    {{ rtrim(rtrim(number_format((float) ($d->qty_diminta ?? 0), 4, '.', ''), '0'), '.') }}
+                                                </td>
+                                                <td class="px-3 py-2 text-center">
+                                                    {{ $d->catatan ?? '-'}}
+                                                </td>
+                                                {{-- <td class="px-3 py-2 text-right">
+                                                    {{ rtrim(rtrim(number_format((float) ($d->qty_disetujui ?? 0), 4, '.', ''), '0'), '.') }}
+                                                </td>
+                                                <td class="px-3 py-2 text-right">
+                                                    {{ rtrim(rtrim(number_format((float) ($d->qty_dipenuhi ?? 0), 4, '.', ''), '0'), '.') }}
+                                                </td> --}}
+                                            </tr>
+                                        @empty
+                                            <tr class="border-t">
+                                                <td colspan="4" class="px-3 py-3 text-gray-500">Detail barang tidak
+                                                    ditemukan.</td>
+                                            </tr>
+                                        @endforelse
+                                    </tbody>
+                                </table>
+                            </div>
+                        @else
+                            <div class="text-gray-500">Data permintaan tidak ditemukan.</div>
+                        @endif
+                    </div>
+                </div>
+            @endif
+
+
         </div>
 
         <!-- Steps -->

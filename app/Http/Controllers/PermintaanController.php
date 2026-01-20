@@ -6,13 +6,18 @@ use App\Models\Barang;
 use App\Models\Permintaan;
 use App\Models\PermintaanDetail;
 use App\Models\UrutanNomorDokumen;
+use App\Models\PermintaanPersetujuan;
+use App\Models\LangkahPermintaanPersetujuan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
+use App\Services\ApprovalService;
 
 class PermintaanController extends Controller
 {
+
+    public function __construct(private ApprovalService $approvalService) {}
 
     public function index(Request $request)
     {
@@ -72,7 +77,7 @@ class PermintaanController extends Controller
             'mendesak' => 'Mendesak',
         ];
 
-        $nomorPreview = $this->previewNomor('permintaan', $user->instansi_id, $user->unit_organisasi_id);
+        $nomorPreview = $this->previewNomor('REQ', $user->instansi_id, $user->unit_organisasi_id);
 
         return view('permintaan.create', compact('barang', 'tipeList', 'prioritasList', 'nomorPreview'));
     }
@@ -207,6 +212,10 @@ class PermintaanController extends Controller
 
         abort_unless($permintaan->instansi_id === $user->instansi_id, 404);
 
+        if (!in_array($permintaan->status, ['draft', 'diajukan'], true)) {
+            return back()->withErrors(['status' => 'Permintaan tidak bisa diubah pada status ini.']);
+        }
+
         $data = $request->validate([
             'tanggal_permintaan' => ['required', 'date'],
             'tipe_permintaan' => ['required', 'in:habis_pakai,penugasan_aset,peminjaman_aset'],
@@ -242,6 +251,8 @@ class PermintaanController extends Controller
                     ]);
                 }
             }
+
+            // $beforeStatus = $permintaan->status;
 
             $permintaan->update([
                 'tanggal_permintaan' => $data['tanggal_permintaan'],
@@ -291,11 +302,78 @@ class PermintaanController extends Controller
 
             PermintaanDetail::insert($insert);
 
+            // if ($beforeStatus === 'draft' && $permintaan->status === 'diajukan') {
+            //     $this->ensurePersetujuanCreated($permintaan, $user->id);
+            // }
             return redirect()
                 ->route('permintaan.edit', $permintaan->id)
                 ->with('ok', 'Permintaan berhasil diperbarui.');
         });
     }
+
+    public function ajukan(Permintaan $permintaan)
+    {
+        // dd($permintaan->all);
+        $user = Auth::user();
+        abort_unless((int) $permintaan->instansi_id === (int) $user->instansi_id, 404);
+
+        if ($permintaan->status !== 'draft') {
+            return back()->withErrors(['status' => 'Hanya permintaan draft yang bisa diajukan.']);
+        }
+
+        $req = $this->approvalService->buatPermintaan(
+            berlakuUntuk: 'permintaan',
+            tipeEntitas: 'permintaan',
+            idEntitas: $permintaan->id,
+            ringkasan: 'Permintaan #' . ($permintaan->nomor_permintaan ?? $permintaan->id)
+        );
+
+
+        $permintaan->update([
+            'status' => 'diajukan',
+            'permintaan_persetujuan_id' => $req->id,
+        ]);
+
+        return back()->with('ok', 'Permintaan diajukan dan menunggu persetujuan.');
+    }
+
+    // private function ensurePersetujuanCreated(Permintaan $permintaan, int $userId): void
+    // {
+    //     $exists = PermintaanPersetujuan::query()
+    //         ->where('permintaan_id', $permintaan->id)
+    //         ->exists();
+
+    //     if ($exists) {
+    //         return;
+    //     }
+
+    //     $pp = PermintaanPersetujuan::create([
+    //         'permintaan_id' => $permintaan->id,
+    //         'status' => 'menunggu',
+    //         'langkah_saat_ini' => 1,
+    //         'dibuat_oleh' => $userId,
+    //     ]);
+
+    //     $steps = config('persetujuan.permintaan_steps', []);
+
+    //     if (!is_array($steps) || count($steps) === 0) {
+    //         throw ValidationException::withMessages([
+    //             'status' => 'Template langkah persetujuan belum dikonfigurasi.'
+    //         ]);
+    //     }
+
+    //     $rows = [];
+    //     foreach (array_values($steps) as $idx => $s) {
+    //         $rows[] = [
+    //             'permintaan_persetujuan_id' => $pp->id,
+    //             'no_langkah' => $idx + 1,
+    //             'status' => 'menunggu',
+    //             'snapshot' => $s,
+    //         ];
+    //     }
+
+    //     LangkahPermintaanPersetujuan::insert($rows);
+    // }
 
     private function previewNomor(string $tipeDokumen, int $instansiId, ?int $unitId): string
     {
@@ -318,10 +396,10 @@ class PermintaanController extends Controller
 
         $parts = [];
         if ($awalan) $parts[] = $awalan;
-        $parts[] = strtoupper($tipeDokumen) . '/' . $tahun . '/' . $num;
+        $parts[] = strtoupper($tipeDokumen) . '-' . $tahun . '-' . $num;
         if ($akhiran) $parts[] = $akhiran;
 
-        return implode('/', $parts);
+        return implode('-', $parts);
     }
 
     private function nextNomor(string $tipeDokumen, int $instansiId, ?int $unitId): string
@@ -355,9 +433,9 @@ class PermintaanController extends Controller
 
         $parts = [];
         if (!empty($row->awalan)) $parts[] = $row->awalan;
-        $parts[] = strtoupper($tipeDokumen) . '/' . $tahun . '/' . $num;
+        $parts[] = strtoupper($tipeDokumen) . '-' . $tahun . '-' . $num;
         if (!empty($row->akhiran)) $parts[] = $row->akhiran;
 
-        return implode('/', $parts);
+        return implode('-', $parts);
     }
 }

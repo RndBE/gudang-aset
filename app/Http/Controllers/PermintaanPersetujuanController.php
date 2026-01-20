@@ -263,6 +263,28 @@ class PermintaanPersetujuanController extends Controller
                 ->find($idEntitas);
         }
 
+        if ($tipeEntitas === 'pesanan_pembelian') {
+            $entitas = \App\Models\PesananPembelian::query()
+                ->with([
+                    'detail.barang',
+                    'pemasok',
+                    'dibuatOleh',
+                ])
+                ->where('instansi_id', auth()->user()->instansi_id)
+                ->find($idEntitas);
+        }
+
+        if ($tipeEntitas === 'permintaan') {
+            $entitas = \App\Models\Permintaan::query()
+                ->with([
+                    'detail.barang',
+                    'pemohon',
+                    'unitOrganisasi',
+                ])
+                ->where('instansi_id', auth()->user()->instansi_id)
+                ->find($idEntitas);
+        }
+
         return view('permintaan_persetujuan.show', [
             'data' => $permintaan_persetujuan,
             'step' => $step,
@@ -336,7 +358,7 @@ class PermintaanPersetujuanController extends Controller
 
             return;
         }
-        
+
         if ($tipe === 'pesanan_pembelian') {
             $po = \App\Models\PesananPembelian::find($idEntitas);
             if (!$po) return;
@@ -345,6 +367,19 @@ class PermintaanPersetujuanController extends Controller
                 $po->update(['status' => 'disetujui']);
             } else {
                 $po->update(['status' => 'ditolak']);
+            }
+
+            return;
+        }
+
+        if ($tipe === 'permintaan') {
+            $permintaan = \App\Models\Permintaan::find($idEntitas);
+            if (!$permintaan) return;
+
+            if ($statusAkhir === 'disetujui') {
+                $permintaan->update(['status' => 'disetujui']);
+            } else {
+                $permintaan->update(['status' => 'ditolak']);
             }
 
             return;

@@ -53,4 +53,9 @@ class Permintaan extends BaseModel
     {
         return $this->hasMany(PermintaanDetail::class, 'permintaan_id');
     }
+    public function permintaanPersetujuan()
+    {
+        return $this->hasOne(\App\Models\PermintaanPersetujuan::class, 'id_entitas', 'id')
+            ->where('tipe_entitas', 'pesanan_pembelian');
+    }
 }

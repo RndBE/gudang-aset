@@ -163,8 +163,19 @@
                 class="px-3 py-2 rounded-lg btn-outline-active text-sm border hover:bg-gray-50 ">Kembali</a>
             <button class="px-4 py-2 rounded-lg btn-active text-sm bg-blue-600 text-white hover:bg-blue-700">Simpan
                 Perubahan</button>
+            @if ($permintaan->status === 'draft')
+                <button type="button" onclick="document.getElementById('ajukanForm').submit()"
+                    class="px-5 py-2.5 rounded-lg text-sm bg-white border hover:bg-gray-50">
+                    Ajukan
+                </button>
+            @endif
         </div>
     </form>
+    @if ($permintaan->status === 'draft')
+        <form id="ajukanForm" method="post" action="{{ route('permintaan.ajukan', $permintaan->id) }}" class="hidden">
+            @csrf
+        </form>
+    @endif
 
     <template id="rowTpl">
         <tr class="border-t border-gray-300 text-sm ">
