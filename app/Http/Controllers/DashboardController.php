@@ -4,13 +4,14 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class DashboardController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         $totalInstansi = DB::table('instansi')->count();
         $totalGudang = DB::table('gudang')->count();
@@ -22,6 +23,105 @@ class DashboardController extends Controller
         $asetDipinjamkan = DB::table('peminjaman_aset')->count();
         $asetDihapus = DB::table('penghapusan_aset')->count();
 
+        $year = (int) ($request->get('year') ?: now()->year);
+        $mode = $request->get('mode') === 'monthly' ? 'monthly' : 'weekly';
+
+        if ($mode === 'monthly') {
+            $start = Carbon::create($year, 1, 1)->startOfDay();
+            $end = Carbon::create($year, 12, 31)->endOfDay();
+
+            $penerimaan = DB::table('penerimaan')
+                ->join('penerimaan_detail', 'penerimaan_detail.penerimaan_id', '=', 'penerimaan.id')
+                ->where('penerimaan.instansi_id', auth()->user()->instansi_id)
+                ->whereBetween('penerimaan.tanggal_penerimaan', [$start, $end])
+                ->whereIn('penerimaan.status', ['diterima', 'diposting'])
+                ->selectRaw('MONTH(tanggal_penerimaan) as m, SUM(penerimaan_detail.qty_diterima) as total_qty')
+                ->groupByRaw('MONTH(tanggal_penerimaan)')
+                ->pluck('total_qty', 'm');
+
+            $pengeluaran = DB::table('pengeluaran')
+                ->join('pengeluaran_detail', 'pengeluaran_detail.pengeluaran_id', '=', 'pengeluaran.id')
+                ->where('pengeluaran.instansi_id', auth()->user()->instansi_id)
+                ->whereBetween('pengeluaran.tanggal_pengeluaran', [$start, $end])
+                ->whereIn('pengeluaran.status', ['dikeluarkan', 'diposting'])
+                ->selectRaw('MONTH(tanggal_pengeluaran) as m, SUM(pengeluaran_detail.qty) as total_qty')
+                ->groupByRaw('MONTH(tanggal_pengeluaran)')
+                ->pluck('total_qty', 'm');
+
+            $labels = [];
+            $in = [];
+            $out = [];
+            for ($m = 1; $m <= 12; $m++) {
+                $labels[] = Carbon::create($year, $m, 1)->format('M');
+                $in[] = (float) ($penerimaan[$m] ?? 0);
+                $out[] = (float) ($pengeluaran[$m] ?? 0);
+            }
+        } else {
+            $start = now()->startOfMonth()->startOfDay();
+            $end = now()->endOfMonth()->endOfDay();
+
+            $startDate = $start->toDateString();
+            $endDate = $end->toDateString();
+
+            $penerimaanDaily = DB::table('penerimaan')
+                ->leftJoin('penerimaan_detail', 'penerimaan_detail.penerimaan_id', '=', 'penerimaan.id')
+                ->where('penerimaan.instansi_id', auth()->user()->instansi_id)
+                ->whereIn('penerimaan.status', ['diterima', 'diposting'])
+                ->whereDate('penerimaan.tanggal_penerimaan', '>=', $startDate)
+                ->whereDate('penerimaan.tanggal_penerimaan', '<=', $endDate)
+                ->selectRaw('DATE(penerimaan.tanggal_penerimaan) as tgl, COALESCE(SUM(penerimaan_detail.qty_diterima),0) as total_qty')
+                ->groupByRaw('DATE(penerimaan.tanggal_penerimaan)')
+                ->orderBy('tgl')
+                ->pluck('total_qty', 'tgl');
+
+            $pengeluaranDaily = DB::table('pengeluaran')
+                ->leftJoin('pengeluaran_detail', 'pengeluaran_detail.pengeluaran_id', '=', 'pengeluaran.id')
+                ->where('pengeluaran.instansi_id', auth()->user()->instansi_id)
+                ->whereIn('pengeluaran.status', ['dikeluarkan', 'diposting'])
+                ->whereDate('pengeluaran.tanggal_pengeluaran', '>=', $startDate)
+                ->whereDate('pengeluaran.tanggal_pengeluaran', '<=', $endDate)
+                ->selectRaw('DATE(pengeluaran.tanggal_pengeluaran) as tgl, COALESCE(SUM(pengeluaran_detail.qty),0) as total_qty')
+                ->groupByRaw('DATE(pengeluaran.tanggal_pengeluaran)')
+                ->orderBy('tgl')
+                ->pluck('total_qty', 'tgl');
+
+            $labels = [];
+            $in = [];
+            $out = [];
+
+            $daysInMonth = $start->daysInMonth;
+            for ($i = 0; $i < $daysInMonth; $i++) {
+                $d = $start->copy()->addDays($i)->toDateString();
+                $labels[] = \Carbon\Carbon::parse($d)->format('d M');
+                $in[] = (float) ($penerimaanDaily[$d] ?? 0);
+                $out[] = (float) ($pengeluaranDaily[$d] ?? 0);
+            }
+        }
+
+        $yearOptions = range(now()->year - 5, now()->year + 1);
+
+        $topN = 10;
+        $instansiId = auth()->user()->instansi_id;
+
+        $rows = DB::table('barang')
+            ->join('kategori_barang', 'kategori_barang.id', '=', 'barang.kategori_id')
+            ->where('barang.instansi_id', $instansiId)
+            ->where('barang.status', 'aktif')
+            ->selectRaw('kategori_barang.nama as kategori, COUNT(DISTINCT barang.id) as total_barang')
+            ->groupBy('kategori_barang.nama')
+            ->orderByDesc('total_barang')
+            ->get();
+
+        // $top = $rows->take($topN);
+        // $lainnya = (float) $rows->skip($topN)->sum('qty');
+
+        $pieLabels = $rows->pluck('kategori')->values()->all();
+        $pieValues = $rows->pluck('total_barang')->map(fn($v) => (float)$v)->values()->all();
+
+        // if ($lainnya > 0) {
+        //     $pieLabels[] = 'Lainnya';
+        //     $pieValues[] = $lainnya;
+        // }
         return view('dashboard', compact(
             'totalInstansi',
             'totalGudang',
@@ -30,7 +130,15 @@ class DashboardController extends Controller
             'totalAset',
             'asetDitugaskan',
             'asetDipinjamkan',
-            'asetDihapus'
+            'asetDihapus',
+            'labels',
+            'in',
+            'out',
+            'year',
+            'mode',
+            'yearOptions',
+            'pieLabels',
+            'pieValues'
         ));
     }
 
