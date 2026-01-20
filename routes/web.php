@@ -326,6 +326,10 @@ Route::middleware(['auth', AuditActivity::class])->group(function () {
         ->name('permintaan.update')
         ->middleware('izin:permintaan.kelola');
 
+    Route::post('permintaan/{permintaan}/ajukan', [\App\Http\Controllers\PermintaanController::class, 'ajukan'])
+        ->name('permintaan.ajukan')
+        ->middleware('izin:permintaan.kelola');
+
     Route::resource('pengeluaran', \App\Http\Controllers\PengeluaranController::class)
         ->only(['index', 'create', 'store', 'edit', 'update'])
         ->middleware('izin:pengeluaran.lihat|pengeluaran.kelola');
