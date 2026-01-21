@@ -136,7 +136,7 @@
                                     $svgPath = resource_path('icon/' . $logo . '.svg');
                                     $pngPath = resource_path('icon/' . $logo . '_solid.png'); // icon active (png)
 
-                                    $pngUrl = Vite::asset('resources/icon/' . $logo . '_solid.png');
+                                    $pngUrl = asset('icon/' . $logo . '_solid.png');
                                 @endphp
 
                                 @if ($route)
