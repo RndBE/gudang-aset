@@ -56,19 +56,60 @@ class DashboardController extends Controller
                 $in[] = (float) ($penerimaan[$m] ?? 0);
                 $out[] = (float) ($pengeluaran[$m] ?? 0);
             }
-        } else {
-            $start = now()->startOfMonth()->startOfDay();
-            $end = now()->endOfMonth()->endOfDay();
+            // } else {
+            //     $start = now()->startOfMonth()->startOfDay();
+            //     $end = now()->endOfMonth()->endOfDay();
 
-            $startDate = $start->toDateString();
-            $endDate = $end->toDateString();
+            //     $startDate = $start->toDateString();
+            //     $endDate = $end->toDateString();
+
+            //     $penerimaanDaily = DB::table('penerimaan')
+            //         ->leftJoin('penerimaan_detail', 'penerimaan_detail.penerimaan_id', '=', 'penerimaan.id')
+            //         ->where('penerimaan.instansi_id', auth()->user()->instansi_id)
+            //         ->whereIn('penerimaan.status', ['diterima', 'diposting'])
+            //         ->whereDate('penerimaan.tanggal_penerimaan', '>=', $startDate)
+            //         ->whereDate('penerimaan.tanggal_penerimaan', '<=', $endDate)
+            //         ->selectRaw('DATE(penerimaan.tanggal_penerimaan) as tgl, COALESCE(SUM(penerimaan_detail.qty_diterima),0) as total_qty')
+            //         ->groupByRaw('DATE(penerimaan.tanggal_penerimaan)')
+            //         ->orderBy('tgl')
+            //         ->pluck('total_qty', 'tgl');
+
+            //     $pengeluaranDaily = DB::table('pengeluaran')
+            //         ->leftJoin('pengeluaran_detail', 'pengeluaran_detail.pengeluaran_id', '=', 'pengeluaran.id')
+            //         ->where('pengeluaran.instansi_id', auth()->user()->instansi_id)
+            //         ->whereIn('pengeluaran.status', ['dikeluarkan', 'diposting'])
+            //         ->whereDate('pengeluaran.tanggal_pengeluaran', '>=', $startDate)
+            //         ->whereDate('pengeluaran.tanggal_pengeluaran', '<=', $endDate)
+            //         ->selectRaw('DATE(pengeluaran.tanggal_pengeluaran) as tgl, COALESCE(SUM(pengeluaran_detail.qty),0) as total_qty')
+            //         ->groupByRaw('DATE(pengeluaran.tanggal_pengeluaran)')
+            //         ->orderBy('tgl')
+            //         ->pluck('total_qty', 'tgl');
+
+            //     $labels = [];
+            //     $in = [];
+            //     $out = [];
+
+            //     $daysInMonth = $start->daysInMonth;
+            //     for ($i = 0; $i < $daysInMonth; $i++) {
+            //         $d = $start->copy()->addDays($i)->toDateString();
+            //         $labels[] = \Carbon\Carbon::parse($d)->format('d M');
+            //         $in[] = (float) ($penerimaanDaily[$d] ?? 0);
+            //         $out[] = (float) ($pengeluaranDaily[$d] ?? 0);
+            //     }
+            // }
+
+            // $yearOptions = range(now()->year - 5, now()->year + 1);
+        } else {
+            $month = (int) ($request->get('month') ?: now()->month);
+
+            $start = Carbon::create($year, $month, 1)->startOfDay();
+            $end = $start->copy()->endOfMonth()->endOfDay();
 
             $penerimaanDaily = DB::table('penerimaan')
                 ->leftJoin('penerimaan_detail', 'penerimaan_detail.penerimaan_id', '=', 'penerimaan.id')
                 ->where('penerimaan.instansi_id', auth()->user()->instansi_id)
+                ->whereBetween('penerimaan.tanggal_penerimaan', [$start, $end])
                 ->whereIn('penerimaan.status', ['diterima', 'diposting'])
-                ->whereDate('penerimaan.tanggal_penerimaan', '>=', $startDate)
-                ->whereDate('penerimaan.tanggal_penerimaan', '<=', $endDate)
                 ->selectRaw('DATE(penerimaan.tanggal_penerimaan) as tgl, COALESCE(SUM(penerimaan_detail.qty_diterima),0) as total_qty')
                 ->groupByRaw('DATE(penerimaan.tanggal_penerimaan)')
                 ->orderBy('tgl')
@@ -77,9 +118,8 @@ class DashboardController extends Controller
             $pengeluaranDaily = DB::table('pengeluaran')
                 ->leftJoin('pengeluaran_detail', 'pengeluaran_detail.pengeluaran_id', '=', 'pengeluaran.id')
                 ->where('pengeluaran.instansi_id', auth()->user()->instansi_id)
+                ->whereBetween('pengeluaran.tanggal_pengeluaran', [$start, $end])
                 ->whereIn('pengeluaran.status', ['dikeluarkan', 'diposting'])
-                ->whereDate('pengeluaran.tanggal_pengeluaran', '>=', $startDate)
-                ->whereDate('pengeluaran.tanggal_pengeluaran', '<=', $endDate)
                 ->selectRaw('DATE(pengeluaran.tanggal_pengeluaran) as tgl, COALESCE(SUM(pengeluaran_detail.qty),0) as total_qty')
                 ->groupByRaw('DATE(pengeluaran.tanggal_pengeluaran)')
                 ->orderBy('tgl')
@@ -92,13 +132,14 @@ class DashboardController extends Controller
             $daysInMonth = $start->daysInMonth;
             for ($i = 0; $i < $daysInMonth; $i++) {
                 $d = $start->copy()->addDays($i)->toDateString();
-                $labels[] = \Carbon\Carbon::parse($d)->format('d M');
+                $labels[] = Carbon::parse($d)->format('d M');
                 $in[] = (float) ($penerimaanDaily[$d] ?? 0);
                 $out[] = (float) ($pengeluaranDaily[$d] ?? 0);
             }
         }
 
-        $yearOptions = range(now()->year - 5, now()->year + 1);
+        $yearOptions = collect(range(now()->year - 5, now()->year + 1))->values()->all();
+        $monthOptions = range(1, 12);
 
         $topN = 10;
         $instansiId = auth()->user()->instansi_id;
