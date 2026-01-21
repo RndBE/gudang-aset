@@ -263,9 +263,13 @@ class BarangController extends Controller
     {
         $request->validate([
             'image' => ['required', 'image', 'max:10240'],
+            'handwritten' => ['nullable', 'boolean'],
         ]);
+        $isHandwritten = (bool) $request->boolean('handwritten');
 
-        $url = config('services.ocr_barang.url');
+        $url = $isHandwritten
+            ? config('services.ocr_barang.handwritten_url')
+            : config('services.ocr_barang.url');
 
         if (!$url) {
             return response()->json(['message' => 'OCR endpoint belum dikonfigurasi.'], 422);

@@ -36,6 +36,7 @@ return [
     ],
     'ocr_barang' => [
         'url' => env('OCR_BARANG_URL'),
+        'handwritten_url' => env('OCR_BARANG_HANDWRITTEN_URL'),
     ],
 
 ];

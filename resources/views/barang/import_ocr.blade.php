@@ -229,14 +229,22 @@
                     </div>
                 </div>
             </div>
+            <div class="flex justify-between">
+                <div id="handwriteWrap" class="hidden">
+                    <label class="inline-flex items-center gap-2 text-sm text-gray-700 select-none cursor-pointer">
+                        <input type="checkbox" id="chkHandwrite"
+                            class="rounded border-gray-300 text-[#C58D2A] focus:ring-[#C58D2A]">
+                        <span class="font-medium">Tulisan Tangan</span>
+                    </label>
+                </div>
 
-
-            <div class="flex items-center gap-3">
-                <button type="button" id="btnScan"
-                    class="px-3 py-2 rounded-lg btn-outline-active cursor-pointer text-sm">
-                    Scan Gambar
-                </button>
-                <div id="scanStatus" class="text-sm text-gray-600"></div>
+                <div class="flex items-center ">
+                    <button type="button" id="btnScan"
+                        class="px-3 py-2 rounded-lg btn-outline-active cursor-pointer text-sm">
+                        Scan Gambar
+                    </button>
+                    <div id="scanStatus" class="text-sm text-gray-600 ms-2"></div>
+                </div>
             </div>
         </div>
 
@@ -296,6 +304,8 @@
         const rowsBody = document.getElementById('rowsBody');
         const rowCount = document.getElementById('rowCount');
         const btnAddRow = document.getElementById('btnAddRow');
+        const chkHandwrite = document.getElementById('chkHandwrite');
+        const handwriteWrap = document.getElementById('handwriteWrap');
 
         function escapeHtml(str) {
             return String(str ?? '')
@@ -420,6 +430,8 @@
 
             if (!f) {
                 imgPreview.removeAttribute('src');
+                if (handwriteWrap) handwriteWrap.classList.add('hidden');
+                if (chkHandwrite) chkHandwrite.checked = false;
                 resetResult();
                 return;
             }
@@ -427,8 +439,12 @@
             const url = URL.createObjectURL(f);
             imgPreview.src = url;
 
+            if (handwriteWrap) handwriteWrap.classList.remove('hidden');
+            if (chkHandwrite) chkHandwrite.checked = false;
+
             resetResult();
         });
+
 
         btnScan.addEventListener('click', async () => {
             const f = imgInput.files?.[0];
@@ -444,7 +460,9 @@
             try {
                 const fd = new FormData();
                 fd.append('image', f);
-
+                const isHandwritten = chkHandwrite?.checked ? 1 : 0;
+                fd.append('handwritten', isHandwritten);
+                console.log(isHandwritten)
                 const res = await fetch("{{ route('barang.import_ocr.scan') }}", {
                     method: 'POST',
                     headers: {
@@ -453,6 +471,7 @@
                     },
                     body: fd
                 });
+
 
                 const data = await res.json().catch(() => null);
                 console.log(data);

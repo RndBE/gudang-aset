@@ -25,6 +25,91 @@
         border: 1.5px solid #C58D2A;
 
     }
+
+    .typing-bubble {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        height: 22px;
+    }
+
+    .typing-bubble span {
+        width: 7px;
+        height: 7px;
+        border-radius: 999px;
+        background: #9ca3af;
+        opacity: .55;
+        animation: typingDots 1.1s infinite ease-in-out;
+    }
+
+    .typing-bubble span:nth-child(2) {
+        animation-delay: .15s;
+    }
+
+    .typing-bubble span:nth-child(3) {
+        animation-delay: .3s;
+    }
+
+    @keyframes typingDots {
+
+        0%,
+        80%,
+        100% {
+            transform: translateY(0);
+            opacity: .45;
+        }
+
+        40% {
+            transform: translateY(-4px);
+            opacity: 1;
+        }
+    }
+
+    .md p {
+        margin: .35rem 0;
+        line-height: 1.65;
+    }
+
+    .md ul {
+        list-style: disc;
+        padding-left: 1.25rem;
+        margin: .35rem 0;
+    }
+
+    .md ol {
+        list-style: decimal;
+        padding-left: 1.25rem;
+        margin: .35rem 0;
+    }
+
+    .md li {
+        margin: .2rem 0;
+    }
+
+    .md code {
+        background: #f3f4f6;
+        padding: .12rem .35rem;
+        border-radius: .35rem;
+    }
+
+    .md pre {
+        background: #0b1020;
+        color: #e5e7eb;
+        padding: .75rem;
+        border-radius: .75rem;
+        overflow: auto;
+    }
+
+    .md h1,
+    .md h2,
+    .md h3 {
+        font-weight: 700;
+        margin: .55rem 0 .25rem;
+    }
+
+    .md a {
+        text-decoration: underline;
+    }
 </style>
 @php
     $user = auth()->user();
@@ -363,20 +448,6 @@
                     </div>
                 </div>
 
-                <div class="flex items-start gap-4 justify-end">
-                    <div class="max-w-[70%] rounded-xl bg-[#F3E8D4] px-5 py-4 text-base text-gray-900">
-                        Barang yang menipis di gudang utama apa aja?
-                    </div>
-                    <div
-                        class="h-11 w-11 rounded-full bg-gray-100 text-gray-600 flex items-center justify-center shrink-0">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
-                            class="h-6 w-6">
-                            <path fill-rule="evenodd"
-                                d="M7.5 7.5a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z"
-                                clip-rule="evenodd" />
-                        </svg>
-                    </div>
-                </div>
 
             </div>
 
@@ -412,6 +483,212 @@
         </div>
     </div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.8/dist/purify.min.js"></script>
+<script>
+    const chatBox = document.querySelector('#chatOverlay .h-\\[calc\\(85vh-140px\\)\\]')
+    const chatInput = document.getElementById('chatInput')
+    const chatSend = document.getElementById('chatSend')
+
+    const API_URL = 'http://192.168.10.10:8001/chat_stream'
+    const history = []
+
+    function appendBubble(role, text) {
+        const wrap = document.createElement('div')
+        if (role === 'user') {
+            wrap.className = 'flex items-start gap-4 justify-end'
+            wrap.innerHTML = `
+        <div class="max-w-[70%] rounded-xl bg-[#F3E8D4] px-5 py-4 text-base text-gray-900"></div>
+        <div class="h-11 w-11 rounded-full bg-gray-100 text-gray-600 flex items-center justify-center shrink-0">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="h-6 w-6">
+            <path fill-rule="evenodd" d="M7.5 7.5a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z" clip-rule="evenodd" />
+          </svg>
+        </div>
+      `
+            wrap.querySelector('div').textContent = text
+            chatBox.appendChild(wrap)
+            chatBox.scrollTop = chatBox.scrollHeight
+            return {
+                wrap,
+                bubble: wrap.querySelector('div')
+            }
+        } else {
+            wrap.className = 'flex items-start gap-4'
+            wrap.innerHTML = `
+        <div class="h-11 w-11 rounded-full bg-[#F3E8D4] flex items-center justify-center shrink-0">
+          {!! str_replace(["\n", "\r"], '', file_get_contents(resource_path('icon/robot.svg'))) !!}
+        </div>
+        <div class="max-w-[70%] rounded-3xl border border-gray-200 bg-gray-50 px-5 py-4 text-base text-gray-800 whitespace-pre-wrap"></div>
+      `
+            wrap.querySelector('div:last-child').textContent = text
+            chatBox.appendChild(wrap)
+            chatBox.scrollTop = chatBox.scrollHeight
+            return {
+                wrap,
+                bubble: wrap.querySelector('div:last-child')
+            }
+        }
+    }
+
+    function appendTyping() {
+        const wrap = document.createElement('div')
+        wrap.className = 'flex items-start gap-4'
+        wrap.innerHTML = `
+      <div class="h-11 w-11 rounded-full bg-[#F3E8D4] flex items-center justify-center shrink-0">
+        {!! str_replace(["\n", "\r"], '', file_get_contents(resource_path('icon/robot.svg'))) !!}
+      </div>
+      <div class="max-w-[70%] rounded-3xl border border-gray-200 bg-gray-50 px-5 py-4 text-base text-gray-800">
+        <div class="typing-bubble" aria-label="AI sedang mengetik">
+          <span></span><span></span><span></span>
+        </div>
+      </div>
+    `
+        chatBox.appendChild(wrap)
+        chatBox.scrollTop = chatBox.scrollHeight
+        return wrap
+    }
+
+    function setLoading(isLoading) {
+        chatSend.disabled = isLoading
+        chatInput.disabled = isLoading
+        chatSend.classList.toggle('opacity-60', isLoading)
+        chatSend.classList.toggle('cursor-not-allowed', isLoading)
+    }
+
+    async function sendMessage() {
+        const text = (chatInput.value || '').trim()
+        if (!text) return
+
+        chatInput.value = ''
+        appendBubble('user', text)
+        history.push({
+            role: 'user',
+            content: text
+        })
+
+        setLoading(true)
+
+        const typingEl = appendTyping()
+        let assistantBubble = null
+        let acc = ""
+
+        try {
+            const resp = await fetch(API_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    message: text,
+                    history
+                })
+            })
+
+            if (!resp.ok) {
+                let data = null
+                try {
+                    data = await resp.json()
+                } catch (_) {
+                    data = {
+                        detail: 'Response bukan JSON'
+                    }
+                }
+                typingEl.remove()
+                appendBubble('assistant', 'Error: ' + (data.detail || 'Gagal memproses permintaan'))
+                return
+            }
+
+            const reader = resp.body.getReader()
+            const decoder = new TextDecoder('utf-8')
+
+            let buffer = ""
+
+            while (true) {
+                const {
+                    value,
+                    done
+                } = await reader.read()
+                if (done) break
+
+                buffer += decoder.decode(value, {
+                    stream: true
+                })
+
+                const parts = buffer.split("\n\n")
+                buffer = parts.pop() || ""
+
+                for (const part of parts) {
+                    const line = part.split("\n").find(x => x.startsWith("data: "))
+                    if (!line) continue
+
+                    let payload = null
+                    try {
+                        payload = JSON.parse(line.replace("data: ", ""))
+                    } catch (_) {
+                        continue
+                    }
+
+                    if (payload.type === "delta") {
+                        if (!assistantBubble) {
+                            typingEl.remove()
+                            assistantBubble = appendBubble('assistant', '')
+                        }
+
+                        acc += payload.delta
+                        assistantBubble.bubble.textContent = acc
+                        chatBox.scrollTop = chatBox.scrollHeight
+                    }
+
+                    if (payload.type === "done") {
+                        const finalReply = (payload.reply || acc || '').trim()
+
+                        if (!assistantBubble) {
+                            typingEl.remove()
+                            assistantBubble = appendBubble('assistant', finalReply)
+                        } else {
+                            assistantBubble.bubble.textContent = finalReply
+                        }
+
+                        history.push({
+                            role: 'assistant',
+                            content: finalReply
+                        })
+                        return
+                    }
+
+                    if (payload.type === "error") {
+                        typingEl.remove()
+                        appendBubble('assistant', 'Error: ' + (payload.message || 'Stream error'))
+                        return
+                    }
+                }
+            }
+
+            typingEl.remove()
+            if (!assistantBubble) {
+                appendBubble('assistant', 'Error: stream ended without output')
+            } else {
+                const finalReply = acc.trim()
+                if (finalReply) history.push({
+                    role: 'assistant',
+                    content: finalReply
+                })
+            }
+        } catch (err) {
+            typingEl.remove()
+            appendBubble('assistant', 'Error: ' + (err?.message || 'Network error'))
+        } finally {
+            setLoading(false)
+            chatInput.focus()
+        }
+    }
+
+    chatSend.addEventListener('click', sendMessage)
+    chatInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') sendMessage()
+    })
+</script>
+
 <script>
     (() => {
         const fab = document.getElementById('chatFab')
@@ -440,81 +717,6 @@
             if (e.key === 'Escape' && !overlay.classList.contains('hidden')) close()
         })
     })()
-</script>
-<script>
-    const chatBox = document.querySelector('#chatOverlay .h-\\[calc\\(85vh-140px\\)\\]')
-    const chatInput = document.getElementById('chatInput')
-    const chatSend = document.getElementById('chatSend')
-
-    const API_URL = 'http://127.0.0.1:8001/chat'
-    const history = []
-
-    function appendBubble(role, text) {
-        const wrap = document.createElement('div')
-        if (role === 'user') {
-            wrap.className = 'flex items-start gap-4 justify-end'
-            wrap.innerHTML = `
-        <div class="max-w-[70%] rounded-xl bg-[#F3E8D4] px-5 py-4 text-base text-gray-900"></div>
-        <div class="h-11 w-11 rounded-full bg-gray-100 text-gray-600 flex items-center justify-center shrink-0">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="h-6 w-6">
-            <path fill-rule="evenodd" d="M7.5 7.5a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z" clip-rule="evenodd" />
-          </svg>
-        </div>
-      `
-            wrap.querySelector('div').textContent = text
-        } else {
-            wrap.className = 'flex items-start gap-4'
-            wrap.innerHTML = `
-        <div class="h-11 w-11 rounded-full bg-[#F3E8D4] flex items-center justify-center shrink-0">
-          {!! str_replace(["\n", "\r"], '', file_get_contents(resource_path('icon/robot.svg'))) !!}
-        </div>
-        <div class="max-w-[70%] rounded-3xl border border-gray-200 bg-gray-50 px-5 py-4 text-base text-gray-800"></div>
-      `
-            wrap.querySelector('div:last-child').textContent = text
-        }
-        chatBox.appendChild(wrap)
-        chatBox.scrollTop = chatBox.scrollHeight
-    }
-
-    async function sendMessage() {
-        const text = (chatInput.value || '').trim()
-        if (!text) return
-
-        chatInput.value = ''
-        appendBubble('user', text)
-        history.push({
-            role: 'user',
-            content: text
-        })
-
-        const resp = await fetch(API_URL, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                message: text,
-                history
-            })
-        })
-
-        const data = await resp.json()
-        if (!resp.ok) {
-            appendBubble('assistant', 'Error: ' + (data.detail || 'Gagal memproses permintaan'))
-            return
-        }
-
-        appendBubble('assistant', data.reply)
-        history.push({
-            role: 'assistant',
-            content: data.reply
-        })
-    }
-
-    chatSend.addEventListener('click', sendMessage)
-    chatInput.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') sendMessage()
-    })
 </script>
 
 </html>

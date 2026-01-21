@@ -30,10 +30,10 @@ export default defineConfig({
     port: 5173,
     strictPort: true,
     cors: {
-      origin: ['http://192.168.12.104:8000'],
+      origin: ['http://192.168.12.166:8000'],
     },
     hmr: {
-      host: '192.168.12.104',
+      host: '192.168.12.166',
       port: 5173,
       protocol: 'ws',
     },
