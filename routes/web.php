@@ -37,12 +37,12 @@ use App\Http\Controllers\LogAuditController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Middleware\AuditActivity;
 
+use App\Http\Controllers\Api\WarehouseApiController;
+
 Route::get('/login', [AuthController::class, 'formLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.post');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-Route::get('/api/kategori-barang', [KategoriBarangController::class, 'api']);
-Route::get('/api/satuan-barang', [SatuanBarangController::class, 'api']);
 // Route::middleware('auth')->group(function () {
 Route::middleware(['auth', AuditActivity::class])->group(function () {
     Route::get('/', fn() => redirect()->route('dashboard'));
@@ -341,4 +341,28 @@ Route::middleware(['auth', AuditActivity::class])->group(function () {
     Route::post('pengeluaran/{pengeluaran}/batalkan', [\App\Http\Controllers\PengeluaranController::class, 'batalkan'])
         ->name('pengeluaran.batalkan')
         ->middleware('izin:pengeluaran.kelola');
+});
+
+Route::prefix('api')->group(function () {
+    Route::get('/barang', [WarehouseApiController::class, 'barangList']);
+    Route::get('/gudang', [WarehouseApiController::class, 'gudangList']);
+
+    Route::get('/stok/saldo', [WarehouseApiController::class, 'stokSaldo']);
+    Route::get('/stok/mutasi', [WarehouseApiController::class, 'stokMutasi']);
+
+    Route::get('/po', [WarehouseApiController::class, 'poList']);
+    Route::get('/penerimaan', [WarehouseApiController::class, 'penerimaanList']);
+    Route::get('/qc', [WarehouseApiController::class, 'qcList']);
+
+    Route::get('/permintaan', [WarehouseApiController::class, 'permintaanList']);
+    Route::get('/pengeluaran', [WarehouseApiController::class, 'pengeluaranList']);
+
+    Route::get('/aset', [WarehouseApiController::class, 'asetList']);
+    Route::get('/approval/pending', [WarehouseApiController::class, 'approvalPending']);
+
+    Route::get('/lookup/barang', [WarehouseApiController::class, 'lookupBarang']);
+    Route::get('/lookup/gudang', [WarehouseApiController::class, 'lookupGudang']);
+    Route::get('/lookup/lokasi', [WarehouseApiController::class, 'lookupLokasi']);
+    Route::get('/lookup/pemasok', [WarehouseApiController::class, 'lookupPemasok']);
+    Route::get('/lookup/unit', [WarehouseApiController::class, 'lookupUnit']);
 });

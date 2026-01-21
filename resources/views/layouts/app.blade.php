@@ -490,7 +490,7 @@
     const chatInput = document.getElementById('chatInput')
     const chatSend = document.getElementById('chatSend')
 
-    const API_URL = 'http://192.168.10.10:8001/chat_stream'
+    const API_URL = 'http://192.168.12.166:8001/chat_stream'
     const history = []
 
     function appendBubble(role, text) {
@@ -498,13 +498,13 @@
         if (role === 'user') {
             wrap.className = 'flex items-start gap-4 justify-end'
             wrap.innerHTML = `
-        <div class="max-w-[70%] rounded-xl bg-[#F3E8D4] px-5 py-4 text-base text-gray-900"></div>
-        <div class="h-11 w-11 rounded-full bg-gray-100 text-gray-600 flex items-center justify-center shrink-0">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="h-6 w-6">
-            <path fill-rule="evenodd" d="M7.5 7.5a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z" clip-rule="evenodd" />
-          </svg>
-        </div>
-      `
+      <div class="max-w-[70%] rounded-xl bg-[#F3E8D4] px-5 py-4 text-base text-gray-900"></div>
+      <div class="h-11 w-11 rounded-full bg-gray-100 text-gray-600 flex items-center justify-center shrink-0">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="h-6 w-6">
+          <path fill-rule="evenodd" d="M7.5 7.5a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z" clip-rule="evenodd" />
+        </svg>
+      </div>
+    `
             wrap.querySelector('div').textContent = text
             chatBox.appendChild(wrap)
             chatBox.scrollTop = chatBox.scrollHeight
@@ -515,11 +515,11 @@
         } else {
             wrap.className = 'flex items-start gap-4'
             wrap.innerHTML = `
-        <div class="h-11 w-11 rounded-full bg-[#F3E8D4] flex items-center justify-center shrink-0">
-          {!! str_replace(["\n", "\r"], '', file_get_contents(resource_path('icon/robot.svg'))) !!}
-        </div>
-        <div class="max-w-[70%] rounded-3xl border border-gray-200 bg-gray-50 px-5 py-4 text-base text-gray-800 whitespace-pre-wrap"></div>
-      `
+      <div class="h-11 w-11 rounded-full bg-[#F3E8D4] flex items-center justify-center shrink-0">
+        {!! str_replace(["\n", "\r"], '', file_get_contents(resource_path('icon/robot.svg'))) !!}
+      </div>
+      <div class="max-w-[70%] rounded-3xl border border-gray-200 bg-gray-50 px-5 py-4 text-base text-gray-800 whitespace-pre-wrap"></div>
+    `
             wrap.querySelector('div:last-child').textContent = text
             chatBox.appendChild(wrap)
             chatBox.scrollTop = chatBox.scrollHeight
@@ -534,15 +534,15 @@
         const wrap = document.createElement('div')
         wrap.className = 'flex items-start gap-4'
         wrap.innerHTML = `
-      <div class="h-11 w-11 rounded-full bg-[#F3E8D4] flex items-center justify-center shrink-0">
-        {!! str_replace(["\n", "\r"], '', file_get_contents(resource_path('icon/robot.svg'))) !!}
+    <div class="h-11 w-11 rounded-full bg-[#F3E8D4] flex items-center justify-center shrink-0">
+      {!! str_replace(["\n", "\r"], '', file_get_contents(resource_path('icon/robot.svg'))) !!}
+    </div>
+    <div class="max-w-[70%] rounded-3xl border border-gray-200 bg-gray-50 px-5 py-4 text-base text-gray-800">
+      <div class="typing-bubble" aria-label="AI sedang mengetik">
+        <span></span><span></span><span></span>
       </div>
-      <div class="max-w-[70%] rounded-3xl border border-gray-200 bg-gray-50 px-5 py-4 text-base text-gray-800">
-        <div class="typing-bubble" aria-label="AI sedang mengetik">
-          <span></span><span></span><span></span>
-        </div>
-      </div>
-    `
+    </div>
+  `
         chatBox.appendChild(wrap)
         chatBox.scrollTop = chatBox.scrollHeight
         return wrap
@@ -553,6 +553,39 @@
         chatInput.disabled = isLoading
         chatSend.classList.toggle('opacity-60', isLoading)
         chatSend.classList.toggle('cursor-not-allowed', isLoading)
+    }
+
+    function stageLabel(stage) {
+        if (stage === 'start') return 'Mulai...'
+        if (stage === 'detect_intent') return 'Klasifikasi intent...'
+        if (stage === 'intent_done') return 'Intent didapat...'
+        if (stage === 'fetch_backend') return 'Ambil data backend...'
+        if (stage === 'llm_stream') return 'Generate jawaban...'
+        return stage ? `Proses: ${stage}` : ''
+    }
+
+    function ensureAssistantBubble(typingEl, assistantBubbleRef) {
+        if (assistantBubbleRef.current) return assistantBubbleRef.current
+        typingEl?.remove()
+        assistantBubbleRef.current = appendBubble('assistant', '')
+        return assistantBubbleRef.current
+    }
+
+    function parseSSEChunk(chunkText) {
+        const events = []
+        const blocks = chunkText.split(/\n\n/)
+        for (const block of blocks) {
+            const lines = block.split(/\n/)
+            for (const ln of lines) {
+                const line = ln.trim()
+                if (!line.startsWith('data:')) continue
+                const jsonStr = line.replace(/^data:\s*/, '')
+                try {
+                    events.push(JSON.parse(jsonStr))
+                } catch (_) {}
+            }
+        }
+        return events
     }
 
     async function sendMessage() {
@@ -569,8 +602,12 @@
         setLoading(true)
 
         const typingEl = appendTyping()
-        let assistantBubble = null
-        let acc = ""
+        const assistantBubbleRef = {
+            current: null
+        }
+
+        let acc = ''
+        let lastStageShown = ''
 
         try {
             const resp = await fetch(API_URL, {
@@ -600,8 +637,7 @@
 
             const reader = resp.body.getReader()
             const decoder = new TextDecoder('utf-8')
-
-            let buffer = ""
+            let buffer = ''
 
             while (true) {
                 const {
@@ -613,67 +649,71 @@
                 buffer += decoder.decode(value, {
                     stream: true
                 })
-
-                const parts = buffer.split("\n\n")
-                buffer = parts.pop() || ""
+                const parts = buffer.split(/\n\n/)
+                buffer = parts.pop() || ''
 
                 for (const part of parts) {
-                    const line = part.split("\n").find(x => x.startsWith("data: "))
-                    if (!line) continue
+                    const events = parseSSEChunk(part)
+                    for (const payload of events) {
+                        if (!payload || !payload.type) continue
 
-                    let payload = null
-                    try {
-                        payload = JSON.parse(line.replace("data: ", ""))
-                    } catch (_) {
-                        continue
-                    }
-
-                    if (payload.type === "delta") {
-                        if (!assistantBubble) {
-                            typingEl.remove()
-                            assistantBubble = appendBubble('assistant', '')
+                        if (payload.type === 'meta') {
+                            const label = stageLabel(payload.stage)
+                            if (label && label !== lastStageShown) {
+                                const ab = ensureAssistantBubble(typingEl, assistantBubbleRef)
+                                if (!acc.trim()) {
+                                    acc = label + '\n'
+                                    ab.bubble.textContent = acc
+                                }
+                                lastStageShown = label
+                            }
+                            continue
                         }
 
-                        acc += payload.delta
-                        assistantBubble.bubble.textContent = acc
-                        chatBox.scrollTop = chatBox.scrollHeight
-                    }
-
-                    if (payload.type === "done") {
-                        const finalReply = (payload.reply || acc || '').trim()
-
-                        if (!assistantBubble) {
-                            typingEl.remove()
-                            assistantBubble = appendBubble('assistant', finalReply)
-                        } else {
-                            assistantBubble.bubble.textContent = finalReply
+                        if (payload.type === 'delta') {
+                            const ab = ensureAssistantBubble(typingEl, assistantBubbleRef)
+                            acc += (payload.delta || '')
+                            ab.bubble.textContent = acc
+                            chatBox.scrollTop = chatBox.scrollHeight
+                            continue
                         }
 
-                        history.push({
-                            role: 'assistant',
-                            content: finalReply
-                        })
-                        return
-                    }
+                        if (payload.type === 'meta_backend') {
+                            continue
+                        }
 
-                    if (payload.type === "error") {
-                        typingEl.remove()
-                        appendBubble('assistant', 'Error: ' + (payload.message || 'Stream error'))
-                        return
+                        if (payload.type === 'done') {
+                            const finalReply = (payload.reply || acc || '').trim()
+                            const ab = ensureAssistantBubble(typingEl, assistantBubbleRef)
+                            ab.bubble.textContent = finalReply
+                            history.push({
+                                role: 'assistant',
+                                content: finalReply
+                            })
+                            return
+                        }
+
+                        if (payload.type === 'error') {
+                            typingEl.remove()
+                            appendBubble('assistant', 'Error: ' + (payload.message || 'Stream error'))
+                            return
+                        }
                     }
                 }
             }
 
             typingEl.remove()
-            if (!assistantBubble) {
+            if (!assistantBubbleRef.current) {
                 appendBubble('assistant', 'Error: stream ended without output')
-            } else {
-                const finalReply = acc.trim()
-                if (finalReply) history.push({
-                    role: 'assistant',
-                    content: finalReply
-                })
+                return
             }
+
+            const finalReply = acc.trim()
+            if (finalReply) history.push({
+                role: 'assistant',
+                content: finalReply
+            })
+
         } catch (err) {
             typingEl.remove()
             appendBubble('assistant', 'Error: ' + (err?.message || 'Network error'))

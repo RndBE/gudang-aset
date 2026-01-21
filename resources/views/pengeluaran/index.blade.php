@@ -42,7 +42,7 @@
                     <th class="px-4 py-3 text-right">Aksi</th>
                 </tr>
             </thead>
-            <tbody class="divide-y">
+            <tbody class="divide-y divide-gray-300">
                 @forelse($items as $it)
                     <tr>
                         <td class="px-4 py-3 whitespace-nowrap font-medium text-gray-900">{{ $it->nomor_pengeluaran }}</td>

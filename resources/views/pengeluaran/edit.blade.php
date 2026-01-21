@@ -145,7 +145,7 @@
                             <th class="px-2 py-2 text-right">Aksi</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y" id="detailBody"></tbody>
+                    <tbody class="divide-y divide-gray-300" id="detailBody"></tbody>
                 </table>
 
                 @if (!in_array($pengeluaran->status, ['dikeluarkan', 'dibatalkan'], true))
@@ -198,7 +198,7 @@
         function makeSelect(name, options, value = '', disabled = false) {
             const s = document.createElement('select');
             s.name = name;
-            s.className = 'w-full rounded-lg border-gray-300';
+            s.className = 'w-full rounded-lg border-gray-300 py-2 px-3 border';
             if (disabled) s.disabled = true;
             const opt0 = document.createElement('option');
             opt0.value = '';
@@ -232,13 +232,13 @@
             const tdLot = document.createElement('td');
             tdLot.className = 'px-2 py-2 min-w-[140px]';
             tdLot.innerHTML =
-                `<input name="no_lot[${idx}]" value="${preset?.no_lot ?? ''}" class="w-full rounded-lg border-gray-300" ${readOnly ? 'disabled' : ''} />`;
+                `<input name="no_lot[${idx}]" value="${preset?.no_lot ?? ''}" class="w-full rounded-lg border py-2 px-3 border-gray-300" ${readOnly ? 'disabled' : ''} />`;
             tr.appendChild(tdLot);
 
             const tdExp = document.createElement('td');
             tdExp.className = 'px-2 py-2 min-w-[150px]';
             tdExp.innerHTML =
-                `<input type="date" name="tanggal_kedaluwarsa[${idx}]" value="${preset?.tanggal_kedaluwarsa ?? ''}" class="w-full rounded-lg border-gray-300" ${readOnly ? 'disabled' : ''} />`;
+                `<input type="date" name="tanggal_kedaluwarsa[${idx}]" value="${preset?.tanggal_kedaluwarsa ?? ''}" class="w-full rounded-lg border py-2 px-3 border-gray-300" ${readOnly ? 'disabled' : ''} />`;
             tr.appendChild(tdExp);
 
             const tdQty = document.createElement('td');
@@ -246,7 +246,7 @@
             // tdQty.innerHTML =
             //     `<input type="number" step="0.0001" min="0.0001" name="qty[${idx}]" value="${preset?.qty ?? '1'}" class="w-full rounded-lg border-gray-300 text-right" ${readOnly ? 'disabled' : ''} />`;
             tdQty.innerHTML =
-                `<input type="number" step="1" min="1" inputmode="numeric" name="qty[${idx}]" value="${preset?.qty ?? '1'}" class="w-full rounded-lg border-gray-300 text-right" ${readOnly ? 'disabled' : ''} />`;
+                `<input type="number" step="0.0001" min="0.0001" name="qty[${idx}]" value="${preset?.qty ?? '1'}" class="w-full rounded-lg border py-2 px-3 border-gray-300 text-right" ${readOnly ? 'disabled' : ''} />`;
             tr.appendChild(tdQty);
 
             const tdBiaya = document.createElement('td');

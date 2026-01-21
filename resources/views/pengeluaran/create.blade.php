@@ -108,7 +108,7 @@
                             <th class="px-2 py-2 text-right">Aksi</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y" id="detailBody"></tbody>
+                    <tbody class="divide-y divide-gray-300" id="detailBody"></tbody>
                 </table>
 
                 <div class="mt-4 flex justify-end">
@@ -131,7 +131,7 @@
         function makeSelect(name, options, value = '') {
             const s = document.createElement('select');
             s.name = name;
-            s.className = 'w-full rounded-lg border-gray-300';
+            s.className = 'w-full rounded-lg py-2 px-3 border border-gray-300';
             const opt0 = document.createElement('option');
             opt0.value = '';
             opt0.textContent = '-';
@@ -163,13 +163,14 @@
 
             const tdLot = document.createElement('td');
             tdLot.className = 'px-2 py-2 min-w-[140px]';
-            tdLot.innerHTML = `<input name="no_lot[${idx}]" class="w-full rounded-lg border-gray-300" />`;
+            tdLot.innerHTML =
+                `<input name="no_lot[${idx}]" class="w-full rounded-lg border-gray-300 border border-gray-300 py-2 px-3" />`;
             tr.appendChild(tdLot);
 
             const tdExp = document.createElement('td');
             tdExp.className = 'px-2 py-2 min-w-[150px]';
             tdExp.innerHTML =
-                `<input type="date" name="tanggal_kedaluwarsa[${idx}]" class="w-full rounded-lg border-gray-300" />`;
+                `<input type="date" name="tanggal_kedaluwarsa[${idx}]" class="w-full rounded-lg border-gray-300  border py-2 px-3" />`;
             tr.appendChild(tdExp);
 
             const tdQty = document.createElement('td');
