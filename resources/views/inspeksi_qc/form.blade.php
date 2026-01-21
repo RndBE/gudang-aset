@@ -138,10 +138,16 @@
                                     $qcDetail instanceof \Illuminate\Support\Collection ? $qcDetail->get($d->id) : null;
 
                                 $hasilVal = $oldPd ? $oldHasil[$i] ?? 'menunggu' : $existing?->hasil ?? 'menunggu';
-                                $qtyLulusVal = $oldPd
+
+                                $qtyLulusRaw = $oldPd
                                     ? $oldTerima[$i] ?? $d->qty_diterima
                                     : $existing?->qty_diterima ?? $d->qty_diterima;
-                                $qtyTolakVal = $oldPd ? $oldTolak[$i] ?? 0 : $existing?->qty_ditolak ?? 0;
+
+                                $qtyTolakRaw = $oldPd ? $oldTolak[$i] ?? 0 : $existing?->qty_ditolak ?? 0;
+
+                                $qtyLulusVal = (int) round((float) $qtyLulusRaw);
+                                $qtyTolakVal = (int) round((float) $qtyTolakRaw);
+
                                 $catVal = $oldPd ? $oldCat[$i] ?? '' : $existing?->catatan_cacat ?? '';
                             @endphp
 
@@ -152,7 +158,7 @@
                                     <input type="hidden" name="penerimaan_detail_id[]" value="{{ $d->id }}">
                                 </td>
                                 <td class="px-3 py-2">
-                                    <div class="font-medium text-gray-900">{{ $d->qty_diterima }}</div>
+                                    <div class="font-medium text-gray-900">{{ (int) $d->qty_diterima }}</div>
                                     <div class="text-xs text-gray-500">{{ $d->no_lot ? 'Lot: ' . $d->no_lot : '' }}</div>
                                 </td>
                                 <td class="px-3 py-2">

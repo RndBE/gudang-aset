@@ -422,34 +422,90 @@
                     Aksi Persetujuan – {{ $step->nama_langkah }}
                 </div>
 
-                <div class="p-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div x-data="{ open: false, action: null }"  class="p-4 grid grid-cols-1 md:grid-cols-2 gap-4">
 
                     <!-- Approve -->
-                    <form method="POST" action="{{ route('permintaan-persetujuan.setujui', $data->id) }}">
+                    <form id="form-approve" method="POST" action="{{ route('permintaan-persetujuan.setujui', $data->id) }}">
                         @csrf
                         <label class="text-sm font-medium">Catatan (opsional)</label>
                         <textarea name="catatan_keputusan" class="w-full border rounded-lg border-gray-300 px-3 py-2 text-sm mt-1 mb-3"
                             rows="3"></textarea>
 
-                        <button
-                            class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg border-gray-300 text-sm"
+                        <button class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded text-sm"
                             onclick="return confirm('Setujui langkah ini?')">
                             Setujui
                         </button>
                     </form>
 
                     <!-- Reject -->
-                    <form method="POST" action="{{ route('permintaan-persetujuan.tolak', $data->id) }}">
+                    <form id="form-reject" method="POST" action="{{ route('permintaan-persetujuan.tolak', $data->id) }}">
                         @csrf
                         <label class="text-sm font-medium">Catatan Penolakan <span class="text-red-500">*</span></label>
                         <textarea name="catatan_keputusan" required
                             class="w-full border rounded-lg border-gray-300 px-3 py-2 text-sm mt-1 mb-3" rows="3"></textarea>
 
-                        <button class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg border-gray-300 text-sm"
+                        <button class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded text-sm"
                             onclick="return confirm('Tolak permintaan ini?')">
                             Tolak
                         </button>
                     </form>
+
+                    <!-- Modal -->
+                    <div x-show="open" x-transition.opacity class="fixed inset-0 z-50">
+                        <div class="absolute inset-0 bg-black/40" @click="open=false"></div>
+
+                        <div class="absolute inset-0 flex items-center justify-center p-4">
+                            <div x-transition
+                                class="w-full max-w-md rounded-2xl bg-white shadow-xl border border-gray-200 overflow-hidden">
+                                <div class="p-5">
+                                    <div class="flex items-start gap-3">
+                                        <div class="mt-0.5 h-10 w-10 rounded-full flex items-center justify-center"
+                                            :class="action === 'approve' ? 'bg-green-100' : 'bg-red-100'">
+                                            <svg x-show="action==='approve'" xmlns="http://www.w3.org/2000/svg"
+                                                class="h-6 w-6 text-green-700" viewBox="0 0 24 24" fill="none"
+                                                stroke="currentColor" stroke-width="2">
+                                                <path d="M20 6 9 17l-5-5" />
+                                            </svg>
+                                            <svg x-show="action==='reject'" xmlns="http://www.w3.org/2000/svg"
+                                                class="h-6 w-6 text-red-700" viewBox="0 0 24 24" fill="none"
+                                                stroke="currentColor" stroke-width="2">
+                                                <path d="M18 6 6 18M6 6l12 12" />
+                                            </svg>
+                                        </div>
+
+                                        <div class="flex-1">
+                                            <div class="text-base font-semibold text-gray-900"
+                                                x-text="action==='approve' ? 'Setujui permintaan ini?' : 'Tolak permintaan ini?'">
+                                            </div>
+                                            <div class="mt-1 text-sm text-gray-600"
+                                                x-text="action==='approve'
+                                    ? 'Aksi ini akan melanjutkan proses persetujuan ke tahap berikutnya.'
+                                    : 'Aksi ini akan menghentikan proses dan menandai permintaan sebagai ditolak.'">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="px-5 pb-5 flex items-center justify-end gap-2">
+                                    <button type="button" class="px-4 py-2 rounded-lg text-sm border hover:bg-gray-50"
+                                        @click="open=false">
+                                        Batal
+                                    </button>
+
+                                    <button type="button" class="px-4 py-2 rounded-lg text-sm text-white"
+                                        :class="action === 'approve' ? 'bg-green-600 hover:bg-green-700' :
+                                            'bg-red-600 hover:bg-red-700'"
+                                        @click="
+                            open=false;
+                            if(action==='approve'){ document.getElementById('form-approve').submit() }
+                            else { document.getElementById('form-reject').submit() }
+                        ">
+                                        <span x-text="action==='approve' ? 'Ya, Setujui' : 'Ya, Tolak'"></span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
                 </div>
             </div>

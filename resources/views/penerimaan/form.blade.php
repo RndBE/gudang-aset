@@ -264,12 +264,27 @@
                                     <input type="hidden" name="po_detail_id[]" value="{{ $d['po_detail_id'] }}">
                                 </td>
                                 <td class="px-3 py-2">
-                                    <input name="qty_diterima[]" value="{{ $d['qty_diterima'] }}"
+                                    {{-- <input name="qty_diterima[]" value="{{ $d['qty_diterima'] }}"
+                                        class="w-full border border-gray-300 rounded-lg px-2 py-2" --}}
+                                    <input name="qty_diterima[]"
+                                        value="{{ old('qty_diterima.' . $loop->index, rtrim(rtrim(number_format((float) $d['qty_diterima'], 4, '.', ''), '0'), '.')) }}"
                                         class="w-full border border-gray-300 rounded-lg px-2 py-2"
                                         {{ $canManage ? '' : 'readonly' }}>
                                 </td>
+
+                                @php
+                                    $raw = old('biaya_satuan.' . $loop->index, $d['biaya_satuan'] ?? 0);
+
+                                    $num = is_numeric($raw)
+                                        ? (float) $raw
+                                        : (float) preg_replace('/[^\d]/', '', (string) $raw);
+
+                                    $formatted = number_format($num, 0, ',', '.');
+                                @endphp
                                 <td class="px-3 py-2">
-                                    <input name="biaya_satuan[]" value="{{ $d['biaya_satuan'] }}"
+                                    {{-- <input name="biaya_satuan[]" value="{{ $d['biaya_satuan'] }}"
+                                        class="w-full border border-gray-300 rounded-lg px-2 py-2" --}}
+                                    <input name="biaya_satuan[]" value="{{ $formatted }}"
                                         class="w-full border border-gray-300 rounded-lg px-2 py-2"
                                         {{ $canManage ? '' : 'readonly' }}>
                                 </td>

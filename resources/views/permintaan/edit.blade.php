@@ -139,7 +139,7 @@
                                     </td>
                                     <td class="px-3 py-2">
                                         <input type="number" step="0.0001" min="0.0001" name="qty_diminta[]"
-                                            value="{{ $row['qty'] ?? 1 }}"
+                                            value="{{ (int) round((float) ($row['qty'] ?? 1)) }}"
                                             class="w-full border rounded-lg border-gray-300 text-sm  px-3 py-2">
                                     </td>
                                     <td class="px-3 py-2">

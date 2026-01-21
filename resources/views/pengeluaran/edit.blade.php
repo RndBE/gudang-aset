@@ -178,7 +178,8 @@
                     'lokasi_id' => $d->lokasi_id,
                     'no_lot' => $d->no_lot,
                     'tanggal_kedaluwarsa' => $d->tanggal_kedaluwarsa ? $d->tanggal_kedaluwarsa->format('Y-m-d') : null,
-                    'qty' => (string) $d->qty,
+                    // 'qty' => (string) $d->qty,
+                    'qty' => (int) $d->qty,
                     'biaya_satuan' => (string) ($d->biaya_satuan ?? 0),
                 ],
             )
@@ -241,8 +242,10 @@
 
             const tdQty = document.createElement('td');
             tdQty.className = 'px-2 py-2 min-w-[120px] text-right';
+            // tdQty.innerHTML =
+            //     `<input type="number" step="0.0001" min="0.0001" name="qty[${idx}]" value="${preset?.qty ?? '1'}" class="w-full rounded-lg border-gray-300 text-right" ${readOnly ? 'disabled' : ''} />`;
             tdQty.innerHTML =
-                `<input type="number" step="0.0001" min="0.0001" name="qty[${idx}]" value="${preset?.qty ?? '1'}" class="w-full rounded-lg border-gray-300 text-right" ${readOnly ? 'disabled' : ''} />`;
+                `<input type="number" step="1" min="1" inputmode="numeric" name="qty[${idx}]" value="${preset?.qty ?? '1'}" class="w-full rounded-lg border-gray-300 text-right" ${readOnly ? 'disabled' : ''} />`
             tr.appendChild(tdQty);
 
             const tdBiaya = document.createElement('td');
