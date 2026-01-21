@@ -180,7 +180,8 @@
                     'tanggal_kedaluwarsa' => $d->tanggal_kedaluwarsa ? $d->tanggal_kedaluwarsa->format('Y-m-d') : null,
                     // 'qty' => (string) $d->qty,
                     'qty' => (int) $d->qty,
-                    'biaya_satuan' => (string) ($d->biaya_satuan ?? 0),
+                    // 'biaya_satuan' => (string) ($d->biaya_satuan ?? 0),
+                    'biaya_satuan' => (string) ((int) ($d->biaya_satuan ?? 0)),
                 ],
             )
             ->values();
@@ -245,13 +246,13 @@
             // tdQty.innerHTML =
             //     `<input type="number" step="0.0001" min="0.0001" name="qty[${idx}]" value="${preset?.qty ?? '1'}" class="w-full rounded-lg border-gray-300 text-right" ${readOnly ? 'disabled' : ''} />`;
             tdQty.innerHTML =
-                `<input type="number" step="1" min="1" inputmode="numeric" name="qty[${idx}]" value="${preset?.qty ?? '1'}" class="w-full rounded-lg border-gray-300 text-right" ${readOnly ? 'disabled' : ''} />`
+                `<input type="number" step="1" min="1" inputmode="numeric" name="qty[${idx}]" value="${preset?.qty ?? '1'}" class="w-full rounded-lg border-gray-300 text-right" ${readOnly ? 'disabled' : ''} />`;
             tr.appendChild(tdQty);
 
             const tdBiaya = document.createElement('td');
             tdBiaya.className = 'px-2 py-2 min-w-[140px] text-right';
             tdBiaya.innerHTML =
-                `<input type="number" step="0.0001" min="0" name="biaya_satuan[${idx}]" value="${preset?.biaya_satuan ?? '0'}" class="w-full rounded-lg border-gray-300 text-right" ${readOnly ? 'disabled' : ''} />`;
+                `<input type="number" step="0.0001" min="0" inputmode="numeric" name="biaya_satuan[${idx}]" value="${preset?.biaya_satuan ?? '0'}" class="w-full rounded-lg border-gray-300 text-right" ${readOnly ? 'disabled' : ''} />`;
             tr.appendChild(tdBiaya);
 
             const tdAksi = document.createElement('td');
