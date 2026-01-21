@@ -35,7 +35,7 @@
             {{-- LEFT --}}
             <div class="md:col-span-7 hidden md:block px-6 py-6 ">
                 <div class="h-full min-h-[50vh] bg-center bg-no-repeat bg-cover rounded-xl flex items-end"
-                    style="background-image: url('{{ Vite::asset('resources/icon/hero_login.png') }}');">
+                    style="background-image: url('{{ asset('icon/hero_login.png') }}');">
                     <div class="px-8 mb-8">
                         <div class="text-3xl font-bold text-white">Advance Warehouse Smart System</div>
                         <div class="text-md font-semibold text-white">Kontrol Stok Lebih Rapi, Operasional Lebih Pasti
