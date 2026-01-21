@@ -3,9 +3,12 @@
 @section('content')
     <div class="flex items-center justify-between mb-4">
         <h1 class="text-xl font-semibold">Aset</h1>
-        <a href="{{ route('aset.create') }}" class="px-6 py-3 rounded-lg btn-active text-sm">
-            Tambah Aset
-        </a>
+        <div class="flex items-center ">
+            <a href="{{ route('aset.create') }}" class="px-6 py-3 rounded-lg btn-active text-sm me-3">
+                Tambah Aset
+            </a>
+            <a href="{{ route('export.aset') }}" class="px-6 py-3 rounded-lg btn-active text-sm">Export Aset</a>
+        </div>
     </div>
 
     @if (session('success'))

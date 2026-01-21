@@ -438,7 +438,7 @@ class GudangAsetSeeder extends Seeder
                 'diubah_pada' => $now,
             ]);
 
-            for ($i = 2; $i <= 20; $i++) {
+            for ($i = 2; $i <= 10; $i++) {
                 DB::table('gudang')->insert([
                     'instansi_id' => $instansiId,
                     'unit_organisasi_id' => $cabangId,
@@ -545,7 +545,7 @@ class GudangAsetSeeder extends Seeder
                 'diubah_pada' => $now,
             ]);
 
-            for ($i = 2; $i <= 20; $i++) {
+            for ($i = 2; $i <= 10; $i++) {
                 DB::table('pemasok')->insert([
                     'instansi_id' => $instansiId,
                     'kode' => 'VENDOR-' . str_pad((string)$i, 2, '0', STR_PAD_LEFT),
@@ -602,21 +602,6 @@ class GudangAsetSeeder extends Seeder
                 ['sku' => 'AST-PRN-001', 'nama' => 'Printer Laser', 'merek' => 'DemoPrint', 'model' => 'LP-01', 'kat' => $katElektronikId, 'sat' => $satuanPcsId, 'track' => 'serial'],
                 ['sku' => 'AST-SCN-001', 'nama' => 'Scanner Dokumen', 'merek' => 'DemoScan', 'model' => 'SC-10', 'kat' => $katElektronikId, 'sat' => $satuanPcsId, 'track' => 'serial'],
                 ['sku' => 'AST-PRO-001', 'nama' => 'Proyektor Meeting', 'merek' => 'DemoProject', 'model' => 'PJ-01', 'kat' => $katElektronikId, 'sat' => $satuanPcsId, 'track' => 'serial'],
-                ['sku' => 'AST-UPS-001', 'nama' => 'UPS 1200VA', 'merek' => 'DemoUPS', 'model' => 'UPS-12', 'kat' => $katElektronikId, 'sat' => $satuanPcsId, 'track' => 'serial'],
-                ['sku' => 'AST-RTR-001', 'nama' => 'Router Kantor', 'merek' => 'DemoNet', 'model' => 'RT-01', 'kat' => $katElektronikId, 'sat' => $satuanPcsId, 'track' => 'serial'],
-                ['sku' => 'AST-SWT-001', 'nama' => 'Switch 24 Port', 'merek' => 'DemoNet', 'model' => 'SW-24', 'kat' => $katElektronikId, 'sat' => $satuanPcsId, 'track' => 'serial'],
-                ['sku' => 'AST-CCTV-001', 'nama' => 'Kamera CCTV Indoor', 'merek' => 'DemoCam', 'model' => 'CV-01', 'kat' => $katElektronikId, 'sat' => $satuanPcsId, 'track' => 'serial'],
-                ['sku' => 'AST-CCTV-002', 'nama' => 'Kamera CCTV Outdoor', 'merek' => 'DemoCam', 'model' => 'CV-02', 'kat' => $katElektronikId, 'sat' => $satuanPcsId, 'track' => 'serial'],
-                ['sku' => 'AST-ABS-001', 'nama' => 'Mesin Absensi Fingerprint', 'merek' => 'DemoOffice', 'model' => 'FP-01', 'kat' => $katElektronikId, 'sat' => $satuanPcsId, 'track' => 'serial'],
-                ['sku' => 'AST-SRV-001', 'nama' => 'Server Mini', 'merek' => 'DemoServer', 'model' => 'SV-01', 'kat' => $katElektronikId, 'sat' => $satuanPcsId, 'track' => 'serial'],
-                ['sku' => 'AST-MON-001', 'nama' => 'Monitor 24 inch', 'merek' => 'DemoDisplay', 'model' => 'MN-24', 'kat' => $katElektronikId, 'sat' => $satuanPcsId, 'track' => 'tanpa'],
-                ['sku' => 'AST-MON-002', 'nama' => 'Monitor 27 inch', 'merek' => 'DemoDisplay', 'model' => 'MN-27', 'kat' => $katElektronikId, 'sat' => $satuanPcsId, 'track' => 'tanpa'],
-                ['sku' => 'AST-TBL-001', 'nama' => 'Tablet Operasional', 'merek' => 'DemoTab', 'model' => 'TB-10', 'kat' => $katElektronikId, 'sat' => $satuanPcsId, 'track' => 'serial'],
-                ['sku' => 'AST-HP-001', 'nama' => 'Smartphone Operasional', 'merek' => 'DemoPhone', 'model' => 'PH-01', 'kat' => $katElektronikId, 'sat' => $satuanPcsId, 'track' => 'serial'],
-                ['sku' => 'AST-LEM-001', 'nama' => 'Lemari Arsip Besi', 'merek' => 'DemoFurn', 'model' => 'LM-01', 'kat' => $katElektronikId, 'sat' => $satuanPcsId, 'track' => 'tanpa'],
-                ['sku' => 'AST-MEJ-001', 'nama' => 'Meja Kerja', 'merek' => 'DemoFurn', 'model' => 'MJ-01', 'kat' => $katElektronikId, 'sat' => $satuanPcsId, 'track' => 'tanpa'],
-                ['sku' => 'AST-KRS-001', 'nama' => 'Kursi Kantor', 'merek' => 'DemoFurn', 'model' => 'KS-01', 'kat' => $katElektronikId, 'sat' => $satuanPcsId, 'track' => 'tanpa'],
-                ['sku' => 'AST-AC-001', 'nama' => 'AC Split 1 PK', 'merek' => 'DemoCool', 'model' => 'AC-1', 'kat' => $katElektronikId, 'sat' => $satuanPcsId, 'track' => 'serial'],
             ];
 
             $barangHabis = [
@@ -624,32 +609,6 @@ class GudangAsetSeeder extends Seeder
                 ['sku' => 'ATK-PEN-002', 'nama' => 'Pulpen Biru', 'sat' => $satuanPcsId],
                 ['sku' => 'ATK-SPD-001', 'nama' => 'Spidol Board', 'sat' => $satuanPcsId],
                 ['sku' => 'ATK-MAP-001', 'nama' => 'Map Folder', 'sat' => $satuanPcsId],
-                ['sku' => 'ATK-AMP-001', 'nama' => 'Amplop Coklat', 'sat' => $satuanBoxId],
-                ['sku' => 'ATK-LAK-001', 'nama' => 'Lakban', 'sat' => $satuanPcsId],
-                ['sku' => 'ATK-KBL-001', 'nama' => 'Kabel LAN 10m', 'sat' => $satuanPcsId],
-                ['sku' => 'ATK-MSE-001', 'nama' => 'Mouse USB', 'sat' => $satuanPcsId],
-                ['sku' => 'ATK-KBD-001', 'nama' => 'Keyboard USB', 'sat' => $satuanPcsId],
-                ['sku' => 'ATK-FLD-001', 'nama' => 'Flashdisk 32GB', 'sat' => $satuanPcsId],
-                ['sku' => 'ATK-BTR-001', 'nama' => 'Baterai AA', 'sat' => $satuanPakId],
-                ['sku' => 'ATK-BTR-002', 'nama' => 'Baterai AAA', 'sat' => $satuanPakId],
-                ['sku' => 'ATK-TNR-001', 'nama' => 'Toner Printer', 'sat' => $satuanPcsId],
-                ['sku' => 'ATK-INK-001', 'nama' => 'Tinta Printer', 'sat' => $satuanPcsId],
-                ['sku' => 'ATK-GLV-001', 'nama' => 'Sarung Tangan', 'sat' => $satuanPakId],
-                ['sku' => 'ATK-MSK-001', 'nama' => 'Masker', 'sat' => $satuanPakId],
-                ['sku' => 'ATK-BLT-001', 'nama' => 'Baut 10mm', 'sat' => $satuanPcsId],
-                ['sku' => 'ATK-MUR-001', 'nama' => 'Mur 10mm', 'sat' => $satuanPcsId],
-                ['sku' => 'ATK-OBG-001', 'nama' => 'Obeng Set', 'sat' => $satuanPakId],
-                ['sku' => 'ATK-CTN-001', 'nama' => 'Cotton Bud', 'sat' => $satuanBoxId],
-                ['sku' => 'ATK-FRM-001', 'nama' => 'Formulir Blanko', 'sat' => $satuanBoxId],
-                ['sku' => 'ATK-BKM-001', 'nama' => 'Buku Tulis', 'sat' => $satuanPcsId],
-                ['sku' => 'ATK-PLS-001', 'nama' => 'Plastik Map', 'sat' => $satuanPakId],
-                ['sku' => 'ATK-STR-001', 'nama' => 'Stapler', 'sat' => $satuanPcsId],
-                ['sku' => 'ATK-ISI-001', 'nama' => 'Isi Stapler', 'sat' => $satuanBoxId],
-                ['sku' => 'ATK-GLU-001', 'nama' => 'Lem Kertas', 'sat' => $satuanPcsId],
-                ['sku' => 'ATK-SCI-001', 'nama' => 'Gunting', 'sat' => $satuanPcsId],
-                ['sku' => 'ATK-RLR-001', 'nama' => 'Penggaris', 'sat' => $satuanPcsId],
-                ['sku' => 'ATK-PPR-001', 'nama' => 'Kertas F4', 'sat' => $satuanBoxId],
-                ['sku' => 'ATK-CLN-001', 'nama' => 'Pembersih Ruangan', 'sat' => $satuanPcsId],
             ];
 
             $barangIdsAset = [$barangLaptopId];
@@ -1079,7 +1038,7 @@ class GudangAsetSeeder extends Seeder
                     'subtotal' => 0,
                     'pajak' => 0,
                     'total' => 0,
-                    'status' => 'disetujui',
+                    'status' => 'diterima',
                     'catatan' => null,
                     'dibuat_oleh' => $pengguna['petugas_gudang'],
                     'dibuat_pada' => $now,
@@ -1407,15 +1366,59 @@ class GudangAsetSeeder extends Seeder
 
             $asetIds = [];
             $idxAset = 1;
+            // foreach ($barangIdsAset as $bid) {
+            //     $qtyAset = (int)DB::table('saldo_stok')->where('gudang_id', $gudangId)->where('lokasi_id', $binId)->where('barang_id', $bid)->sum('qty_tersedia');
+            //     $qtyAset = max(1, $qtyAset);
+            //     for ($i = 0; $i < $qtyAset; $i++) {
+            //         $asetIds[] = DB::table('aset')->insertGetId([
+            //             'instansi_id' => $instansiId,
+            //             'barang_id' => $bid,
+            //             'tag_aset' => 'AST-' . str_pad((string)$idxAset, 5, '0', STR_PAD_LEFT),
+            //             'no_serial' => 'SN-' . str_pad((string)$idxAset, 6, '0', STR_PAD_LEFT),
+            //             'imei' => null,
+            //             'no_mesin' => null,
+            //             'no_rangka' => null,
+            //             'no_polisi' => null,
+            //             'tanggal_beli' => $now->toDateString(),
+            //             'penerimaan_id' => $penerimaanId,
+            //             'unit_organisasi_saat_ini_id' => $cabangId,
+            //             'gudang_saat_ini_id' => $gudangId,
+            //             'lokasi_saat_ini_id' => $binId,
+            //             'pemegang_pengguna_id' => null,
+            //             'status_kondisi' => 'baik',
+            //             'status_siklus' => 'disimpan',
+            //             'biaya_perolehan' => rand(1500000, 12000000),
+            //             'mata_uang' => 'IDR',
+            //             'extra' => null,
+            //             'dibuat_pada' => $now,
+            //             'diubah_pada' => $now,
+            //         ]);
+            //         $idxAset++;
+            //     }
+            // }
+            $limitAset = 10;
+            $created = 0;
+
             foreach ($barangIdsAset as $bid) {
-                $qtyAset = (int)DB::table('saldo_stok')->where('gudang_id', $gudangId)->where('lokasi_id', $binId)->where('barang_id', $bid)->sum('qty_tersedia');
+                $qtyAset = (int) DB::table('saldo_stok')
+                    ->where('gudang_id', $gudangId)
+                    ->where('lokasi_id', $binId)
+                    ->where('barang_id', $bid)
+                    ->sum('qty_tersedia');
+
                 $qtyAset = max(1, $qtyAset);
-                for ($i = 0; $i < $qtyAset; $i++) {
+
+                $sisa = $limitAset - $created;
+                if ($sisa <= 0) break;
+
+                $qtyToCreate = min($qtyAset, $sisa);
+
+                for ($i = 0; $i < $qtyToCreate; $i++) {
                     $asetIds[] = DB::table('aset')->insertGetId([
                         'instansi_id' => $instansiId,
                         'barang_id' => $bid,
-                        'tag_aset' => 'AST-' . str_pad((string)$idxAset, 5, '0', STR_PAD_LEFT),
-                        'no_serial' => 'SN-' . str_pad((string)$idxAset, 6, '0', STR_PAD_LEFT),
+                        'tag_aset' => 'AST-' . str_pad((string) $idxAset, 5, '0', STR_PAD_LEFT),
+                        'no_serial' => 'SN-' . str_pad((string) $idxAset, 6, '0', STR_PAD_LEFT),
                         'imei' => null,
                         'no_mesin' => null,
                         'no_rangka' => null,
@@ -1427,20 +1430,22 @@ class GudangAsetSeeder extends Seeder
                         'lokasi_saat_ini_id' => $binId,
                         'pemegang_pengguna_id' => null,
                         'status_kondisi' => 'baik',
-                        'status_siklus' => 'disimpan',
+                        'status_siklus' => 'tersedia',
                         'biaya_perolehan' => rand(1500000, 12000000),
                         'mata_uang' => 'IDR',
                         'extra' => null,
                         'dibuat_pada' => $now,
                         'diubah_pada' => $now,
                     ]);
+
                     $idxAset++;
+                    $created++;
                 }
             }
 
-            $asetPenugasan = array_slice($asetIds, 0, 5);
-            $asetPeminjaman = array_slice($asetIds, 5, 3);
-            $asetPenghapusan = array_slice($asetIds, 8, 2);
+            $asetPenugasan = array_slice($asetIds, 0, 2);
+            $asetPeminjaman = array_slice($asetIds, 2, 3);
+            $asetPenghapusan = array_slice($asetIds, 5, 2);
 
             foreach ($asetPenugasan as $aid) {
                 $penugasanId = DB::table('penugasan_aset')->insertGetId([

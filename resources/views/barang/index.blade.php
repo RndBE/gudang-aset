@@ -15,7 +15,8 @@
                     </path>
                 </svg>Mass Upload</a>
             <a href="{{ route('barang.create') }}"
-                class="btn-active px-4 py-2 lg:px-6 lg:py-3 rounded-lg text-sm  text-center">Tambah</a>
+                class="btn-active px-4 py-2 lg:px-6 lg:py-3 rounded-lg text-sm  text-center me-3">Tambah</a>
+            <a href="{{ route('export.barang') }}" class="btn-active px-4 py-2 lg:px-6 lg:py-3 rounded-lg text-sm  text-center">Export Barang</a>
         </div>
     </div>
     @if (session('success'))
