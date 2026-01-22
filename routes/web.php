@@ -18,7 +18,7 @@ use App\Http\Controllers\PenggunaController;
 use App\Http\Controllers\AsetController;
 use App\Http\Controllers\PenghapusanAsetController;
 use App\Http\Controllers\PeminjamanAsetController;
-use App\http\Controllers\PenugasanAsetController;
+use App\Http\Controllers\PenugasanAsetController;
 use App\Http\Controllers\RencanaPerawatanController;
 use App\Http\Controllers\PerintahKerjaController;
 
