@@ -35,6 +35,8 @@ use App\Http\Controllers\PermintaanPersetujuanController;
 use App\Http\Controllers\LogAuditController;
 
 use App\Http\Controllers\DashboardController;
+
+use App\Http\Controllers\ExportController;
 use App\Http\Middleware\AuditActivity;
 
 use App\Http\Controllers\Api\WarehouseApiController;
@@ -47,6 +49,9 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::middleware(['auth', AuditActivity::class])->group(function () {
     Route::get('/', fn() => redirect()->route('dashboard'));
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+    Route::get('/export/barang', [ExportController::class, 'barang'])->name('export.barang');
+    Route::get('/export/aset', [ExportController::class, 'aset'])->name('export.aset');
 
     Route::resource('pengguna', PenggunaController::class)
         ->only(['index'])
