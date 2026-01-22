@@ -163,6 +163,21 @@ class DashboardController extends Controller
         //     $pieLabels[] = 'Lainnya';
         //     $pieValues[] = $lainnya;
         // }
+        $donut = DB::table('pergerakan_stok as ps')
+            ->leftJoin('detail_pergerakan_stok as dps', 'dps.pergerakan_stok_id', '=', 'ps.id')
+            ->where('ps.instansi_id', $instansiId)
+            ->where('ps.status', 'diposting')
+            // ->whereIn('ps.tipe_referensi', ['penerimaan', 'pengeluaran',])
+            // ->selectRaw('ps.tipe_referensi as tipe, COALESCE(SUM(dps.qty),0) as total_qty')
+            ->selectRaw('ps.tipe_referensi as tipe, COUNT(DISTINCT ps.id) as total_qty')
+            ->groupBy('ps.tipe_referensi')
+            ->pluck('total_qty', 'tipe');
+
+        $donutLabels = ['Penerimaan', 'Pengeluaran'];
+        $donutValues = [
+            (float) ($donut['penerimaan'] ?? 0),
+            (float) ($donut['pengeluaran'] ?? 0),
+        ];
         return view('dashboard', compact(
             'totalInstansi',
             'totalGudang',
@@ -179,7 +194,9 @@ class DashboardController extends Controller
             'mode',
             'yearOptions',
             'pieLabels',
-            'pieValues'
+            'pieValues',
+            'donutLabels',
+            'donutValues'
         ));
     }
 

@@ -59,3 +59,35 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   })
 })
+
+document.addEventListener('DOMContentLoaded', () => {
+  const el = document.getElementById('pergerakanDonut')
+  if (!el) return
+
+  const labels = JSON.parse(el.dataset.labels || '[]')
+  const values = JSON.parse(el.dataset.values || '[]')
+
+  const ctx = el.getContext('2d')
+  if (window.__pergerakanDonutChart) window.__pergerakanDonutChart.destroy()
+
+  window.__pergerakanDonutChart = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels,
+      datasets: [{ data: values, cutout: '68%' }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { position: 'bottom' },
+        tooltip: {
+          callbacks: {
+            label: (tt) => `${tt.label}: ${Number(tt.raw || 0).toLocaleString('id-ID')}`
+          }
+        }
+      }
+    }
+  })
+})
+
