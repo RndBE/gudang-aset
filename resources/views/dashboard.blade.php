@@ -70,8 +70,8 @@
                     <div class="{{ $c['bg'] }} text-white rounded-xl px-4 py-3 shadow-sm">
                         <div class="flex items-center justify-start gap-4">
                             <div class="shrink-0 rounded-lg bg-white ring-1 ring-white/20 p-3">
-                                {{-- {!! svg($c['icon'], 'h-6 w-6 ' . $c['iconColor']) !!} --}}
-                                {!! file_get_contents(resource_path('icon/' . $c['icon'] . '.svg')) !!}
+                                {!! svg($c['icon'], 'h-6 w-6 ' . $c['iconColor']) !!}
+                                {{-- {!! file_get_contents(resource_path('icon/' . $c['icon'] . '.svg')) !!} --}}
                             </div>
 
                             <div class="min-w-0">
@@ -93,10 +93,10 @@
                             </div>
 
                             <div class="shrink-0 rounded-full {{ $c['pill'] }} p-3 ring-1 ring-black/5">
-                                {{-- {!! svg($c['icon'], 'h-6 w-6') !!} --}}
-                                <div class="h-6 w-6 [&_svg]:h-6 [&_svg]:w-6">
+                                {!! svg($c['icon'], 'h-6 w-6') !!}
+                                {{-- <div class="h-6 w-6 [&_svg]:h-6 [&_svg]:w-6">
                                     {!! file_get_contents(resource_path('icon/' . $c['icon'] . '.svg')) !!}
-                                </div>
+                                </div> --}}
                             </div>
                         </div>
                     </div>
