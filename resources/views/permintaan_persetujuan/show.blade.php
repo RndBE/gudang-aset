@@ -8,7 +8,7 @@
             <div>
                 <h1 class="text-xl font-semibold">Detail Permintaan Persetujuan</h1>
                 <p class="text-sm text-gray-500">
-                    {{ $data->judul }} • {{ $data->tipe_entitas }} #{{ $data->entitas_id }}
+                    {{ $data->judul }} • {{ $data->tipe_entitas }} #{{ $data->id_entitas}}
                 </p>
             </div>
             <a href="{{ route('permintaan-persetujuan.index') }}"
@@ -431,8 +431,9 @@
                         <textarea name="catatan_keputusan" class="w-full border rounded-lg border-gray-300 px-3 py-2 text-sm mt-1 mb-3"
                             rows="3"></textarea>
 
-                        <button class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded text-sm"
-                            onclick="return confirm('Setujui langkah ini?')">
+                        <button type="button" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded text-sm"
+                            {{-- onclick="return confirm('Setujui langkah ini?')"> --}}
+                            @click="open=true; action='approve'">
                             Setujui
                         </button>
                     </form>
@@ -444,8 +445,9 @@
                         <textarea name="catatan_keputusan" required
                             class="w-full border rounded-lg border-gray-300 px-3 py-2 text-sm mt-1 mb-3" rows="3"></textarea>
 
-                        <button class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded text-sm"
-                            onclick="return confirm('Tolak permintaan ini?')">
+                        <button type="button" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded text-sm"
+                            {{-- onclick="return confirm('Tolak permintaan ini?')"> --}}
+                            @click="open=true; action='reject'">
                             Tolak
                         </button>
                     </form>
