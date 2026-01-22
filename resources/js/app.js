@@ -74,7 +74,11 @@ document.addEventListener('DOMContentLoaded', () => {
     type: 'doughnut',
     data: {
       labels,
-      datasets: [{ data: values, cutout: '68%' }]
+      datasets: [{
+      data: values,
+      backgroundColor: ['#3B82F6', '#F472B6'],
+      borderWidth: 0
+    }]
     },
     options: {
       cutout: '68%',
