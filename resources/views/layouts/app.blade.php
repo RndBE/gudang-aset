@@ -490,7 +490,7 @@
     const chatInput = document.getElementById('chatInput')
     const chatSend = document.getElementById('chatSend')
 
-    const API_URL = 'http://72.60.78.159:8001/chat_stream'
+    const API_URL = 'https://awass.site/chat_stream'
     const history = []
 
     function appendBubble(role, text) {
