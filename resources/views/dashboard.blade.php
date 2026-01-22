@@ -155,7 +155,8 @@
 
                 <div style="height: 320px;">
                     <canvas id="pergerakanDonut" data-labels='@json($donutLabels ?? [])'
-                        data-values='@json($donutValues ?? [])' style="width:100%"></canvas>
+                        data-values='@json($donutValues ?? [])' style="width:100%">
+                    </canvas>
                 </div>
             </div>
         </div>
