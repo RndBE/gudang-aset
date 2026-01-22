@@ -77,6 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
       datasets: [{ data: values, cutout: '68%' }]
     },
     options: {
+      cutout: '68%',
       responsive: true,
       maintainAspectRatio: false,
       plugins: {
