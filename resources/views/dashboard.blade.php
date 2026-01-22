@@ -103,7 +103,7 @@
                 @endforeach
             </div>
         </div>
-        <div class="mt-6 rounded-2xl bg-white border border-gray-200 p-5 shadow-sm">
+        {{-- <div class="mt-6 rounded-2xl bg-white border border-gray-200 p-5 shadow-sm">
             <div class="flex items-center justify-between mb-3">
                 <div>
                     <div class="text-base font-semibold text-gray-900">Barang Masuk vs Keluar</div>
@@ -131,8 +131,39 @@
                 <canvas id="stokBar" data-labels='@json($labels ?? [])' data-in='@json($in ?? [])'
                     data-out='@json($out ?? [])' style="height:280px;width:100%"></canvas>
             </div>
-        </div>
+        </div> --}}
         <div class="mt-6 grid grid-cols-1 xl:grid-cols-2 gap-4">
+            <div class="rounded-2xl bg-white border border-gray-200 p-5 shadow-sm">
+                <div class="flex items-center justify-between mb-3">
+                    <div>
+                        <div class="text-base font-semibold text-gray-900">Barang Masuk vs Keluar</div>
+                        <div class="text-sm text-gray-500">Per hari ({{ count($labels ?? []) }} hari terakhir)</div>
+                    </div>
+                    <form method="get" action="{{ route('dashboard') }}" class="flex items-center gap-2">
+                        <select name="year"
+                            class="btn-outline-active border rounded-lg px-3 py-2 text-sm w-full sm:w-28">
+                            @foreach ($yearOptions as $y)
+                                <option value="{{ $y }}" @selected((int) $year === (int) $y)>{{ $y }}
+                                </option>
+                            @endforeach
+                        </select>
+
+                        <select name="mode"
+                            class="btn-outline-active border rounded-lg px-3 py-2 text-sm w-full sm:w-32">
+                            <option value="weekly" @selected($mode === 'weekly')>Days</option>
+                            <option value="monthly" @selected($mode === 'monthly')>Monthly</option>
+                        </select>
+
+                        <button
+                            class=" btn-active px-4 py-2 rounded-lg text-sm bg-[#C58D2A] text-white w-full sm:w-auto">Terapkan</button>
+                    </form>
+                </div>
+
+                <div style="height: 320px;">
+                    <canvas id="stokBar" data-labels='@json($labels ?? [])' data-in='@json($in ?? [])'
+                        data-out='@json($out ?? [])' style="height:280px;width:100%"></canvas>
+                </div>
+            </div>
             <div class="rounded-2xl bg-white border border-gray-200 p-5 shadow-sm">
                 <div class="flex items-center justify-between mb-3">
                     <div>
@@ -145,7 +176,8 @@
                         data-values='@json($pieValues ?? [])' style="height:280px;width:100%"></canvas>
                 </div>
             </div>
-            <div class="rounded-2xl bg-white border border-gray-200 p-5 shadow-sm">
+
+            {{-- <div class="rounded-2xl bg-white border border-gray-200 p-5 shadow-sm">
                 <div class="flex items-center justify-between mb-3">
                     <div>
                         <div class="text-base font-semibold text-gray-900">Pergerakan Stok</div>
@@ -158,7 +190,7 @@
                         data-values='@json($donutValues ?? [])' style="width:100%">
                     </canvas>
                 </div>
-            </div>
+            </div> --}}
         </div>
 
     </div>
