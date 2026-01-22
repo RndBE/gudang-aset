@@ -157,10 +157,6 @@
                     <canvas id="pergerakanDonut" data-labels='@json($donutLabels ?? [])'
                         data-values='@json($donutValues ?? [])' style="height:280px;width:100%">
                     </canvas>
-                    <pre class="text-xs text-gray-400 mt-2">
-labels: @json($donutLabels)
-values: @json($donutValues)
-</pre>
                 </div>
             </div>
         </div>
