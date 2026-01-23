@@ -60,7 +60,7 @@
                                         class="w-auto h-32 object-contain">
                                 </div> --}}
                                 <div class="w-auto h-auto bg-gray-50 rounded-t-lg flex items-center justify-center overflow-hidden">
-                                    <img src="{{ asset('storage/' . $row->gambar) }}" class="h-auto w-38 object-contain">
+                                    <img src="{{ asset('storage/' . $row->gambar) }}" class="h-32 w-32 object-contain">
                                 </div>
                             </td>
                             <td class="p-3 whitespace-nowrap">{{ $row->sku }}</td>
