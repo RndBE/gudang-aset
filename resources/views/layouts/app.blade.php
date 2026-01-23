@@ -387,7 +387,7 @@
     const chatInput = document.getElementById('chatInput')
     const chatSend = document.getElementById('chatSend')
 
-    const API_URL = 'http://192.168.12.166:8001/chat_stream'
+    const API_URL = 'https://awass.site/chat_stream'
     const history = []
 
     function appendBubble(role, text) {
@@ -890,7 +890,7 @@
                 const ext = (stoppedBlob.type || '').includes('webm') ? 'webm' : 'wav'
                 fd.append('file', stoppedBlob, `voice.${ext}`)
 
-                const STT_URL = 'http://192.168.12.166:8001/stt'
+                const STT_URL = 'https://awass.site/stt'
                 const res = await fetch(STT_URL, {
                     method: 'POST',
                     body: fd
