@@ -99,7 +99,7 @@
                 </div>
             </div> --}}
             <div id="imgModal" class="fixed inset-0 z-50 hidden" onclick="closeImageModal()">
-                <div class="absolute inset-0 bg-black/60"></div>
+                <div class="absolute inset-0 bg-black opacity-60"></div>
 
                 <div class="absolute inset-0 flex items-center justify-center p-4">
                     <div class="bg-white rounded-2xl overflow-hidden shadow-xl w-auto max-w-5xl"
