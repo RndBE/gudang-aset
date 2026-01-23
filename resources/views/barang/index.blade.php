@@ -16,7 +16,8 @@
                 </svg>Mass Upload</a>
             <a href="{{ route('barang.create') }}"
                 class="btn-active px-4 py-2 lg:px-6 lg:py-3 rounded-lg text-sm  text-center me-3">Tambah</a>
-            <a href="{{ route('export.barang') }}" class="btn-active px-4 py-2 lg:px-6 lg:py-3 rounded-lg text-sm  text-center">Export Barang</a>
+            <a href="{{ route('export.barang') }}"
+                class="btn-active px-4 py-2 lg:px-6 lg:py-3 rounded-lg text-sm  text-center">Export Barang</a>
         </div>
     </div>
     @if (session('success'))
@@ -52,10 +53,15 @@
                     @forelse($data as $row)
                         <tr class="border-t border-gray-300 ">
                             <td class="p-3 whitespace-nowrap">
-                                <img src="{{ asset('storage/' . $row->gambar) }}" class="w-auto h-32 object-cover rounded-t-lg flex">
-                                {{-- <div class="w-full h-28 bg-gray-50 rounded-t-lg flex items-center justify-center overflow-hidden">
-                                    <img src="{{ asset('storage/' . $row->gambar) }}" class="h-24 w-auto object-contain">
+                                {{-- <img src="{{ asset('storage/' . $row->gambar) }}" class="w-auto h-32 object-cover rounded-t-lg flex"> --}}
+                                {{-- <div
+                                    class="w-16 h-16 bg-gray-50 border rounded-lg flex items-center justify-center overflow-hidden">
+                                    <img src="{{ asset('storage/' . $row->gambar) }}"
+                                        class="w-auto h-32 object-contain">
                                 </div> --}}
+                                <div class="w-auto h-auto bg-gray-50 rounded-t-lg flex items-center justify-center overflow-hidden">
+                                    <img src="{{ asset('storage/' . $row->gambar) }}" class="h-auto w-38 object-contain">
+                                </div>
                             </td>
                             <td class="p-3 whitespace-nowrap">{{ $row->sku }}</td>
                             <td class="p-3 whitespace-nowrap">
