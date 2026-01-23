@@ -47,6 +47,7 @@
             <table class="min-w-full text-sm">
                 <thead class="bg-gray-50">
                     <tr class="border-b border-gray-300">
+                        <th class="text-left p-3">Gambar</th>
                         <th class="text-left p-3">Nama Barang</th>
                         <th class="text-left p-3">Tanggal Beli</th>
                         <th class="text-left p-3">Tag</th>
@@ -60,8 +61,16 @@
                 <tbody>
                     @forelse($data as $row)
                         <tr class="border-t border-gray-300">
+                            <td class="p-3 whitespace-nowrap">
+                                <div style="cursor: zoom-in"
+                                    class="w-auto h-auto bg-gray-50 rounded-t-lg flex items-center justify-center overflow-hidden"
+                                    onclick="openImageModal('{{ asset('storage/' . $row->gambar) }}')">
+                                    <img src="{{ asset('storage/' . $row->gambar) }}" class="h-32 w-32 object-contain">
+                                </div>
+                            </td>
                             <td class="p-3 font-medium">{{ $row->barang?->nama ?? '-' }}</td>
-                            <td class="p-3 font-medium">{{ $row->dibuat_pada?->translatedFormat('d F Y, H:i') ?? '-' }}</td>
+                            <td class="p-3 font-medium">{{ $row->dibuat_pada?->translatedFormat('d F Y, H:i') ?? '-' }}
+                            </td>
                             <td class="p-3 font-medium">{{ $row->tag_aset }}</td>
                             <td class="p-3">{{ $row->no_serial ?? '-' }}</td>
                             <td class="p-3">{{ $row->imei ?? '-' }}</td>
@@ -103,6 +112,19 @@
                     @endforelse
                 </tbody>
             </table>
+            <div id="imgModal" class="fixed inset-0 z-50 hidden" onclick="closeImageModal()">
+                <div class="absolute inset-0 bg-black opacity-60"></div>
+
+                <div class="absolute inset-0 flex items-center justify-center p-4">
+                    <div class="bg-white rounded-2xl overflow-hidden shadow-xl w-auto max-w-5xl"
+                        onclick="event.stopPropagation()">
+                        <div class="p-4 bg-gray-50 flex items-center justify-center">
+                            <img id="imgModalTarget" src=""
+                                class="max-h-[70vh] max-w-[90vw] w-auto object-contain rounded-xl">
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
     </div>
@@ -110,4 +132,28 @@
     <div class="mt-4">
         {{ $data->links() }}
     </div>
+
+    <script>
+        function openImageModal(src) {
+            const modal = document.getElementById('imgModal');
+            const img = document.getElementById('imgModalTarget');
+
+            img.src = src;
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeImageModal() {
+            const modal = document.getElementById('imgModal');
+            const img = document.getElementById('imgModalTarget');
+
+            img.src = '';
+            modal.classList.add('hidden');
+            document.body.style.overflow = '';
+        }
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeImageModal();
+        });
+    </script>
 @endsection

@@ -7,6 +7,8 @@ use App\Models\Aset;
 use App\Models\Barang;
 use App\Models\Gudang;
 use App\Models\LokasiGudang;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 
 class AsetController extends Controller
 {
@@ -41,10 +43,10 @@ class AsetController extends Controller
      */
     public function create()
     {
-        $barang = Barang::query()->where('tipe_barang','aset')->orderBy('nama')->get();
+        $barang = Barang::query()->where('tipe_barang', 'aset')->orderBy('nama')->get();
         $gudang = Gudang::query()->orderBy('nama')->get();
         $lokasi = LokasiGudang::query()->orderBy('nama')->get();
-        return view('aset.create', compact('barang','gudang', 'lokasi'));
+        return view('aset.create', compact('barang', 'gudang', 'lokasi'));
     }
 
     /**
@@ -70,9 +72,17 @@ class AsetController extends Controller
             'status_siklus' => ['required', 'in:tersedia,dipinjam,ditugaskan,disimpan,perawatan,dihapus'],
             'biaya_perolehan' => ['nullable', 'numeric', 'min:0'],
             'mata_uang' => ['required', 'string', 'max:10'],
+            'gambar' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:4096'],
         ]);
 
         $validated['instansi_id'] = auth()->user()->instansi_id;
+
+        if ($request->hasFile('gambar')) {
+            $ext = $request->file('gambar')->getClientOriginalExtension();
+            $filename = Str::uuid()->toString() . '.' . $ext;
+            $path = $request->file('gambar')->storeAs('aset', $filename, 'public');
+            $validated['gambar'] = $path;
+        }
 
         Aset::create($validated);
 
@@ -122,7 +132,19 @@ class AsetController extends Controller
             'status_siklus' => ['required', 'in:tersedia,dipinjam,ditugaskan,disimpan,perawatan,dihapus'],
             'biaya_perolehan' => ['nullable', 'numeric', 'min:0'],
             'mata_uang' => ['required', 'string', 'max:10'],
+            'gambar' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:4096'],
         ]);
+
+        if ($request->hasFile('gambar')) {
+            if ($aset->gambar && Storage::disk('public')->exists($aset->gambar)) {
+                Storage::disk('public')->delete($aset->gambar);
+            }
+
+            $ext = $request->file('gambar')->getClientOriginalExtension();
+            $filename = Str::uuid()->toString() . '.' . $ext;
+            $path = $request->file('gambar')->storeAs('aset', $filename, 'public');
+            $validated['gambar'] = $path;
+        }
 
         $aset->update($validated);
 

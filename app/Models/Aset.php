@@ -21,6 +21,7 @@ class Aset extends Model
         'no_mesin',
         'no_rangka',
         'no_polisi',
+        'gambar',
 
         'tanggal_beli',
         'penerimaan_id',

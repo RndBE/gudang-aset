@@ -15,7 +15,8 @@
         </div>
     @endif
 
-    <form method="POST" action="{{ route('aset.store') }}" class="bg-white border rounded-lg border-gray-300 p-4 space-y-4">
+    <form method="POST" action="{{ route('aset.store') }}" class="bg-white border rounded-lg border-gray-300 p-4 space-y-4"
+        enctype="multipart/form-data">
         @csrf
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -100,6 +101,11 @@
                 <label class="text-sm font-medium">Tag Aset</label>
                 <input name="tag_aset" value="{{ old('tag_aset') }}"
                     class="mt-1 w-full border rounded-lg border-gray-300 text-sm px-3 py-2" required>
+            </div>
+            <div>
+                <label class="text-sm font-medium">Upload Gambar Aset</label>
+                <input type="file" name="gambar" accept="image/*"
+                    class="mt-1 w-full border rounded-lg text-sm border-gray-300 px-3 py-2">
             </div>
         </div>
 

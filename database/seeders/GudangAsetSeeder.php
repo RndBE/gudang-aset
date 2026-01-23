@@ -1448,6 +1448,7 @@ class GudangAsetSeeder extends Seeder
                         'status_siklus' => 'tersedia',
                         'biaya_perolehan' => rand(1500000, 12000000),
                         'mata_uang' => 'IDR',
+                        'gambar' => $this->seedAsetImage(),
                         'extra' => null,
                         'dibuat_pada' => $now,
                         'diubah_pada' => $now,
@@ -1887,5 +1888,28 @@ class GudangAsetSeeder extends Seeder
         copy($src, $destPath);
 
         return 'barang/' . $newName;
+    }
+    private function seedAsetImage(): ?string
+    {
+        $seedDir = database_path('seeders/asset/aset');
+
+        if (!is_dir($seedDir)) return null;
+
+        $files = glob($seedDir . '/*.{jpg,jpeg,png,webp,JPG,JPEG,PNG,WEBP}', GLOB_BRACE);
+        if (empty($files)) return null;
+
+        $src = $files[array_rand($files)];
+
+        $ext = pathinfo($src, PATHINFO_EXTENSION);
+        $newName = (string) \Illuminate\Support\Str::uuid() . '.' . strtolower($ext);
+
+        $destDir = storage_path('app/public/aset');
+        if (!is_dir($destDir)) {
+            mkdir($destDir, 0775, true);
+        }
+
+        copy($src, $destDir . DIRECTORY_SEPARATOR . $newName);
+
+        return 'aset/' . $newName;
     }
 }

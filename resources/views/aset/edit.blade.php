@@ -20,7 +20,7 @@
     @endif
 
     <form method="POST" action="{{ route('aset.update', $aset->id) }}"
-        class="bg-white border rounded-lg border-gray-300 text-sm p-4 space-y-4">
+        class="bg-white border rounded-lg border-gray-300 text-sm p-4 space-y-4" enctype="multipart/form-data">
         @csrf
         @method('PUT')
 
@@ -102,6 +102,19 @@
                 <label class="text-sm font-medium">IMEI</label>
                 <input name="imei" value="{{ old('imei', $aset->imei) }}"
                     class="mt-1 w-full border rounded-lg border-gray-300 text-sm px-3 py-2">
+            </div>
+            <div>
+                <label class="text-sm font-medium">Gambar Barang</label>
+                @if (!empty($barang?->gambar))
+                    <div class="mt-2 mb-3">
+                        <img src="{{ asset('storage/' . $barang->gambar) }}"
+                            class="h-28 w-28 object-cover rounded border border-gray-200">
+                    </div>
+                @endif
+
+                <input type="file" name="gambar" accept="image/*"
+                    class="mt-1 w-full border rounded-lg text-sm border-gray-300 px-3 py-2">
+                <div class="text-xs text-gray-500 mt-1">JPG/JPEG/PNG/WEBP max 4MB</div>
             </div>
         </div>
 
