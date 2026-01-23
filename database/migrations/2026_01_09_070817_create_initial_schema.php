@@ -458,6 +458,7 @@ return new class extends Migration {
             $table->string('no_mesin', 80)->nullable();
             $table->string('no_rangka', 80)->nullable();
             $table->string('no_polisi', 30)->nullable();
+            $table->string('gambar')->nullable();
             $table->date('tanggal_beli')->nullable();
             $table->foreignId('penerimaan_id')->nullable()->constrained('penerimaan')->nullOnDelete();
             $table->foreignId('unit_organisasi_saat_ini_id')->nullable()->constrained('unit_organisasi')->nullOnDelete();
