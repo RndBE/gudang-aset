@@ -92,7 +92,7 @@
                                     {{ $row->status_siklus }}
                                 </span>
                             </td>
-                            <td class="p-3 text-right space-x-2 flex">
+                            <td class="p-3 text-right whitespace-nowrap">
                                 <a class="px-3 py-1 rounded-lg border-gray-300 border text-sm hover:bg-gray-50"
                                     href="{{ route('aset.show', $row->id) }}">Detail</a>
 

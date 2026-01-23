@@ -10,7 +10,7 @@
     </div>
 
     @if ($errors->any())
-        <div class="mb-4 p-3 rounded-lg border-gray-300 text-sm bg-red-50 text-red-700 text-sm">
+        <div class="mb-4 p-3 rounded-lg border-gray-300 bg-red-50 text-red-700 text-sm">
             <ul class="list-disc pl-5">
                 @foreach ($errors->all() as $e)
                     <li>{{ $e }}</li>
