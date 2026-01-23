@@ -177,6 +177,7 @@ return new class extends Migration {
             $table->string('merek', 160)->nullable();
             $table->string('model', 160)->nullable();
             $table->json('spesifikasi')->nullable();
+            $table->string('gambar')->nullable();
             $table->enum('tipe_barang', ['habis_pakai', 'aset', 'keduanya'])->default('habis_pakai');
             $table->enum('metode_pelacakan', ['tanpa', 'lot', 'kedaluwarsa', 'serial'])->default('tanpa');
             $table->decimal('stok_minimum', 18, 4)->default(0);
