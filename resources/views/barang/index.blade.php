@@ -53,13 +53,8 @@
                     @forelse($data as $row)
                         <tr class="border-t border-gray-300 ">
                             <td class="p-3 whitespace-nowrap">
-                                {{-- <img src="{{ asset('storage/' . $row->gambar) }}" class="w-auto h-32 object-cover rounded-t-lg flex"> --}}
-                                {{-- <div
-                                    class="w-16 h-16 bg-gray-50 border rounded-lg flex items-center justify-center overflow-hidden">
-                                    <img src="{{ asset('storage/' . $row->gambar) }}"
-                                        class="w-auto h-32 object-contain">
-                                </div> --}}
-                                <div class="w-auto h-auto bg-gray-50 rounded-t-lg flex items-center justify-center overflow-hidden">
+                                <div class="w-auto h-auto bg-gray-50 rounded-t-lg flex items-center justify-center overflow-hidden cursor-zoom-in pointer-events-auto"
+                                    onclick="openImageModal('{{ asset('storage/' . $row->gambar) }}')">
                                     <img src="{{ asset('storage/' . $row->gambar) }}" class="h-32 w-32 object-contain">
                                 </div>
                             </td>
@@ -91,6 +86,49 @@
                     @endforelse
                 </tbody>
             </table>
+            <div id="imgModal" class="fixed inset-0 .z-[9999] hidden" onclick="closeImageModal()">
+                <div class="absolute inset-0 bg-black/60" ></div>
+
+                <div class="absolute inset-0 flex items-center justify-center p-4">
+                    <div class="bg-white rounded-2xl overflow-hidden shadow-xl max-w-4xl w-full"
+                        onclick="event.stopPropagation()">
+                        {{-- <div class="flex items-center justify-between px-4 py-3 border-b">
+                            <div class="text-sm font-semibold text-gray-800">Preview Gambar</div>
+                            <button type="button" onclick="closeImageModal()"
+                                class="px-3 py-1.5 rounded-lg text-sm border border-gray-200 hover:bg-gray-50">
+                                Tutup
+                            </button>
+                        </div> --}}
+
+                        <div class="p-4 bg-gray-50 flex items-center justify-center">
+                            <img id="imgModalTarget" src="" class="max-h-[80vh] w-auto object-contain rounded-xl">
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
+    <script>
+        function openImageModal(src) {
+            const modal = document.getElementById('imgModal');
+            const img = document.getElementById('imgModalTarget');
+
+            img.src = src;
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeImageModal() {
+            const modal = document.getElementById('imgModal');
+            const img = document.getElementById('imgModalTarget');
+
+            img.src = '';
+            modal.classList.add('hidden');
+            document.body.style.overflow = '';
+        }
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeImageModal();
+        });
+    </script>
 @endsection
