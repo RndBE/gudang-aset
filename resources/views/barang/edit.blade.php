@@ -20,7 +20,7 @@
     @endif
 
     <form method="post" action="{{ route('barang.update', $barang->id) }}"
-        class="bg-white border rounded-lg text-sm border-gray-300     p-4 space-y-4">
+        class="bg-white border rounded-lg text-sm border-gray-300 p-4 space-y-4" enctype="multipart/form-data">
         @csrf
         @method('PUT')
 
@@ -145,6 +145,19 @@
                 <input type="number" step="0.01" inputmode="decimal" min="0" name="titik_pesan_ulang"
                     value="{{ old('titik_pesan_ulang', $fmtDecimal($barang->titik_pesan_ulang ?? 0)) }}"
                     class="mt-1 w-full border border-gray-300 rounded px-3 py-2" required>
+            </div>
+            <div>
+                <label class="text-sm font-medium">Gambar Barang</label>
+                @if (!empty($barang?->gambar))
+                    <div class="mt-2 mb-3">
+                        <img src="{{ asset('storage/' . $barang->gambar) }}"
+                            class="h-28 w-28 object-cover rounded border border-gray-200">
+                    </div>
+                @endif
+
+                <input type="file" name="gambar" accept="image/*"
+                    class="mt-1 w-full border rounded-lg text-sm border-gray-300 px-3 py-2">
+                <div class="text-xs text-gray-500 mt-1">JPG/JPEG/PNG/WEBP max 4MB</div>
             </div>
         </div>
 

@@ -37,6 +37,7 @@
             <table class="w-full text-sm">
                 <thead class="bg-gray-50">
                     <tr>
+                        <th class="text-left p-3">Gambar</th>
                         <th class="text-left p-3">SKU</th>
                         <th class="text-left p-3">Nama</th>
                         <th class="text-left p-3">Kategori</th>
@@ -50,6 +51,11 @@
                 <tbody>
                     @forelse($data as $row)
                         <tr class="border-t border-gray-300 ">
+                            <td class="p-3 whitespace-nowrap">
+                                <div class="w-full h-28 bg-gray-50 rounded-t-lg flex items-center justify-center overflow-hidden">
+                                    <img src="{{ asset('storage/' . $row->gambar) }}" class="max-h-full max-w-full object-contain">
+                                </div>
+                            </td>
                             <td class="p-3 whitespace-nowrap">{{ $row->sku }}</td>
                             <td class="p-3 whitespace-nowrap">
                                 <div class="font-medium">{{ $row->nama }}</div>

@@ -9,6 +9,7 @@ use App\Models\SatuanBarang;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Http;
 use GuzzleHttp\Promise\PromiseInterface;
 use GuzzleHttp\Client;
@@ -56,7 +57,9 @@ class BarangController extends Controller
             'stok_minimum' => ['required', 'numeric'],
             'titik_pesan_ulang' => ['required', 'numeric'],
             'status' => ['required', 'in:aktif,nonaktif'],
+            'gambar' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:4096'],
         ]);
+
 
         $exists = Barang::where('instansi_id', $instansiId)
             ->where('sku', $payload['sku'])
@@ -109,6 +112,13 @@ class BarangController extends Controller
         $payload['instansi_id'] = $instansiId;
         $payload['spesifikasi'] = $spesifikasi;
 
+        if ($request->hasFile('gambar')) {
+            $ext = $request->file('gambar')->getClientOriginalExtension();
+            $filename = Str::uuid()->toString() . '.' . $ext;
+            $path = $request->file('gambar')->storeAs('barang', $filename, 'public');
+            $payload['gambar'] = $path;
+        }
+
         Barang::create($payload);
 
         return redirect()->route('barang.index')
@@ -144,6 +154,7 @@ class BarangController extends Controller
             'stok_minimum' => ['required', 'numeric'],
             'titik_pesan_ulang' => ['required', 'numeric'],
             'status' => ['required', 'in:aktif,nonaktif'],
+            'gambar' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:4096'],
         ]);
 
         $exists = Barang::where('instansi_id', $instansiId)
@@ -196,6 +207,17 @@ class BarangController extends Controller
         unset($payload['spesifikasi_json']);
 
         $payload['spesifikasi'] = $spesifikasi;
+
+        if ($request->hasFile('gambar')) {
+            if ($barang->gambar && Storage::disk('public')->exists($barang->gambar)) {
+                Storage::disk('public')->delete($barang->gambar);
+            }
+
+            $ext = $request->file('gambar')->getClientOriginalExtension();
+            $filename = Str::uuid()->toString() . '.' . $ext;
+            $path = $request->file('gambar')->storeAs('barang', $filename, 'public');
+            $payload['gambar'] = $path;
+        }
 
         $barang->update($payload);
 

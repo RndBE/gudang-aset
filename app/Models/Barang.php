@@ -18,6 +18,7 @@ class Barang extends Model
         'merek',
         'model',
         'spesifikasi',
+        'gambar',
         'tipe_barang',
         'metode_pelacakan',
         'stok_minimum',

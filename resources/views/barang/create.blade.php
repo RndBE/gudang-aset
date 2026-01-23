@@ -15,7 +15,7 @@
         </div>
     @endif
 
-    <form method="post" action="{{ route('barang.store') }}" class="bg-white border rounded-lg border-gray-300 p-4 space-y-4">
+    <form method="post" action="{{ route('barang.store') }}" class="bg-white border rounded-lg border-gray-300 p-4 space-y-4" enctype="multipart/form-data">
         @csrf
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -108,6 +108,11 @@
                 <label class="text-sm font-medium">Titik Pesan Ulang</label>
                 <input name="titik_pesan_ulang" value="{{ old('titik_pesan_ulang', 0) }}"
                     class="mt-1 w-full border rounded-lg text-sm border-gray-300 px-3 py-2" required>
+            </div>
+            <div>
+                <label class="text-sm font-medium">Upload Gambar barang</label>
+                <input type="file" name="gambar" accept="image/*"
+                    class="mt-1 w-full border rounded-lg text-sm border-gray-300 px-3 py-2">
             </div>
         </div>
 
