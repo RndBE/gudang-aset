@@ -569,6 +569,7 @@ class GudangAsetSeeder extends Seeder
                 'nama' => 'Laptop Operasional',
                 'merek' => 'DemoBrand',
                 'model' => 'D-14',
+                'gambar' => $this->seedBarangImage('laptop.webp'),
                 'spesifikasi' => json_encode(['ram' => '16GB', 'storage' => '512GB']),
                 'tipe_barang' => 'aset',
                 'metode_pelacakan' => 'serial',
@@ -587,6 +588,7 @@ class GudangAsetSeeder extends Seeder
                 'nama' => 'Kertas A4',
                 'merek' => 'DemoPaper',
                 'model' => null,
+                'gambar' => $this->seedBarangImage('kertas-A4.jpg'),
                 'spesifikasi' => null,
                 'tipe_barang' => 'habis_pakai',
                 'metode_pelacakan' => 'tanpa',
@@ -610,6 +612,17 @@ class GudangAsetSeeder extends Seeder
                 ['sku' => 'ATK-SPD-001', 'nama' => 'Spidol Board', 'sat' => $satuanPcsId],
                 ['sku' => 'ATK-MAP-001', 'nama' => 'Map Folder', 'sat' => $satuanPcsId],
             ];
+            $gambarBySku = [
+                'AST-LPT-002' => 'laptop_cadangan.jpeg',
+                'AST-PRN-001' => 'printer-laser.webp',
+                'AST-SCN-001' => 'scanner.webp',
+                'AST-PRO-001' => 'projector.webp',
+
+                'ATK-PEN-001' => 'pulpen-hitam.webp',
+                'ATK-PEN-002' => 'pulpen-biru.jpg',
+                'ATK-SPD-001' => 'spidol.jpg',
+                'ATK-MAP-001' => 'map.jpeg',
+            ];
 
             $barangIdsAset = [$barangLaptopId];
             foreach ($barangAset as $b) {
@@ -621,6 +634,7 @@ class GudangAsetSeeder extends Seeder
                     'nama' => $b['nama'],
                     'merek' => $b['merek'],
                     'model' => $b['model'],
+                    'gambar' => isset($gambarBySku[$b['sku']]) ? $this->seedBarangImage($gambarBySku[$b['sku']]) : null,
                     'spesifikasi' => null,
                     'tipe_barang' => 'aset',
                     'metode_pelacakan' => $b['track'],
@@ -642,6 +656,7 @@ class GudangAsetSeeder extends Seeder
                     'nama' => $b['nama'],
                     'merek' => null,
                     'model' => null,
+                    'gambar' => isset($gambarBySku[$b['sku']]) ? $this->seedBarangImage($gambarBySku[$b['sku']]) : null,
                     'spesifikasi' => null,
                     'tipe_barang' => 'habis_pakai',
                     'metode_pelacakan' => 'tanpa',
@@ -1851,5 +1866,26 @@ class GudangAsetSeeder extends Seeder
             'data_baru' => $baru ? json_encode($baru) : null,
             'dibuat_pada' => $now,
         ]);
+    }
+    private function seedBarangImage(string $filename): ?string
+    {
+        $src = database_path('seeders/asset/barang/' . $filename);
+
+        if (!file_exists($src)) {
+            return null;
+        }
+
+        $ext = pathinfo($src, PATHINFO_EXTENSION);
+        $newName = (string) \Illuminate\Support\Str::uuid() . '.' . strtolower($ext);
+
+        $destPath = storage_path('app/public/barang/' . $newName);
+
+        if (!is_dir(dirname($destPath))) {
+            mkdir(dirname($destPath), 0775, true);
+        }
+
+        copy($src, $destPath);
+
+        return 'barang/' . $newName;
     }
 }
