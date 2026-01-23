@@ -53,7 +53,7 @@
                         <tr class="border-t border-gray-300 ">
                             <td class="p-3 whitespace-nowrap">
                                 <div class="w-full h-28 bg-gray-50 rounded-t-lg flex items-center justify-center overflow-hidden">
-                                    <img src="{{ asset('storage/' . $row->gambar) }}" class="max-h-28 max-w-32 object-contain">
+                                    <img src="{{ asset('storage/' . $row->gambar) }}" class="h-20 w-auto object-contain">
                                 </div>
                             </td>
                             <td class="p-3 whitespace-nowrap">{{ $row->sku }}</td>
