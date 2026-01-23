@@ -52,7 +52,7 @@
                     @forelse($data as $row)
                         <tr class="border-t border-gray-300 ">
                             <td class="p-3 whitespace-nowrap">
-                                <img src="{{ asset('storage/' . $row->gambar) }}" class="w-auto h-24 object-contain rounded-t-lg flex">
+                                <img src="{{ asset('storage/' . $row->gambar) }}" class="w-24 h-20 object-contain rounded-t-lg flex">
                                 {{-- <div class="w-full h-28 bg-gray-50 rounded-t-lg flex items-center justify-center overflow-hidden">
                                     <img src="{{ asset('storage/' . $row->gambar) }}" class="h-20 w-auto object-contain">
                                 </div> --}}
