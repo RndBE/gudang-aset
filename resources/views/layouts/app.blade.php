@@ -150,9 +150,11 @@
                     </svg>
                 </button>
 
-                <div class="w-6 shrink-0 [&_svg]:h-full hidden md:block">
-                    {!! file_get_contents(resource_path('icon/icon-head.svg')) !!}
-                </div>
+                <a href="{{ route('dashboard') }}" class="w-6 shrink-0 hidden md:block">
+                    <div class="w-6 shrink-0 [&_svg]:h-full hidden md:block">
+                        {!! file_get_contents(resource_path('icon/icon-head.svg')) !!}
+                    </div>
+                </a>
             </div>
 
             <div x-data="{ open: false }" class="relative">
