@@ -36,7 +36,13 @@ class ForgotPasswordController extends Controller
 
         $resetLink = route('password.reset', $plainToken) . '?email=' . urlencode($data['email']);
 
-        Mail::send('auth.reset-password', [
+        // Mail::send('auth.reset-password', [
+        //     'resetLink' => $resetLink,
+        //     'user' => $user
+        // ], function ($m) use ($data) {
+        //     $m->to($data['email'])->subject('Reset Password AWASS');
+        // });
+        Mail::send('emails.reset-password', [
             'resetLink' => $resetLink,
             'user' => $user
         ], function ($m) use ($data) {
