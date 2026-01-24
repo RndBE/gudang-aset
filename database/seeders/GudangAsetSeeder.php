@@ -259,7 +259,7 @@ class GudangAsetSeeder extends Seeder
                 'instansi_id' => $instansiId,
                 'unit_organisasi_id' => $mabesId,
                 'username' => 'superadmin',
-                'email' => 'shandybagus2@gmail.com',
+                'email' => 'fadelirsyad04@gmail.com',
                 'telepon' => '081200000001',
                 'hash_password' => Hash::make('password'),
                 'nama_lengkap' => 'Super Admin',
@@ -279,7 +279,7 @@ class GudangAsetSeeder extends Seeder
             $hashedResetToken = hash('sha256', $plainResetToken);
 
             DB::table('password_reset_tokens')->updateOrInsert(
-                ['email' => 'shandybagus2@gmail.com'],
+                ['email' => 'fadelirsyad04@gmail.com'],
                 [
                     'token' => $hashedResetToken,
                     'created_at' => $now
