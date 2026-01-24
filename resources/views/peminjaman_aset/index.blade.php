@@ -56,95 +56,98 @@
 
         <!-- Table -->
         <div class="bg-white border rounded-lg border-gray-300 overflow-hidden">
-            <table class="w-full text-sm">
-                <thead class="bg-gray-50 border-b border-gray-300">
-                    <tr>
-                        <th class="p-3 text-left">Tanggal Peminjaman</th>
-                        <th class="p-3 text-left">Aset</th>
-                        <th class="p-3 text-left">Jatuh Tempo</th>
-                        <th class="p-3 text-left">Status</th>
-                        <th class="p-3 text-left">Dokumen</th>
-                        <th class="text-right p-3">Aksi</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y">
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                    <thead class="bg-gray-50 border-b border-gray-300">
+                        <tr>
+                            <th class="p-3 text-left">Tanggal Peminjaman</th>
+                            <th class="p-3 text-left">Aset</th>
+                            <th class="p-3 text-left">Jatuh Tempo</th>
+                            <th class="p-3 text-left">Status</th>
+                            <th class="p-3 text-left">Dokumen</th>
+                            <th class="text-right p-3">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y">
 
-                    @forelse($data as $row)
-                        @php
-                            $isOverdue = $row->status === 'aktif' && $row->jatuh_tempo && $row->jatuh_tempo->isPast();
-                        @endphp
+                        @forelse($data as $row)
+                            @php
+                                $isOverdue =
+                                    $row->status === 'aktif' && $row->jatuh_tempo && $row->jatuh_tempo->isPast();
+                            @endphp
 
-                        <tr class="hover:bg-gray-50">
-                            <td class="p-3">
-                                <div class="font-medium">
-                                    {{ $row->tanggal_mulai?->translatedFormat('d F Y, H:i') ?? '-' }}
-                                </div>
-                                <div class="text-xs text-gray-500">
-                                    Dibuat: {{ $row->dibuat_pada?->translatedFormat('d F Y, H:i') ?? '-' }}
-                                </div>
-                            </td>
-
-                            <td class="p-3">
-                                <div class="font-medium">{{ $row->aset->tag_aset ?? '-' }}</div>
-                                <div class="text-xs text-gray-500">
-                                    SN: {{ $row->aset->no_serial ?? '-' }} | IMEI: {{ $row->aset->imei ?? '-' }}
-                                </div>
-                            </td>
-
-                            <td class="p-3">
-                                @if ($row->jatuh_tempo)
+                            <tr class="hover:bg-gray-50">
+                                <td class="p-3 border-b  border-gray-300">
                                     <div class="font-medium">
-                                        {{ $row->jatuh_tempo->translatedFormat('d F Y, H:i') }}
+                                        {{ $row->tanggal_mulai?->translatedFormat('d F Y, H:i') ?? '-' }}
                                     </div>
+                                    <div class="text-xs text-gray-500">
+                                        Dibuat: {{ $row->dibuat_pada?->translatedFormat('d F Y, H:i') ?? '-' }}
+                                    </div>
+                                </td>
 
-                                    @if ($isOverdue)
-                                        <span class="text-xs px-2 py-1 rounded-lg border-gray-300 bg-red-100 text-red-700">
-                                            Terlambat
-                                        </span>
+                                <td class="p-3 border-b  border-gray-300">
+                                    <div class="font-medium">{{ $row->aset->tag_aset ?? '-' }}</div>
+                                    <div class="text-xs text-gray-500">
+                                        SN: {{ $row->aset->no_serial ?? '-' }} | IMEI: {{ $row->aset->imei ?? '-' }}
+                                    </div>
+                                </td>
+
+                                <td class="p-3 border-b  border-gray-300">
+                                    @if ($row->jatuh_tempo)
+                                        <div class="font-medium">
+                                            {{ $row->jatuh_tempo->translatedFormat('d F Y, H:i') }}
+                                        </div>
+
+                                        @if ($isOverdue)
+                                            <span
+                                                class="text-xs px-2 py-1 rounded-lg border-gray-300 bg-red-100 text-red-700">
+                                                Terlambat
+                                            </span>
+                                        @endif
+                                    @else
+                                        -
                                     @endif
-                                @else
-                                    -
-                                @endif
-                            </td>
+                                </td>
 
-                            <td class="p-3">
-                                @php
-                                    $statusTampil = $row->status;
-                                    $pp = $row->permintaanPersetujuan; // relasi hasOne
-                                    $apprStatus = $pp?->status; // menunggu/disetujui/ditolak/null
-                                    // kalau ada permintaan persetujuan yg masih menunggu → override status tampilan
-                                    if ($apprStatus === 'menunggu') {
-                                        $statusTampil = 'menunggu persetujuan';
-                                    }
-                                    // default
-                                    $color = 'bg-gray-100 text-gray-700';
+                                <td class="p-3 border-b  border-gray-300">
+                                    @php
+                                        $statusTampil = $row->status;
+                                        $pp = $row->permintaanPersetujuan; // relasi hasOne
+                                        $apprStatus = $pp?->status; // menunggu/disetujui/ditolak/null
+                                        // kalau ada permintaan persetujuan yg masih menunggu → override status tampilan
+                                        if ($apprStatus === 'menunggu') {
+                                            $statusTampil = 'menunggu persetujuan';
+                                        }
+                                        // default
+                                        $color = 'bg-gray-100 text-gray-700';
 
-                                    if ($statusTampil === 'menunggu persetujuan') {
-                                        $color = 'bg-yellow-100 text-yellow-800';
-                                    } elseif ($statusTampil === 'aktif') {
-                                        $color = 'bg-blue-100 text-blue-700';
-                                    } elseif ($statusTampil === 'terlambat') {
-                                        $color = 'bg-red-100 text-red-700';
-                                    } elseif ($statusTampil === 'dikembalikan') {
-                                        $color = 'bg-green-100 text-green-700';
-                                    } elseif ($statusTampil === 'dibatalkan') {
-                                        $color = 'bg-gray-200 text-gray-600';
-                                    }
+                                        if ($statusTampil === 'menunggu persetujuan') {
+                                            $color = 'bg-yellow-100 text-yellow-800';
+                                        } elseif ($statusTampil === 'aktif') {
+                                            $color = 'bg-blue-100 text-blue-700';
+                                        } elseif ($statusTampil === 'terlambat') {
+                                            $color = 'bg-red-100 text-red-700';
+                                        } elseif ($statusTampil === 'dikembalikan') {
+                                            $color = 'bg-green-100 text-green-700';
+                                        } elseif ($statusTampil === 'dibatalkan') {
+                                            $color = 'bg-gray-200 text-gray-600';
+                                        }
 
-                                    $showLink = $pp && $apprStatus === 'menunggu'; // ✅ link hanya kalau masih menunggu
-                                @endphp
+                                        $showLink = $pp && $apprStatus === 'menunggu'; // ✅ link hanya kalau masih menunggu
+                                    @endphp
 
-                                <span
-                                    class="px-2 py-1 rounded-lg border-gray-300 text-xs font-semibold {{ $color }}">
-                                    {{ ucfirst($statusTampil) }}
-                                </span>
-                                @if ($showLink)
-                                    <a href="{{ route('permintaan-persetujuan.show', $pp->id) }}"
-                                        class="ml-2 text-xs text-blue-600 hover:underline">
-                                        Lihat
-                                    </a>
-                                @endif
-                                {{-- $color = 'bg-gray-100 text-gray-700';
+                                    <span
+                                        class="px-2 py-1 rounded-lg border-gray-300 text-xs font-semibold {{ $color }}">
+                                        {{ ucfirst($statusTampil) }}
+                                    </span>
+                                    @if ($showLink)
+                                        <a href="{{ route('permintaan-persetujuan.show', $pp->id) }}"
+                                            class="ml-2 text-xs text-blue-600 hover:underline">
+                                            Lihat
+                                        </a>
+                                    @endif
+                                    {{-- $color = 'bg-gray-100 text-gray-700';
                                 if ($row->status == 'aktif') {
                                 $color = 'bg-blue-100 text-blue-700';
                                 }
@@ -161,51 +164,52 @@
                                 <span class="px-2 py-1 text-xs rounded-lg border-gray-300 {{ $color }}">
                                     {{ ucfirst($row->status) }}
                                 </span>  --}}
-                            </td>
+                                </td>
 
-                            <td class="p-3">
-                                {{ $row->nomor_dok_serah_terima ?? '-' }}
-                            </td>
+                                <td class="p-3 border-b  border-gray-300">
+                                    {{ $row->nomor_dok_serah_terima ?? '-' }}
+                                </td>
 
-                            <td class="p-3 text-right space-x-1">
-                                <a href="{{ route('peminjaman-aset.show', $row->id) }}"
-                                    class="px-2 py-1 border rounded-lg border-gray-300 text-xs hover:bg-gray-50">
-                                    Detail
-                                </a>
-
-                                @if ($row->status === 'aktif' || $row->status === 'terlambat')
-                                    <a href="{{ route('peminjaman-aset.edit', $row->id) }}"
-                                        class="px-2 py-1 border rounded-lg border-gray-300 text-xs text-blue-700 hover:bg-blue-50">
-                                        Edit
+                                <td class="p-3 text-right space-x-1 border-b  border-gray-300">
+                                    <a href="{{ route('peminjaman-aset.show', $row->id) }}"
+                                        class="px-2 py-1 border rounded-lg border-gray-300 text-xs hover:bg-gray-50">
+                                        Detail
                                     </a>
 
-                                    <a href="{{ route('peminjaman-aset.show', $row->id) }}#pengembalian"
-                                        class="px-2 py-1 border rounded-lg border-gray-300 text-xs text-green-700 hover:bg-green-50">
-                                        Pengembalian
-                                    </a>
+                                    @if ($row->status === 'aktif' || $row->status === 'terlambat')
+                                        <a href="{{ route('peminjaman-aset.edit', $row->id) }}"
+                                            class="px-2 py-1 border rounded-lg border-gray-300 text-xs text-blue-700 hover:bg-blue-50">
+                                            Edit
+                                        </a>
 
-                                    <form method="POST" action="{{ route('peminjaman-aset.batalkan', $row->id) }}"
-                                        class="inline">
-                                        @csrf
-                                        <button
-                                            class="px-2 py-1 border rounded-lg border-gray-300 text-xs text-yellow-700 hover:bg-yellow-50"
-                                            onclick="return confirm('Batalkan peminjaman ini?')">
-                                            Batalkan
-                                        </button>
-                                    </form>
-                                @endif
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="6" class="p-6 text-center text-gray-500">
-                                Belum ada data peminjaman aset.
-                            </td>
-                        </tr>
-                    @endforelse
+                                        <a href="{{ route('peminjaman-aset.show', $row->id) }}#pengembalian"
+                                            class="px-2 py-1 border rounded-lg border-gray-300 text-xs text-green-700 hover:bg-green-50">
+                                            Pengembalian
+                                        </a>
 
-                </tbody>
-            </table>
+                                        <form method="POST" action="{{ route('peminjaman-aset.batalkan', $row->id) }}"
+                                            class="inline">
+                                            @csrf
+                                            <button
+                                                class="px-2 py-1 border rounded-lg border-gray-300 text-xs text-yellow-700 hover:bg-yellow-50"
+                                                onclick="return confirm('Batalkan peminjaman ini?')">
+                                                Batalkan
+                                            </button>
+                                        </form>
+                                    @endif
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="6" class="p-6 text-center text-gray-500">
+                                    Belum ada data peminjaman aset.
+                                </td>
+                            </tr>
+                        @endforelse
+
+                    </tbody>
+                </table>
+            </div>
         </div>
 
         <div>
