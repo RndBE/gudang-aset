@@ -12,10 +12,28 @@ class ResetPasswordController extends Controller
 {
     public function show(Request $request, string $token)
     {
+        // return view('auth.reset-password', [
+        //     'token' => $token,
+        //     // 'token' => $request->query('token'),
+        //     'email' => $request->query('email')
+        // ]);
+        $email = $request->query('email');
+
+        $row = DB::table('password_reset_tokens')->where('email', $email)->first();
+
+        if (!$row || !hash_equals($row->token, hash('sha256', $token))) {
+            return redirect()->route('password.request')
+                ->withErrors(['email' => 'Link reset tidak valid atau sudah digunakan.']);
+        }
+
+        if (now()->diffInMinutes($row->created_at) > 60) {
+            return redirect()->route('password.request')
+                ->withErrors(['email' => 'Link reset sudah kedaluwarsa.']);
+        }
+
         return view('auth.reset-password', [
             'token' => $token,
-            // 'token' => $request->query('token'),
-            'email' => $request->query('email')
+            'email' => $email
         ]);
     }
 
