@@ -118,7 +118,7 @@
             {{-- aset peminjaman yang diajukan --}}
             @if ($data->tipe_entitas === 'peminjaman_aset')
                 <div class="bg-white border rounded-lg border-gray-300">
-                    <div class="border-b px-4 py-3 font-semibold">Detail Peminjaman Aset</div>
+                    <div class="border-b border-gray-300 px-4 py-3 font-semibold">Detail Peminjaman Aset</div>
 
                     <div class="p-4 text-sm">
                         @if ($entitas)
@@ -165,7 +165,7 @@
             {{-- aset penugasan yang diajukan --}}
             @if ($data->tipe_entitas === 'penghapusan_aset')
                 <div class="bg-white border rounded-lg border-gray-300">
-                    <div class="border-b px-4 py-3 font-semibold">Detail Penghapusan Aset</div>
+                    <div class="border-b border-gray-300 px-4 py-3 font-semibold">Detail Penghapusan Aset</div>
 
                     <div class="p-4 text-sm">
                         @if ($entitas)
@@ -209,7 +209,7 @@
             {{-- pesanan pembelian yang diajukan --}}
             @if ($data->tipe_entitas === 'pesanan_pembelian')
                 <div class="bg-white border rounded-lg border-gray-300 md:col-span-2">
-                    <div class="border-b px-4 py-3 font-semibold">Detail Pesanan Pembelian</div>
+                    <div class="border-b border-gray-300 px-4 py-3 font-semibold">Detail Pesanan Pembelian</div>
 
                     <div class="p-4 text-sm">
                         @if ($entitas)
@@ -290,7 +290,7 @@
             {{-- permintaan yang diajukan --}}
             @if ($data->tipe_entitas === 'permintaan')
                 <div class="bg-white border rounded-lg border-gray-300 md:col-span-2">
-                    <div class="border-b px-4 py-3 font-semibold border-gray-300">Detail Permintaan Barang</div>
+                    <div class="border-b border-gray-300 px-4 py-3 font-semibold border-gray-300">Detail Permintaan Barang</div>
 
                     <div class="p-4 text-sm">
                         @if ($entitas)
