@@ -39,11 +39,19 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ExportController;
 use App\Http\Middleware\AuditActivity;
 
+use App\Http\Controllers\ForgotPasswordController;
+use App\Http\Controllers\ResetPasswordController;
+
 use App\Http\Controllers\Api\WarehouseApiController;
 
 Route::get('/login', [AuthController::class, 'formLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.post');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::get('/lupa-kata-sandi', [ForgotPasswordController::class, 'show'])->name('password.request');
+Route::post('/lupa-kata-sandi', [ForgotPasswordController::class, 'send'])->name('password.email');
+
+Route::get('/reset-kata-sandi/{token}', [ResetPasswordController::class, 'show'])->name('password.reset');
+Route::post('/reset-kata-sandi', [ResetPasswordController::class, 'update'])->name('password.update');
 
 // Route::middleware('auth')->group(function () {
 Route::middleware(['auth', AuditActivity::class])->group(function () {

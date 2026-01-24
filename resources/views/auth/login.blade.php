@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>AWASS - Login</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    {{-- <link rel="icon" type="image/svg+xml" href="{{ Vite::asset('resources/icon/head-icon.png') }}"> --}}
+    <link rel="icon" type="image/svg+xml" href="{{ Vite::asset('resources/icon/head-icon.png') }}">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Sora:wght@100..800&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Sonsie+One&display=swap" rel="stylesheet">
@@ -117,26 +117,29 @@
                         <div class="mt-7">
                             <div class="flex justify-between  mb-3">
                                 <label class="flex items-center gap-3 cursor-pointer select-none">
-                                    <input type="checkbox" class="peer sr-only">
+                                    <input id="remember_username" type="checkbox" name="remember" class="peer sr-only">
 
                                     <div
-                                        class="h-4 w-4 rounded border border-gray-300 bg-white
-flex items-center justify-center
-peer-checked:bg-[#C58D2A] peer-checked:border-[#C58D2A]
-[&>svg]:hidden peer-checked:[&>svg]:block
-transition ">
+                                        class="h-4 w-4 rounded border border-gray-300 bg-white flex items-center justify-center peer-checked:bg-[#C58D2A] peer-checked:border-[#C58D2A] [&>svg]:hidden peer-checked:[&>svg]:block transition ">
                                         <svg class="h-3.5 w-3.5 text-white" viewBox="0 0 20 20" fill="currentColor">
                                             <path fill-rule="evenodd"
                                                 d="M16.704 5.29a1 1 0 010 1.42l-7.5 7.5a1 1 0 01-1.42 0l-3.5-3.5a1 1 0 011.42-1.42l2.79 2.79 6.79-6.79a1 1 0 011.42 0z"
                                                 clip-rule="evenodd" />
                                         </svg>
                                     </div>
+                                    <label for="remember_username"
+                                        class="text-sm text-gray-700 peer-checked:text-gray-900 cursor-pointer">Ingat saya</label>
 
-                                    <span class="text-sm text-gray-700 peer-checked:text-gray-900">Ingat saya</span>
+                                    {{-- <span class="text-sm text-gray-700 peer-checked:text-gray-900">Ingat saya</span> --}}
                                 </label>
 
 
-                                <div class="text-sm fw-semibold text-end text-[#C58D2A]">Lupa Kata Sandi ?</div>
+                                <div class="text-sm fw-semibold text-end text-[#C58D2A]">
+                                    <a href="{{ route('password.request') }}" class="text-sm hover:underline">
+                                    {{-- <a href="#" class="text-sm hover:underline"> --}}
+                                        {{ __('Lupa Kata Sandi ?') }}
+                                    </a>
+                                </div>
                             </div>
                             <button class="cursor-pointer w-full btn-active rounded-lg px-3 py-2 hover:opacity-90">
                                 Masuk
@@ -165,6 +168,26 @@ transition ">
 
         iconEye.classList.toggle('hidden', isHidden);
         iconEyeSlash.classList.toggle('hidden', !isHidden);
+    });
+
+    document.addEventListener("DOMContentLoaded", function() {
+        const usernameEl = document.getElementById("username");
+        const rememberEl = document.getElementById("remember_username");
+
+        const savedUsername = localStorage.getItem("awass_username");
+        if (savedUsername) {
+            usernameEl.value = savedUsername;
+            rememberEl.checked = true;
+        }
+
+        const form = usernameEl.closest("form");
+        form.addEventListener("submit", function() {
+            if (rememberEl.checked) {
+                localStorage.setItem("awass_username", usernameEl.value);
+            } else {
+                localStorage.removeItem("awass_username");
+            }
+        });
     });
 </script>
 

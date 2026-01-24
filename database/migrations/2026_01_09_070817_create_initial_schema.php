@@ -7,6 +7,14 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up(): void
     {
+        Schema::create('password_reset_tokens', function (Blueprint $table) {
+            $table->string('email', 255)->primary();
+            $table->string('token', 255);
+            $table->timestamp('created_at')->nullable();
+
+            $table->index('created_at', 'idx_password_reset_created_at');
+        });
+
         Schema::create('instansi', function (Blueprint $table) {
             $table->id();
             $table->string('kode', 50)->unique();
@@ -40,7 +48,7 @@ return new class extends Migration {
             $table->foreignId('instansi_id')->constrained('instansi');
             $table->foreignId('unit_organisasi_id')->nullable()->constrained('unit_organisasi')->nullOnDelete();
             $table->string('username', 120);
-            $table->string('email', 255)->nullable();
+            $table->string('email', 255)->nullable()->unique();
             $table->string('telepon', 50)->nullable();
             $table->string('hash_password', 255)->nullable();
             $table->string('nama_lengkap', 255);
@@ -49,6 +57,7 @@ return new class extends Migration {
             $table->string('jabatan', 160)->nullable();
             $table->enum('status', ['aktif', 'nonaktif', 'terkunci'])->default('aktif');
             $table->timestamp('login_terakhir_pada')->nullable();
+            $table->rememberToken();
             $table->timestamp('dibuat_pada')->useCurrent();
             $table->timestamp('diubah_pada')->useCurrent()->useCurrentOnUpdate();
             $table->unique(['instansi_id', 'username'], 'uq_pengguna_inst_username');
@@ -796,6 +805,8 @@ return new class extends Migration {
 
     public function down(): void
     {
+        Schema::dropIfExists('password_reset_tokens');
+
         Schema::dropIfExists('log_audit');
         Schema::dropIfExists('notifikasi');
         Schema::dropIfExists('langkah_permintaan_persetujuan');

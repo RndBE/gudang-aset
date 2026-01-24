@@ -18,13 +18,16 @@ class AuthController extends Controller
         $data = $request->validate([
             'username' => ['required', 'string'],
             'password' => ['required', 'string'],
+            'remember' => ['nullable'],
         ]);
+
+        $remember = $request->boolean('remember');
 
         if (Auth::attempt([
             'username' => $data['username'],
             'password' => $data['password'],
             'status' => 'aktif',
-        ])) {
+        ], $remember)) {
             $request->session()->regenerate();
             return redirect()->route('dashboard');
         }

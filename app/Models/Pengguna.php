@@ -27,11 +27,13 @@ class Pengguna extends Authenticatable
         'pangkat',
         'jabatan',
         'status',
-        'login_terakhir_pada'
+        'login_terakhir_pada',
+        'remember_token'
     ];
 
     protected $hidden = [
         'hash_password',
+        'remember_token'
     ];
 
     public function getAuthPassword()
@@ -41,7 +43,7 @@ class Pengguna extends Authenticatable
 
     public function getRememberTokenName()
     {
-        return null;
+        return 'remember_token';
     }
 
     public function instansi()

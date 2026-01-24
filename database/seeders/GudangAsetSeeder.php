@@ -6,6 +6,7 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
+use Illuminate\Support\Str;
 
 class GudangAsetSeeder extends Seeder
 {
@@ -258,7 +259,7 @@ class GudangAsetSeeder extends Seeder
                 'instansi_id' => $instansiId,
                 'unit_organisasi_id' => $mabesId,
                 'username' => 'superadmin',
-                'email' => 'superadmin@example.go.id',
+                'email' => 'shandybagus2@gmail.com',
                 'telepon' => '081200000001',
                 'hash_password' => Hash::make('password'),
                 'nama_lengkap' => 'Super Admin',
@@ -270,6 +271,20 @@ class GudangAsetSeeder extends Seeder
                 'dibuat_pada' => $now,
                 'diubah_pada' => $now
             ]);
+            // ======================================================
+            // SEED PASSWORD RESET TOKEN (UNTUK TEST LUPA PASSWORD)
+            // ======================================================
+
+            $plainResetToken = 'RESET-DEMO-123';
+            $hashedResetToken = hash('sha256', $plainResetToken);
+
+            DB::table('password_reset_tokens')->updateOrInsert(
+                ['email' => 'shandybagus2@gmail.com'],
+                [
+                    'token' => $hashedResetToken,
+                    'created_at' => $now
+                ]
+            );
 
             $pengguna['kepala_unit'] = DB::table('pengguna')->insertGetId([
                 'instansi_id' => $instansiId,
@@ -406,6 +421,28 @@ class GudangAsetSeeder extends Seeder
                 'dibuat_pada' => $now,
                 'diubah_pada' => $now
             ]);
+
+            // ======================================================
+            // SEED PASSWORD RESET TOKENS (UNTUK TEST LUPA PASSWORD)
+            // ======================================================
+
+            foreach ($pengguna as $uid) {
+                $email = DB::table('pengguna')->where('id', $uid)->value('email');
+
+                if (!$email) continue; // skip kalau user tidak punya email
+
+                $plain = 'RESET-' . strtoupper(Str::random(6));
+
+                DB::table('password_reset_tokens')->updateOrInsert(
+                    ['email' => $email],
+                    [
+                        'token' => hash('sha256', $plain),
+                        'created_at' => $now
+                    ]
+                );
+
+                $this->command->info("Reset token untuk $email : $plain");
+            }
 
             $penggunaPeranRows = [
                 ['pengguna_id' => $pengguna['superadmin'], 'peran_id' => $peran['superadmin']],
