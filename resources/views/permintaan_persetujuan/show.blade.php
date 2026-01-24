@@ -290,7 +290,7 @@
             {{-- permintaan yang diajukan --}}
             @if ($data->tipe_entitas === 'permintaan')
                 <div class="bg-white border rounded-lg border-gray-300 md:col-span-2">
-                    <div class="border-b border-gray-300 px-4 py-3 font-semibold border-gray-300">Detail Permintaan Barang</div>
+                    <div class="border-b px-4 py-3 font-semibold border-gray-300">Detail Permintaan Barang</div>
 
                     <div class="p-4 text-sm">
                         @if ($entitas)
@@ -319,9 +319,9 @@
                                 </div>
                             </div>
 
-                            <div class="border rounded-lg border-gray-300-lg overflow-hidden">
+                            <div class="border rounded-lg border-gray-300 overflow-hidden">
                                 <table class="w-full text-sm">
-                                    <thead class="bg-gray-50">
+                                    <thead class="bg-gray-50 ">
                                         <tr>
                                             <th class="text-left px-3 py-2">Barang</th>
                                             <th class="text-center px-3 py-2 w-28">Diminta</th>
@@ -332,7 +332,7 @@
                                     </thead>
                                     <tbody>
                                         @forelse ($entitas->detail ?? [] as $d)
-                                            <tr class="border-t">
+                                            <tr class="border-t border-gray-300 ">
                                                 <td class="px-3 py-2">
                                                     <div class="font-medium">{{ $d->barang?->sku ?? '-' }} —
                                                         {{ $d->barang?->nama ?? '-' }}</div>
